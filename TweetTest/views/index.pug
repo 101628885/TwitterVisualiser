@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Twitter 
+  form(action='/getTwitterName', method='POST')
+            p Enter a Twitter Username to find their tweets:  
+            input(type='text', name='twitterName',  placeholder='e.g NBA')
+            input(type='submit', value='Find Tweets')
+  each tweet, index in data
+    p #{tweet.created_at}
+    p #{tweet.text}
+  
