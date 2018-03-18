@@ -2,11 +2,30 @@ extends layout
 
 block content
   h1 Twitter 
-  form(action='/getTwitterName', method='POST')
-            p Enter a Twitter Username to find their tweets:  
-            input(type='text', name='twitterName',  placeholder='e.g NBA')
-            input(type='submit', value='Find Tweets')
+  div(class="card")
+    form(action='/getTwitterName', method='POST')
+              h6 Enter a Twitter Username to find their tweets:  
+              input(type='text', name='twitterName',  placeholder='e.g NBA')
+              input(type='submit', value='Find Tweets')
+  br
+  br
+  div(class="card")
+    form(action='/getTweets', method='POST')
+              h6 Enter a word to find tweets:  
+              input(type='text', name='word',  placeholder='e.g crime')
+              br
+              br
+              h6 Enter a radius to find tweets (Centre is Melbourne):  
+              input(type='text', name='dist',  placeholder='default is 10')
+              br
+              br
+              input(type='submit', value='Find Tweets')
+  br
+  br
   each tweet, index in data
-    p #{tweet.created_at}
-    p #{tweet.text}
+    div(class="card")
+      h5(class="card-title") #{tweet.user.screen_name} -  #{tweet.created_at}
+      div(class="card-body")
+        p #{tweet.text}
+    br
   
