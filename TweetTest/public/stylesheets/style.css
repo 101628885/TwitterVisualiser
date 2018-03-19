@@ -1,8 +1,33 @@
+html{
+	background-color: #2AA3EF;
+}
+
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #2AA3EF;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+  font-weight: 300;
 }
 
 a {
   color: #00B7FF;
+}
+
+div{
+	padding: 10px;
+}
+
+h1 {
+	color: white;
+}
+
+.card{
+	background-color: white;
+	border-color: #0084b4;
+	border-width: 0.2em;
+}
+
+.card-body{
+	padding: 10px;
+
 }

@@ -1,7 +1,11 @@
 extends layout
 
 block content
-  h1 Twitter 
+  div(class="row")
+    div(class="col-sm-1")
+      img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
+    div(class="col-sm-11")
+      h1 Twitter Word Visualisation
   div(class="card")
     form(action='/getTwitterName', method='POST')
               h6 Enter a Twitter Username to find their tweets:  
@@ -22,10 +26,19 @@ block content
               input(type='submit', value='Find Tweets')
   br
   br
+  
+  if searchwords
+    p Query sent to Twitter "<strong>#{searchwords}</strong>"
+  div(class="row")
+      if wordCount
+        each value, key in wordCount
+          div(class="col-sm-2")
+            p The word #{key} was found #{value} times
   each tweet, index in data
     div(class="card")
       h5(class="card-title") #{tweet.user.screen_name} -  #{tweet.created_at}
       div(class="card-body")
+        img(src='https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png')
         p #{tweet.text}
     br
   
