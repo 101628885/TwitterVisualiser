@@ -6,12 +6,6 @@ block content
       img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
     div(class="col-sm-11")
       h1 Twitter Word Visualisation
-  div(class="card")
-    form(action='/getTwitterName', method='POST')
-              h6 Enter a Twitter Username to find their tweets:  
-              input(type='text', name='twitterName',  placeholder='e.g NBA')
-              input(type='submit', value='Find Tweets')
-  br
   br
   div(class="card")
     form(action='/getTweets', method='POST')
@@ -27,18 +21,20 @@ block content
   br
   br
   
-  if searchwords
-    p Query sent to Twitter "<strong>#{searchwords}</strong>"
-  div(class="row")
-      if wordCount
-        each value, key in wordCount
-          div(class="col-sm-2")
-            p The word #{key} was found #{value} times
+  div(class="card")
+    div(class="card-body col-sm-12")
+        .col-sm-12
+          if searchwords
+            p Query sent to Twitter "<strong>#{searchwords}</strong>"
+        .col-sm-6  
+            if wordCount
+              each value, key in wordCount
+                  p The word #{key} was found #{value} times
   each tweet, index in data
     div(class="card")
-      h5(class="card-title") #{tweet.user.screen_name} -  #{tweet.created_at}
+      h5(class="card-title") #{tweet.user.screen_name} -  #{tweet.created_at} - #{tweet.geo}
       div(class="card-body")
-        img(src='https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png')
-        p #{tweet.text}
+        img(src=`${tweet.user.profile_image_url}`)
+        p #{tweet.full_text}
     br
   

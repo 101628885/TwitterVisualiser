@@ -73,18 +73,18 @@ exports.getDataMuse = async(req,res, next) =>
 			let words = []
 			let labels = req.body.word + " OR ";
 			words.push(req.body.word);
-			for (let i = 0; i < 9; i++)
+			for (let i = 0; i < 8; i++)
 			{
 				labels += JSON.parse(body)[i].word;
 				words.push(JSON.parse(body)[i].word);
-
-				if (i != 8);
+				console.log(i + ": "+ labels);
+				if (i != 7)
 				{
 					labels += " OR " ;
-				}
+				} 
 			}
 			req.body.words = words
-	    	req.body.dbResults = labels;
+	    	req.body.dbResults = labels + " AND -filter:retweets AND -filter:replies";
 	    	next();
 	  	} else 
 	  	{

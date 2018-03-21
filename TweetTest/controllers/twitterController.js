@@ -1,6 +1,8 @@
 var Twitter = require('twitter');
 const moment = require('moment');
 const request = require('request');
+const D3Node = require('d3-node')
+
 
 var client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -19,10 +21,11 @@ exports.getTweets = async(req,res) =>
 {
 	var params = {
 			q: req.body.dbResults, 
-			result_type: "recent", 
+			 
 			geocode: `-37.8136,144.9631,${req.body.dist || 10}km`,
 			count: 100,
-			lang: 'en'
+			lang: 'en',
+			tweet_mode: 'extended',
 		};
 	console.log(params);
 	client.get('search/tweets', params, function(error, tweets, response) 
@@ -39,7 +42,8 @@ exports.getTweets = async(req,res) =>
 	  		{
 	  			for(tweet in tweets.statuses)
 	  			{
-	  				if(tweets.statuses[tweet].text.includes(req.body.words[word]))
+
+	  				if(tweets.statuses[tweet].full_text.includes(req.body.words[word]))
 	  				{
 	  					if(wordCount.hasOwnProperty(req.body.words[word]))
 	  					{
@@ -52,8 +56,6 @@ exports.getTweets = async(req,res) =>
 	  				}
 	  			}
 	  		}
-
-
 	    	res.render('index', {data: tweets.statuses, searchwords: req.body.dbResults, wordCount: wordCount})
 	  	} else
 	  	{
@@ -69,7 +71,7 @@ exports.getTweetsForUser = async(req,res) =>
 	{
 	  	if (!error) 
 	  	{
-	    	res.render('index', {data: tweets})
+	    	res.render('d3test', {data: tweets})
 	  	}
 	});
 }
