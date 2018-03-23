@@ -2,7 +2,7 @@ var Twitter = require('twitter');
 const moment = require('moment');
 const request = require('request');
 const D3Node = require('d3-node')
-
+const fs = require('fs');
 
 var client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -15,6 +15,80 @@ exports.test = async(req,res) =>
 {
 	tweets = ""
 	res.render('index', {data: tweets});
+}
+
+exports.getBulkTweets = async(req,res) => 
+{
+	let reptitions = 50;
+	let tweetCount = 0;
+	let reptitionsCompleted = 0;
+	//Center of aus with radius 2000km get most of aus 
+	var params = {
+			q: "crime OR delinquency OR syndicate OR spree OR thriller OR mafia OR prevention OR policing OR crimes AND -filter:retweets AND -filter:replies", 
+			geocode: `-25.2744,133.7751,${req.body.dist || 2000}km`,
+			count: 100,
+			lang: 'en',
+			result_type: 'recent',
+			tweet_mode: 'extended',
+	};
+
+	//This loop for set reptitions
+	function getNextBatch(maxid)
+	{
+		params.max_id = maxid;
+		console.log(params);
+		client.get('search/tweets', params, function(error, tweets, response) 
+		{
+		  	if (!error) 
+		  	{
+		  		//Strip unecessary data and create a JSON with what we want
+		  		data = [];
+		  		for(let i in tweets.statuses)
+		  		{
+		  			let tweet = {
+						"created_at": tweets.statuses[i].created_at,
+						"id": tweets.statuses[i].id,
+						"full_text": tweets.statuses[i].full_text,
+						"user_id": tweets.statuses[i].user.id,
+						"user_name": tweets.statuses[i].user.name,
+						"user_location": tweets.statuses[i].user.location,
+						"user_verified": tweets.statuses[i].user.verified,
+						"user_profile_image_url": tweets.statuses[i].user.profile_image_url,	
+						"geo": tweets.statuses[i].geo,
+						"coordinates": tweets.statuses[i].coordinates,
+						"place": tweets.statuses[i].place,
+						"checked": 0,
+						"crime": null
+					}
+					data.push(tweet);
+		  		}
+
+		  		//Write to a JSON file (this is where you would push to database)
+		  		fs.appendFile('../data.json', JSON.stringify(data),function(err)
+		  		{
+	    			if(err) 
+	    				throw err;
+	    			else
+	    			{
+	    				tweetCount += data.length 
+	    				reptitionsCompleted += 1;
+	    				console.log(`Tweet Count: ${tweetCount} \nReptition: ${reptitionsCompleted}`)
+
+	    				//Keep calling until reptitions count reached 
+	    				if (reptitionsCompleted < reptitions)
+	    				{
+	    					getNextBatch(tweets.statuses[tweets.statuses.length-1].id);
+	    				}
+	    			}
+	  			})
+		  	} else
+		  	{
+		  		console.log(error)
+		  		res.send(error)
+		  	}
+		});
+	}
+	getNextBatch(100000000000000000000000000000000000000000000000000000000000000);
 }
 
 exports.getTweets = async(req,res) => 
@@ -56,6 +130,10 @@ exports.getTweets = async(req,res) =>
 	  				}
 	  			}
 	  		}
+	  		
+	  		fs.writeFile('../data.json', JSON.stringify(tweets.statuses),function(err){
+    			if(err) throw err;
+  			})
 	    	res.render('index', {data: tweets.statuses, searchwords: req.body.dbResults, wordCount: wordCount})
 	  	} else
 	  	{
@@ -91,8 +169,6 @@ exports.getFilterTweets = async(req,res) =>
 	  		{
 	  			tweets.statuses[tweet].created_at = moment(tweets.statuses[tweet].created_at).startOf('hour').fromNow(); 
 	  		}
-
-
 	    	res.render('index', {data: tweets.statuses})
 	  	} else
 	  	{

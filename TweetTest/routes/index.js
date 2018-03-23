@@ -9,5 +9,6 @@ router.post('/getTwitterName', twitterController.getTweetsForUser)
 router.post('/getTweets', dbpediaController.getDataMuse, twitterController.getTweets)
 router.get('/fliterTweets', twitterController.getFilterTweets)
 router.get('/getDBPedia', dbpediaController.getDBPedia)
+router.get('/bulk', twitterController.getBulkTweets)
 
 module.exports = router;
