@@ -48,7 +48,7 @@ exports.autoPost = function(req, res)
 
     query = req.body.word;
 
-    autoController.updateState(autoCollect, query);
+    autoController.updateState(query, autoCollect);
 
     res.redirect('/auto');
 
