@@ -5,10 +5,10 @@ var mongoose = require('mongoose');
 var tweetSchema = mongoose.Schema({
 
     created_at:{
-        type: String
+        type: Date
     },
     id: {
-        type: Number
+        type: String
     },
     full_text: {
         type: String
@@ -26,23 +26,20 @@ var tweetSchema = mongoose.Schema({
         type: String
     },
     geo: {
-        type: String
+        type: Array
     },
     coordinates: {
-        type: Number
+        type: Array
     },
     place: {
-        type: String
+        type: Array
     },
     checked: {
         type: Boolean
     },
     crime: {
-        type: String
+        type: Boolean
     }
-
-
-
 });
 
 
