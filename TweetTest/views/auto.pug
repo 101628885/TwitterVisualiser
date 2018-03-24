@@ -1,0 +1,22 @@
+extends layout
+
+block content
+    div(class="row")
+        div(class="col-sm-1")
+            img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
+        div(class="col-sm-11")
+            h1 Twitter Word Visualisation
+    br
+    br
+    div(class="card")
+
+
+        form(method='POST', action='/auto')
+            #form-group
+                label #{monitoredWord}
+                input.form-control(name='word', type='text', hidden = isHidden)
+
+            input.btn.btn-primary(type='submit', value = toggle)
+        br
+        br
+        h6 Status: #{status}
