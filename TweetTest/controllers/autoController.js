@@ -5,7 +5,6 @@ var query = "";
 
 function collect(query)
 {
-    console.log('calling internal post');
 
     request.post({
         headers: {'content-type' : 'application/x-www-form-urlencoded'},
