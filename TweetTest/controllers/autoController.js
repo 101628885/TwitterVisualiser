@@ -22,7 +22,7 @@ exports.updateState = function(word, autoCollect)
 
     setInterval(function(){
 
-        if (autoCollect)
+        if (shouldRun)
         {
             collect(query);
         }
