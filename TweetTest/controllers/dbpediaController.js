@@ -59,11 +59,19 @@ exports.getDBPedia = async(req,res, next) =>
 //https://www.datamuse.com/api/
 exports.getDataMuse = async(req,res, next) => 
 {
-	options = 
+	var wordQuery = req.body.word;
+
+	if (wordQuery == "")
 	{
-		method: "GET",
-		url: `https://api.datamuse.com/words?rel_trg=${req.body.word}`
+		wordQuery = "crime";
 	}
+
+    options =
+        {
+            method: "GET",
+            url: `https://api.datamuse.com/words?rel_trg=` + wordQuery
+        }
+
 
 	request(options, function (error, response, body) 
 	{
@@ -71,8 +79,8 @@ exports.getDataMuse = async(req,res, next) =>
 		{
 			//res.send(body);
 			let words = []
-			let labels = req.body.word + " OR ";
-			words.push(req.body.word);
+			let labels = wordQuery + " OR ";
+			words.push(wordQuery);
 			for (let i = 0; i < 8; i++)
 			{
 				labels += JSON.parse(body)[i].word;
