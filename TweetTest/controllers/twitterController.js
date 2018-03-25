@@ -13,7 +13,7 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-exports.test = async(req,res) => 
+exports.test = (req,res) => 
 {
 	tweets = ""
 	res.render('index', {data: tweets});
@@ -37,9 +37,6 @@ exports.autoGet = function(req, res)
 	} else {
         res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Query to monitor: "});
 	}
-
-
-
 }
 
 exports.autoPost = function(req, res)
@@ -54,7 +51,7 @@ exports.autoPost = function(req, res)
 
 }
 
-exports.getBulkTweetsOld = async(req,res) => 
+exports.getBulkTweetsOld = (req,res) => 
 {
 	let reptitions = 50000000000000000;
 	let tweetCount = 0;
