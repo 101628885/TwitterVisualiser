@@ -4,6 +4,7 @@ const request = require('request');
 const D3Node = require('d3-node')
 const fs = require('fs');
 const mongoController = require('./mongoController'); 
+const autoController = require ('./autoController');
 
 var client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -16,6 +17,41 @@ exports.test = async(req,res) =>
 {
 	tweets = ""
 	res.render('index', {data: tweets});
+}
+
+var query = "";
+var autoCollect = false;
+
+exports.test = async(req,res) => 
+{
+	tweets = ""
+	res.render('index', {data: tweets});
+}
+
+exports.autoGet = function(req, res)
+{
+
+	if (autoCollect)
+	{
+        res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query});
+	} else {
+        res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Query to monitor: "});
+	}
+
+
+
+}
+
+exports.autoPost = function(req, res)
+{
+    autoCollect = !autoCollect; //toggle autoCollect
+
+    query = req.body.word;
+
+    autoController.updateState(query, autoCollect);
+
+    res.redirect('/auto');
+
 }
 
 exports.getBulkTweetsOld = async(req,res) => 

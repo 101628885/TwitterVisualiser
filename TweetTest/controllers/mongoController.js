@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 //Load tweet schema
 const tweet = require('../models/tweet_schema');
 const url = 'mongodb://team:swinburne@144.6.226.34/tweets';
+//const url = 'mongodb://localhost:27017/tweets';
 
 mongoose.connect(url);
 
@@ -11,11 +12,11 @@ var db = mongoose.connection;
 
 db.on('error', function()
 {
-    console.log("An error occurred while connecting to the DB. Please check that the MongoDB service is running on localhost!");
+    console.log("An error occurred while connecting to the DB " + url);
 });
 
 db.once('open', function(){
-    console.log("Connected to DB");
+    console.log("Connected to DB at " + url);
 });
 
 exports.getLastId = function(tweetToStore)
