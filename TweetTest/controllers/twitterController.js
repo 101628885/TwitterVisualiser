@@ -20,7 +20,7 @@ exports.test = async(req,res) =>
 
 exports.getBulkTweetsOld = async(req,res) => 
 {
-	let reptitions = 50000000000000000000000000000000000000000000000000000000;
+	let reptitions = 50000000000000000;
 	let tweetCount = 0;
 	let reptitionsCompleted = 0;
 	//Center of aus with radius 2000km get most of aus 

@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  div(class="row")
+    div(class="col-sm-1")
+      img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
+    div(class="col-sm-11")
+      h1 Twitter Word Visualisation Checking
+  
+    br
+  br
+  form(action='/check', method='POST' name="check")
+    each tweet, index in data
+      div(class="card")
+        h5(class="card-title") #{tweet.user_name} -  #{tweet.created_at} - #{tweet.geo}
+        div(class="card-body")
+          img(src=`${tweet.user_profile_image_url}`)
+          p #{tweet.full_text}
+          .col-sm-12
+            select(name=`${tweet.id}` wdith="100%")
+              option(value="" disable selected) 
+              option(value='true') True
+              option(value='false') False
+    input(type='submit', value='Send')
+  

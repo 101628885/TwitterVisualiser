@@ -18,10 +18,9 @@ db.once('open', function(){
     console.log("Connected to DB");
 });
 
-
 exports.getLastId = function(tweetToStore)
 {
-    return db.tweets.find().limit(1).sort({$natural:-1}).id
+    return db.tweet.find().limit(1).sort({$natural:-1}).id
 }
 exports.storeTweets = function(tweetToStore)
 {
