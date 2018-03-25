@@ -72,7 +72,6 @@ exports.getDataMuse = async(req,res, next) =>
             url: `https://api.datamuse.com/words?rel_trg=` + wordQuery
         }
 
-
 	request(options, function (error, response, body) 
 	{
 		if (!error) 

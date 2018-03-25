@@ -42,6 +42,4 @@ var tweetSchema = mongoose.Schema({
     }
 });
 
-
-
 var tweet = module.exports = mongoose.model('tweets',tweetSchema);

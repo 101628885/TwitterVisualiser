@@ -9,7 +9,6 @@ mongoose.connect(url);
 
 var db = mongoose.connection;
 
-
 db.on('error', function()
 {
     console.log("An error occurred while connecting to the DB " + url);
