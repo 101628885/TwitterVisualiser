@@ -122,7 +122,8 @@ exports.getBulkTweetsNew = async(req,res) =>
 	let reptitionsCompleted = 0;
 	//Center of aus with radius 2000km get most of aus 
 	var params = {
-			q: "crime OR delinquency OR syndicate OR spree OR thriller OR mafia OR prevention OR policing OR crimes AND -filter:retweets AND -filter:replies", 
+			q: "crime OR delinquency OR syndicate OR spree OR thriller OR mafia OR prevention OR policing OR crimes AND -filter:retweets AND -filter:replies",
+			//q: res.
 			geocode: `-25.2744,133.7751,${req.body.dist || 2000}km`,
 			count: 100,
 			lang: 'en',
@@ -181,6 +182,33 @@ exports.getBulkTweetsNew = async(req,res) =>
 
 exports.getTweets = async(req,res) => 
 {
+
+	function storeTweets(tweets)
+	{
+        for(let i in tweets.statuses) {
+            let tweet = {
+                "created_at": tweets.statuses[i].created_at,
+                "id": tweets.statuses[i].id,
+                "full_text": tweets.statuses[i].full_text,
+                "user_id": tweets.statuses[i].user.id,
+                "user_name": tweets.statuses[i].user.name,
+                "user_location": tweets.statuses[i].user.location,
+                "user_verified": tweets.statuses[i].user.verified,
+                "user_profile_image_url": tweets.statuses[i].user.profile_image_url,
+                "geo": tweets.statuses[i].geo,
+                "coordinates": tweets.statuses[i].coordinates,
+                "place": tweets.statuses[i].place,
+                "checked": false,
+                "crime": null
+            }
+
+            mongoController.storeTweets(tweet);
+
+        }
+	}
+
+
+
 	var params = {
 			q: req.body.dbResults, 
 			 
@@ -194,10 +222,14 @@ exports.getTweets = async(req,res) =>
 	{
 	  	if (!error) 
 	  	{
-	  		for(tweet in tweets.statuses)
-	  		{
-	  			tweets.statuses[tweet].created_at = moment(tweets.statuses[tweet].created_at).startOf('hour').fromNow(); 
-	  		}
+	  		if (!req.body.shouldStoreTweets) //dont format time if we're storing tweets in the DB
+			{
+                for(tweet in tweets.statuses)
+                {
+                    tweets.statuses[tweet].created_at = moment(tweets.statuses[tweet].created_at).startOf('hour').fromNow();
+                }
+			}
+
 
 	  		let wordCount = {};
 	  		for(word in req.body.words)
@@ -218,6 +250,14 @@ exports.getTweets = async(req,res) =>
 	  				}
 	  			}
 	  		}
+
+	  		if (req.body.shouldStoreTweets)
+			{
+				//store tweets
+				storeTweets(tweets);
+			}
+
+
 	  		
 	  		fs.writeFile('../data.json', JSON.stringify(tweets.statuses),function(err){
     			if(err) throw err;
