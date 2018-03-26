@@ -19,7 +19,6 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/vector-icons": "^6.3.1",
     "expo": "^25.0.0",
     "native-base": "^2.3.10",
     "react": "16.2.0",
