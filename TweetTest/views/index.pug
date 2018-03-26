@@ -17,10 +17,10 @@ block content
               input(type='text', name='dist',  placeholder='default is 10')
               br
               br
+              input(type='text', name='shouldStoreTweets',  hidden, value=false)
               input(type='submit', value='Find Tweets')
   br
   br
-  
   div(class="card")
     div(class="card-body col-sm-12")
         .col-sm-12
@@ -37,4 +37,3 @@ block content
         img(src=`${tweet.user.profile_image_url}`)
         p #{tweet.full_text}
     br
-  
