@@ -76,13 +76,13 @@ export default class App extends React.Component {
               </Button>
             </Left>
             <Body>
-              <Title style = {{ color: "#0084b4" }}>Crime Tweets</Title>
+              <Title style = {{ color: "#FFF" }}>Crime Tweets</Title>
             </Body>
             <Right>
               <Button
                 transparent
                 onPress = {() => this.componentDidMount()}>
-                <Icon style = {{ color: "#0084b4" }} name="refresh" />
+                <Icon style = {{ color: "#FFF" }} name="refresh" />
               </Button>
             </Right>
           </Header>
