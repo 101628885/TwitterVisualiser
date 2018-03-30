@@ -30,7 +30,6 @@ exports.test = async(req,res) =>
 
 exports.autoGet = function(req, res)
 {
-
 	if (autoCollect)
 	{
         res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query});
