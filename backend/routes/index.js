@@ -14,6 +14,7 @@ router.post('/getTweets', dbpediaController.getDataMuse, twitterController.getTw
 router.get('/fliterTweets', twitterController.getFilterTweets)
 router.get('/getDBPedia', dbpediaController.getDBPedia)
 router.get('/bulk', twitterController.getBulkTweetsOld)
+router.get('/nlpTrainingEndpoint/:count', nlpTrainingController.returnNLPDataSet);
 router.get('/check', verifyController.getUncheckedTweets)
 router.post('/check', verifyController.checkTweets)
 
