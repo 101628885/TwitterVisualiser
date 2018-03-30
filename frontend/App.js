@@ -1,43 +1,60 @@
+/**
+|--------------------------------------------------
+| App.js
+| - Contains logic for all action.
+| - Pretty much the 'main' file.
+|--------------------------------------------------
+*/
+
 import React, { Component } from 'react';
-import {  View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import CrimeTweets from './pages/CrimeTweets';
+import Home from './pages/Home';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
-import { Container, Header, Body, Icon, H2 } from 'native-base';
+import { Container, Header, Body, Icon, H2, Root } from 'native-base';
 
 export default class App extends React.Component {
   render() {
     return (
-      <MyApp />
+      // Root allows for toasts
+      <Root>
+        <MyApp />
+      </Root>
     );
   }
 }
 
+// Allows for logo and other edits above drawer links
 const CustomDrawerContentComponent = (props) => (
   <Container>
-    <Header style = { styles.drawerHeader }>
+    <Header style={styles.drawerHeader}>
       <Body>
-        <Image 
-          style = { styles.drawerIcon }
-          source = { require('./assets/logo/logo-5.png') }
+        <Image
+          style={styles.drawerIcon}
+          source={require('./assets/logo/logo-5.png')}
         />
-      <H2 style = { styles.drawerTitle }>Mohan Bois</H2>
+        <H2 style={styles.drawerTitle}>Mohan Bois</H2>
       </Body>
     </Header>
-    <DrawerItems {...props}/>
+    <DrawerItems {...props} />
   </Container>
-)
+);
 
-const MyApp = DrawerNavigator ({
-'Show Tweets': {
+// Drawer Navigation logicß
+const MyApp = DrawerNavigator({
+  'Home': {
+    screen: Home
+  },
+  'Show Tweets': {
     screen: CrimeTweets
   }
 }, {
-    initialRouteName: 'Show Tweets',
+    initialRouteName: 'Home',
     contentComponent: CustomDrawerContentComponent,
     drawerOpenRoue: 'DrawerOpen',
     drawerCloseRoute: 'DrawerClose',
     drawerToggleRoute: 'DrawerToggle',
-})
+});
 
 styles = StyleSheet.create({
   drawerIcon: {
@@ -53,4 +70,4 @@ styles = StyleSheet.create({
     fontStyle: 'italic',
     color: '#FFF'
   }
-})
+});

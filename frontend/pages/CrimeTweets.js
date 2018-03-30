@@ -1,3 +1,10 @@
+/**
+|--------------------------------------------------
+| Crime Tweets page
+| - Loads crime related tweets.
+|--------------------------------------------------
+*/
+
 import React from 'react';
 import { 
   FlatList, 
@@ -24,7 +31,7 @@ import {
 } from "native-base";
 import Font from 'expo';
 
-export default class crimeTweets extends React.Component {
+export default class CrimeTweets extends React.Component {
     constructor(props){
         super(props);
         this.state = { dataLoaded: false, fontLoaded: false, showToast: false}
@@ -70,8 +77,6 @@ export default class crimeTweets extends React.Component {
       render(){
         return (
           this.state.dataLoaded && this.state.fontLoaded ? 
-          // Root required for Toast rendering
-          <Root>
             <Container style = { style.container }>
               <Header>
                 {/* Still needs proper drawer implementation */}
@@ -118,9 +123,8 @@ export default class crimeTweets extends React.Component {
                   />
               </Content>
             </Container>
-          </Root>
-            :
-            <View style={style.mb}>
+          :
+            <View style = { style.mb }>
               <ActivityIndicator />
             </View>
         )
