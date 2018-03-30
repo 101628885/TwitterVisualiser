@@ -16,7 +16,7 @@ router.get('/getDBPedia', dbpediaController.getDBPedia)
 router.get('/bulk', twitterController.getBulkTweetsOld)
 router.get('/nlpTrainingEndpoint/:count', nlpTrainingController.returnNLPDataSet);
 router.get('/check', verifyController.getUncheckedTweets)
-router.post('/check', verifyController.checkTweets)
+router.post('/check/:id/:value', verifyController.checkTweets)
 
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
 module.exports = router;
