@@ -24,7 +24,7 @@ import {
 } from "native-base";
 import Font from 'expo';
 
-export default class CrimeTweets extends React.Component {
+export default class crimeTweets extends React.Component {
     constructor(props){
         super(props);
         this.state = { dataLoaded: false, fontLoaded: false, showToast: false}
@@ -115,7 +115,7 @@ export default class CrimeTweets extends React.Component {
           </Root>
             :
             <View style={style.mb}>
-              <ActivityIndicator/>
+              <ActivityIndicator />
             </View>
         )
       }
