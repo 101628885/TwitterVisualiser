@@ -29,6 +29,12 @@ export default class crimeTweets extends React.Component {
         super(props);
         this.state = { dataLoaded: false, fontLoaded: false, showToast: false}
       }
+
+      static navigationOptions = {
+        drawerIcon: (
+          <Icon name = "logo-twitter" style = {{ color: "#0084b4" }}/>
+        )
+      }
     
       // Part of the react lifecyle
       async componentDidMount(){
