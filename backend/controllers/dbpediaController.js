@@ -100,3 +100,54 @@ exports.getDataMuse = async(req,res, next) =>
 	});
 }
 
+//gets words from the wordsAPI and creates an array out of them
+exports.getWordsAPI = async(req,res, next) => 
+{
+	var wordQuery = req.body.word;
+
+	if (wordQuery == "" || wordQuery == undefined)
+	{
+		wordQuery = "crime";
+	}
+
+    options =
+        {
+            method: "GET",
+            url: `https://wordsapiv1.p.mashape.com/words/${wordQuery}`,
+            headers: {
+    			'X-Mashape-Key': process.env.WORDSAPIKEY,
+    			'Accept': 'application/json'
+  			}
+        }
+
+	request(options, function (error, response, body) 
+	{
+		if (!error) 
+		{
+			body = JSON.parse(body); 
+			let words = [wordQuery]
+			//get words in the 'hasCatergories' array and add to words array
+			for(let word in body.results[0].hasCategories)
+			{
+				words.push(body.results[0].hasCategories[word])
+			}
+
+			//get words in the 'hasCatergories' array
+			for(let word in body.results[0].hasCategories)
+			{
+				//make sure there is no duplicate words added to words array
+				if(words.indexOf(body.results[0].hasCategories[word]) == -1)
+				{
+					words.push(body.results[0].hasCategories[word])
+				}
+			}
+			//sort alphabatically because why not 
+			words.sort();
+
+			req.body.words = words
+			next();
+			
+		}
+	});
+}
+

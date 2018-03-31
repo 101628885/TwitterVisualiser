@@ -5,6 +5,7 @@ const D3Node = require('d3-node')
 const fs = require('fs');
 const mongoController = require('./mongoController'); 
 const autoController = require ('./autoController');
+const helpers = require ('../helpers');
 
 var client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -119,64 +120,67 @@ exports.getBulkTweetsNew = async(req,res) =>
 	let reptitions = 5;
 	let tweetCount = 0;
 	let reptitionsCompleted = 0;
-	//Center of aus with radius 2000km get most of aus 
-	var params = {
-			q: "crime OR delinquency OR syndicate OR spree OR thriller OR mafia OR prevention OR policing OR crimes AND -filter:retweets AND -filter:replies",
-			//q: res.
-			geocode: `-25.2744,133.7751,${req.body.dist || 2000}km`,
-			count: 100,
-			lang: 'en',
-			result_type: 'recent',
-			tweet_mode: 'extended'
-	};
+	let params = []
+	let pwords = []
 
-	//This loop for set reptitions
-	function getNextBatch(since_id)
+	for(let i = 0; i < req.body.words.length; i++)
 	{
-		params.since_id = since_id;
-		console.log(params);
-		client.get('search/tweets', params, function(error, tweets, response) 
+		pwords.push(req.body.words[i])
+		if(pwords.length % 10 == 0)
 		{
-		  	if (!error) 
-		  	{
-		  		//Strip unecessary data and create a JSON with what we want
-		  		for(let i in tweets.statuses)
-		  		{
-		  			let tweet = {
-						"created_at": tweets.statuses[i].created_at,
-						"id": tweets.statuses[i].id,
-						"full_text": tweets.statuses[i].full_text,
-						"user_id": tweets.statuses[i].user.id,
-						"user_name": tweets.statuses[i].user.name,
-						"user_location": tweets.statuses[i].user.location,
-						"user_verified": tweets.statuses[i].user.verified,
-						"user_profile_image_url": tweets.statuses[i].user.profile_image_url,	
-						"geo": tweets.statuses[i].geo,
-						"coordinates": tweets.statuses[i].coordinates,
-						"place": tweets.statuses[i].place,
-						"checked": false,
-						"crime": null
-					}
-					mongoController.storeTweets(tweet);
-		  		}
-
-				tweetCount += [tweets.statuses].length 
-				reptitionsCompleted += 1;
-				console.log(`Tweet Count: ${tweetCount} \nReptition: ${reptitionsCompleted}`)
-
-				//Keep calling until reptitions count reached 
-				if (reptitionsCompleted < reptitions)
-				{
-					getNextBatch(tweets.statuses[tweets.statuses.length-1].id);
-				}
-		  	} else
-		  	{
-		  		console.log(error)
-		  		res.send(error)
-		  	}
-		});
+			params.push(helpers.createTwitterParams(pwords));
+			pwords = [];
+		}
 	}
-	getNextBatch(100000000000000000000000000000000000000000000000000000000000000);
+	
+	for(let i = 0; i < params.length; i++)
+	{
+		function getNextBatch(since_id, reps)
+		{
+			reps += 1;
+			params[i].since_id = since_id;
+			console.log(params[i].q);
+			client.get('search/tweets', params[i], function(error, tweets, response) 
+			{
+			  	if (!error && res) 
+			  	{
+			  		//Strip unecessary data and create a JSON with what we want
+			  		for(let i in tweets.statuses)
+			  		{
+			  			let tweet = {
+							"created_at": tweets.statuses[i].created_at,
+							"id": tweets.statuses[i].id,
+							"full_text": tweets.statuses[i].full_text,
+							"user_id": tweets.statuses[i].user.id,
+							"user_name": tweets.statuses[i].user.name,
+							"user_location": tweets.statuses[i].user.location,
+							"user_verified": tweets.statuses[i].user.verified,
+							"user_profile_image_url": tweets.statuses[i].user.profile_image_url,	
+							"geo": tweets.statuses[i].geo,
+							"coordinates": tweets.statuses[i].coordinates,
+							"place": tweets.statuses[i].place,
+							"checked": false,
+							"crime": null
+						}
+						mongoController.storeTweets(tweet);
+			  		}
+
+					tweetCount += [tweets.statuses].length 
+					reptitionsCompleted += 1;
+
+					//Keep calling until reptitions count reached 
+					if (reps < reptitions && tweets.statuses[tweets.statuses.length-1] != undefined)
+					{
+						getNextBatch(tweets.statuses[tweets.statuses.length-1].id, reps);
+					}
+			  	} else {
+			  		console.log(error)
+			  		res.send(error)
+			  	}
+			});
+		}
+		getNextBatch(100000000000000000000000000000000000000000000000000000000000000, 0);
+	}
 }
 
 exports.getTweets = async(req,res) => 
@@ -200,13 +204,9 @@ exports.getTweets = async(req,res) =>
                 "checked": false,
                 "crime": null
             }
-
             mongoController.storeTweets(tweet);
-
         }
 	}
-
-
 
 	var params = {
 			q: req.body.dbResults, 
@@ -228,7 +228,6 @@ exports.getTweets = async(req,res) =>
                     tweets.statuses[tweet].created_at = moment(tweets.statuses[tweet].created_at).startOf('hour').fromNow();
                 }
 			}
-
 
 	  		let wordCount = {};
 	  		for(word in req.body.words)
@@ -256,11 +255,6 @@ exports.getTweets = async(req,res) =>
 				storeTweets(tweets);
 			}
 
-
-	  		
-	  		fs.writeFile('../data.json', JSON.stringify(tweets.statuses),function(err){
-    			if(err) throw err;
-  			})
 	    	res.render('index', {data: tweets.statuses, searchwords: req.body.dbResults, wordCount: wordCount})
 	  	} else
 	  	{
@@ -303,3 +297,4 @@ exports.getFilterTweets = async(req,res) =>
 	  	}
 	});
 }
+
