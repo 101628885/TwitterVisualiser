@@ -43,27 +43,31 @@ export default class TrackTweets extends React.Component {
     )
   };
 
+  // Return a list of map markers based on tweet data
   renderMarkers() {
     return (
-      this.state.markers.map(marker => (<MapView.Marker 
-        key={marker.id}
-        coordinate={marker.latlng}
-        title={marker.title}
-        description={marker.description}
-      />))
+      this.state.markers.map(marker => (
+        <MapView.Marker 
+          key={marker.id}
+          coordinate={marker.latlng}
+          title={marker.title}
+          description={marker.description}
+        >
+          <MapView.Callout>
+            <View style={{ width: 300 }}>
+              <Text>{marker.title}</Text>
+              <Text note>{marker.description}</Text>
+            </View>
+          </MapView.Callout>
+        </MapView.Marker>
+      ))
     );
   }
 
-  geocodeLocation(query) {
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${this.state.apiKey}`)
-    .then(res => {
-      return res.json;
-    });
-  }
-
-  // Fetch tweets from node endpoint and store in state
+  // Fetch tweets from node endpoint and generate map markers to store in state
   generateMarkers() {
-    // TODO: get data from node NLP server
+    // TODO: Get data from node NLP server
+    // TODO: Edit for custom search sizes
     fetch('http://144.6.226.34:3000/shanesAndCoreysSpecialEndPoint/20')
     .then(res => res.json())
     .then(tweetData => {
@@ -71,7 +75,6 @@ export default class TrackTweets extends React.Component {
       for (let tweet of tweetData) {
         fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${tweet.user_location}&key=${this.state.apiKey}`)
         .then(res => res.json())
-
         .then(locationData => this.setState({
           markers: [...this.state.markers, ({
             id: tweet.id,
