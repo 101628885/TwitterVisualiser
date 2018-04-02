@@ -14,10 +14,8 @@ import {
   Body,
   Left,
   Right,
-  Root,
   View,
-  Text,
-  Thumbnail
+  Text
 } from 'native-base';
 import { Font, MapView } from 'expo';
 
@@ -73,9 +71,11 @@ export default class TrackTweets extends React.Component {
     .then(tweetData => {
       let markerArray = [];
       for (let tweet of tweetData) {
+        // generate and store a marker in state for each element in tweetData
         fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${tweet.user_location}&key=${this.state.apiKey}`)
         .then(res => res.json())
         .then(locationData => this.setState({
+          // strange javascript witchcraft for upating state
           markers: [...this.state.markers, ({
             id: tweet.id,
             latlng: {
@@ -138,7 +138,8 @@ export default class TrackTweets extends React.Component {
     );
   }
 }
-    
+
+// Define styles for this component/page
 const styles = StyleSheet.create({
   containerStyle: {
     backgroundColor: '#FFF'
