@@ -26,7 +26,10 @@ import {
     Root,
     Right
 } from "native-base";
-import Font from 'expo';
+import {
+    Font,
+    Constants
+} from 'expo';
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -70,6 +73,7 @@ export default class Home extends React.Component {
         return (
             this.state.dataLoaded && this.state.fontLoaded ?
                 <Container style={style.container}>
+                <View style={style.statusBar} />
                     <Header>
                         <Left>
                             <Button
@@ -84,7 +88,7 @@ export default class Home extends React.Component {
                         <Right />
                     </Header>
                         <View style = { style.titleView }>
-                            <H2 style = { style.title }>Welcome to Twiiter Visualiser</H2>
+                            <H2 style = { style.title }>Welcome to Twitter Visualiser</H2>
                         </View>
                 </Container>
                 :
@@ -111,5 +115,8 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    statusBar: {
+        marginTop: Constants.statusBarHeight,
     }
 })

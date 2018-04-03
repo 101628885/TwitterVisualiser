@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { 
+  StatusBar,
   FlatList, 
   ActivityIndicator, 
   Text, 
@@ -29,7 +30,10 @@ import {
   Toast,
   Root
 } from "native-base";
-import Font from 'expo';
+import {
+  Font,
+  Constants
+} from 'expo';
 
 export default class CrimeTweets extends React.Component {
     constructor(props){
@@ -78,6 +82,7 @@ export default class CrimeTweets extends React.Component {
         return (
           this.state.dataLoaded && this.state.fontLoaded ? 
             <Container style = { style.container }>
+            <View style={style.statusBar} />
               <Header>
                 {/* Still needs proper drawer implementation */}
                 <Left>
@@ -133,10 +138,13 @@ export default class CrimeTweets extends React.Component {
     
     const style = StyleSheet.create({
       container: {
-        backgroundColor: "#0084b4"
+        backgroundColor: "#0084b4",
        },
        mb: {
          marginBottom: 15,
          padding: 20,
+       },
+       statusBar: {
+         marginTop: Constants.statusBarHeight,
        }
     })
