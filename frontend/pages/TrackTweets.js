@@ -17,7 +17,11 @@ import {
   View,
   Text
 } from 'native-base';
-import { Font, MapView } from 'expo';
+import { 
+  Font, 
+  MapView,
+  Constants
+} from 'expo';
 
 export default class TrackTweets extends React.Component {
   constructor(props) { 
@@ -105,8 +109,8 @@ export default class TrackTweets extends React.Component {
   render() {
     return (
       this.state.fontLoaded ? (
-        <Container style={styles.containerStyle}>
-          <View style={{ height: StatusBar.currentHeight, backgroundColor: '#2196F3' }} />
+        <Container style={style.containerStyle}>
+        <View style={style.statusBar} />
           <Header style={{ backgroundColor: '#2196F3' }}>
             {/* Still needs proper drawer implementation */}
             <Left>
@@ -131,7 +135,7 @@ export default class TrackTweets extends React.Component {
           </Content>
         </Container>
       ) : (
-        <View style = {styles.mbStyle}>
+        <View style = {style.mbStyle}>
           <ActivityIndicator />
         </View>
       )
@@ -140,12 +144,15 @@ export default class TrackTweets extends React.Component {
 }
 
 // Define styles for this component/page
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   containerStyle: {
-    backgroundColor: '#FFF'
+    backgroundColor: '#2196F3'
   },
   mbStyle: {
     marginBottom: 15,
     padding: 20,
+  },
+  statusBar: {
+    marginTop: Constants.statusBarHeight
   }
 })
