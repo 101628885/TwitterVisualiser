@@ -50,7 +50,11 @@ const MyApp = DrawerNavigator({
     screen: CrimeTweets
   },
   'Track Tweets': {
+<<<<<<< HEAD
     screen: TrackTweets
+=======
+  	screen: TrackTweets
+>>>>>>> 960b8e3c4f8f5e3e61c37c67d50066b10c88b826
   }
 }, {
     initialRouteName: 'Home',
