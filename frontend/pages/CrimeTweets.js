@@ -93,13 +93,13 @@ export default class CrimeTweets extends React.Component {
                   </Button>
                 </Left>
                 <Body>
-                  <Title style = {{ color: "#0084b4" }}>Crime Tweets</Title>
+                  <Title>Crime Tweets</Title>
                 </Body>
                 <Right>
                   <Button
                     transparent
                     onPress = {() => this.componentDidMount()}>
-                    <Icon style = {{ color: "#0084b4" }} name="refresh" />
+                    <Icon name="refresh" />
                   </Button>
                 </Right>
               </Header>
@@ -138,7 +138,7 @@ export default class CrimeTweets extends React.Component {
     
     const style = StyleSheet.create({
       container: {
-        backgroundColor: "#0084b4",
+        backgroundColor: "#2196F3",
        },
        mb: {
          marginBottom: 15,

@@ -83,7 +83,7 @@ export default class Home extends React.Component {
                             </Button>
                         </Left>
                         <Body>
-                            <Title style={{ color: "#0084b4", alignSelf: 'center' }}>Home</Title>
+                            <Title style={{ alignSelf: 'center' }}>Home</Title>
                         </Body>
                         <Right />
                     </Header>
@@ -101,7 +101,7 @@ export default class Home extends React.Component {
 
 const style = StyleSheet.create({
     container: {
-        backgroundColor: "#0084b4",
+        backgroundColor: "#2196F3",
     },
     mb: {
         marginBottom: 15,

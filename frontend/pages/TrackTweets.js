@@ -112,7 +112,7 @@ export default class TrackTweets extends React.Component {
       this.state.fontLoaded ? (
         <Container style={style.containerStyle}>
         <View style={style.statusBar} />
-          <Header style={{ backgroundColor: '#2196F3' }}>
+          <Header>
             {/* Still needs proper drawer implementation */}
             <Left>
               <Button
