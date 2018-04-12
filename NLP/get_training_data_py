@@ -18,7 +18,8 @@ file.close()
 file = open("tweet_text.txt", "w")
 
 for json in data:
-	file.write(json["full_text"].encode('utf8'))
-	file.write("\n")
+	if json["crime"] == True:
+		file.write(json["full_text"].encode('utf8'))
+		file.write("\n")
 
 file.close()
