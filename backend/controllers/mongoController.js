@@ -22,6 +22,7 @@ exports.getLastId = function(tweetToStore)
 {
     return db.tweet.find().limit(1).sort({$natural:-1}).id
 }
+
 exports.storeTweets = function(tweetToStore)
 {
     

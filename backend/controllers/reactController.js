@@ -18,3 +18,46 @@ exports.shanesAndCoreySpecialsEndPoint = async (req,res) =>
         }  
     }); 
 }
+
+exports.getCrimeWordCount = async (req,res, next) => 
+{
+    var tweet = db.model('tweets', tweet);
+    words = {};
+    tweet.find({crime: true}).limit(10000).exec(function(err, posts) 
+    {
+        let tweetNum = posts.length;
+        let uniqueWords = 0;
+        let wordsFound = 0;
+        if(!err)
+        {
+            for (tweet in posts)
+            {
+                let temp = posts[tweet].full_text.toString().replace(/[^a-z0-9']/gi,' ').split(" ");
+                for (i in temp)
+                {
+                    wordsFound += 1;
+                    word = temp[i]
+                    if(!words.hasOwnProperty(word) && word.length > 2)
+                    {
+                        words[word] = 1;
+                        uniqueWords += 1;
+                    } else 
+                    {
+                        words[word] += 1;
+                    }
+                }
+            }
+
+            var sortedWords = [];
+            for (var word in words) {
+                sortedWords.push([word, words[word]]);
+            }
+
+            sortedWords.sort(function(a, b) {
+                return b[1] - a[1];
+            });
+
+            res.send({crime_tweets: tweetNum, unique_words: uniqueWords, words_found: wordsFound, words: sortedWords});
+        }  
+    });     
+}
