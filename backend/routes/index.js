@@ -14,8 +14,11 @@ router.get('/', twitterController.test)
 router.get('/auto', twitterController.autoGet)
 router.post('/auto', twitterController.autoPost)
 router.post('/getTweets', dbpediaController.getDataMuse, twitterController.getTweets)
-router.get('/fliterTweets', twitterController.getFilterTweets)
-router.get('/getWordsAPI', dbpediaController.getWordsAPI, twitterController.getBulkTweetsNew)
+
+router.get('/filterTweets', twitterController.getFilterTweets)
+router.get('/getDBPedia', dbpediaController.getDBPedia)
+router.get('/getWordsAPI', dbpediaController.getDataMuse, twitterController.getBulkTweetsNew)
+
 router.get('/bulk', twitterController.getBulkTweetsOld)
 
 //Dpedia Controller

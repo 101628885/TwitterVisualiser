@@ -8,6 +8,7 @@
 
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import Visualisation from './pages/Visualisation';
 import CrimeTweets from './pages/CrimeTweets';
 import TrackTweets from './pages/TrackTweets';
 import Home from './pages/Home';
@@ -51,6 +52,9 @@ const MyApp = DrawerNavigator({
   },
   'Track Tweets': {
     screen: TrackTweets
+  },
+  'Visualisation': {
+    screen: Visualisation
   }
 }, {
     initialRouteName: 'Home',
