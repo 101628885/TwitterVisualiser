@@ -1,3 +1,10 @@
+/**
+|--------------------------------------------------
+| Tracking tweets through Map API
+| For now..
+|--------------------------------------------------
+*/
+
 import React from 'react';
 import { 
   ActivityIndicator,
@@ -68,31 +75,31 @@ export default class TrackTweets extends React.Component {
   }
 
   // Fetch tweets from node endpoint and generate map markers to store in state
-  generateMarkers() {
+  async generateMarkers() {
     // TODO: Get data from node NLP server
     // TODO: Edit for custom search sizes
-    fetch('http://144.6.226.34:3000/shanesAndCoreysSpecialEndPoint/20')
-    .then(res => res.json())
-    .then(tweetData => {
-      let markerArray = [];
-      for (let tweet of tweetData) {
-        // generate and store a marker in state for each element in tweetData
-        fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${tweet.user_location}&key=${this.state.apiKey}`)
-        .then(res => res.json())
-        .then(locationData => this.setState({
-          // strange javascript witchcraft for upating state
-          markers: [...this.state.markers, ({
-            id: tweet.id,
-            latlng: {
-              latitude: locationData.results[0].geometry.location.lat,
-              longitude: locationData.results[0].geometry.location.lng
-            },
-            title: tweet.user_name,
-            description: tweet.full_text
-          })]
-        }));
-      }
-    });
+    await fetch('http://144.6.226.34:3000/shanesAndCoreysSpecialEndPoint/20')
+      .then(res => res.json())
+      .then(tweetData => {
+        let markerArray = [];
+        for (let tweet of tweetData) {
+          // generate and store a marker in state for each element in tweetData
+          fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${tweet.user_location}&key=${this.state.apiKey}`)
+          .then(res => res.json())
+          .then(locationData => this.setState({
+            // strange javascript witchcraft for upating state
+            markers: [...this.state.markers, ({
+              id: tweet.id,
+              latlng: {
+                latitude: locationData.results[0].geometry.location.lat,
+                longitude: locationData.results[0].geometry.location.lng
+              },
+              title: tweet.user_name,
+              description: tweet.full_text
+            })]
+          }));
+        }
+      });
   }
 
   // React lifecycle
@@ -113,7 +120,6 @@ export default class TrackTweets extends React.Component {
         <Container style={style.containerStyle}>
         <View style={style.statusBar} />
           <Header>
-            {/* Still needs proper drawer implementation */}
             <Left>
               <Button
                 transparent
