@@ -82,6 +82,12 @@ exports.getDataMuse = async(req,res, next) =>
 			words.push(wordQuery);
 			for (let i = 0; i < 8; i++)
 			{
+				if (body == "[]")
+				{
+					console.log("Empty response from DataMuse...");
+					break;
+				}
+				
 				labels += JSON.parse(body)[i].word;
 				words.push(JSON.parse(body)[i].word);
 				console.log(i + ": "+ labels);
