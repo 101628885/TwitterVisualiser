@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "jest-expo": "25.0.0",
+    "appr": "^2.0.0",
+    "exp": "^52.0.3",
+    "jest-expo": "25.1.0",
     "react-native-scripts": "1.11.1",
     "react-test-renderer": "16.2.0"
   },
@@ -13,10 +15,14 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js"
+    "test": "node node_modules/jest/bin/jest.js",
+    "appr": "appr"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react|react-navigation|react-native|react-native-drawer|react-native-easy-grid|react-native-safe-area-view|react-native-keyboard-aware-scroll-view|react-native-iphone-x-helper|expo|@expo|native-base|native-base-shoutem-theme)/)"
+    ]
   },
   "dependencies": {
     "expo": "^25.0.0",
