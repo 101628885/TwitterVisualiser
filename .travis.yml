@@ -4,7 +4,7 @@ node_js:
 cache: yarn
 before_install: 'cd frontend/'
 script:
-  - yarn test
+  - yarn test --maxWorkers=4
   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" == "dev" ]; then yarn appr; fi'
 after_success:
   - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
