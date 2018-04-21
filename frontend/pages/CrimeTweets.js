@@ -59,7 +59,7 @@ export default class CrimeTweets extends React.Component {
           dataLoaded: true,
           dataSource: resJson,
         }, () => Toast.show({
-          text: "Tweets loaded",
+          text: this.state.tweetAmount + " Tweets loaded",
           position: "bottom",
           buttonText: "Okay",
           type: "success"
