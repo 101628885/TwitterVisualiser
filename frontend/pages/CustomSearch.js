@@ -35,12 +35,15 @@ export default class CustomSearch extends React.Component {
     this.setState({ fontLoaded: true });
   }
 
-  changeTweetValue(value, visible) {
+  //This function gets called when a picker value is selected
+  //Changes selected values' state, and calls the function that was passed to it.
+  changeTweetValue(value) {
     this.setState({
       tweetValue: value,
     }, () => this.props.action(this.state.tweetValue));
   }
 
+  //returns a view with a button that opens a dialog to change the tweets
   render() {
     return (
       <View style={{ borderWidth: 0 }}>

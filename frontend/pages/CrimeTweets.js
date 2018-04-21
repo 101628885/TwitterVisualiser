@@ -79,7 +79,9 @@ export default class CrimeTweets extends React.Component {
     });
     this.setState({ fontLoaded: true });
   }
-  //
+
+  //Function that is passed to CustomSearch
+  //Allows for CustomSearch to set the state of CrimeTweets within CustomSearch.
   changeTweetAmount(value) {
     this.setState({
       tweetAmount: value
