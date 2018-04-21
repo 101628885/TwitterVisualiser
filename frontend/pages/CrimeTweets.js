@@ -6,13 +6,14 @@
 */
 
 import React from 'react';
+import CustomSearch from './CustomSearch'
 import { 
   StatusBar,
   FlatList, 
   ActivityIndicator, 
   Text, 
   View, 
-  StyleSheet  
+  StyleSheet
 } from 'react-native';
 import {
   Container,
@@ -38,7 +39,8 @@ import {
 export default class CrimeTweets extends React.Component {
     constructor(props){
         super(props);
-        this.state = { dataLoaded: false, fontLoaded: false, showToast: false}
+        this.state = { dataLoaded: false, fontLoaded: false, showToast: false, tweetAmount: "10"}
+        this.changeTweetAmount = this.changeTweetAmount.bind(this);
       }
 
       static navigationOptions = {
@@ -49,9 +51,8 @@ export default class CrimeTweets extends React.Component {
     
       // Part of the react lifecyle
       async componentDidMount(){
-        // TODO: Edit for custom search sizes
         //await fetch('https://testtwitter-diigzuppaq.now.sh/shanesAndCoreysSpecialEndPoint/10')
-        await fetch('http://144.6.226.34:3000/shanesAndCoreysSpecialEndPoint/10')
+        await fetch('http://144.6.226.34:3000/shanesAndCoreysSpecialEndPoint/' + this.state.tweetAmount)
           .then((res) => res.json())
           .then((resJson) => {
             this.setState({
@@ -68,7 +69,8 @@ export default class CrimeTweets extends React.Component {
             console.error(error);
           });
       }
-    
+      
+      
       // Part of the react lifecyle
       async componentWillMount(){
         await Expo.Font.loadAsync({
@@ -77,7 +79,15 @@ export default class CrimeTweets extends React.Component {
         });
         this.setState({fontLoaded: true});
       }
-    
+      //
+      changeTweetAmount(value)
+      {
+        this.setState({
+          tweetAmount: value
+        }),
+        this.componentDidMount()
+      }
+
       render(){
         return (
           this.state.dataLoaded && this.state.fontLoaded ? 
@@ -96,6 +106,7 @@ export default class CrimeTweets extends React.Component {
                   <Title>Crime Tweets</Title>
                 </Body>
                 <Right>
+                  <CustomSearch action={this.changeTweetAmount}/>
                   <Button
                     transparent
                     onPress = {() => this.componentDidMount()}>
@@ -103,7 +114,6 @@ export default class CrimeTweets extends React.Component {
                   </Button>
                 </Right>
               </Header>
-    
               <Content padder>
                   <FlatList
                     data = { this.state.dataSource }
