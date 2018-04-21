@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "node"
+cache: yarn
+before_install: 'cd frontend/'
+script:
+  - yarn test --maxWorkers=4
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" == "dev" ]; then yarn appr; fi'
+after_success:
+  - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
+after_failure:
+  - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
