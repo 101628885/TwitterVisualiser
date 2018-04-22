@@ -1,5 +1,7 @@
 # TwitterVisualiser
 
+[![Build Status](https://travis-ci.org/101628885/TwitterVisualiser.svg?branch=dev)](https://travis-ci.org/101628885/TwitterVisualiser)
+
 > Modern cross-platform application with state of the art data visualisation
 
 ## What is TwitterVisualiser?
