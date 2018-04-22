@@ -46,6 +46,11 @@ def spacy_tokenizer(sentence):
 
 # Loads 1000 training data from source
 def loadTrainingData():
+    ## TODO:
+    # Change the get address to the server address
+    # After working more on the backend
+    # http://144.6.226.34:3000/nlpTrainingEndpoint/1000
+
     dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint/1000').json()
     tweetData = []
     for t in dataJson:
@@ -55,6 +60,11 @@ def loadTrainingData():
 
 # Loads 5 random checked testing data
 def checkData():
+    ## TODO:
+    # Change the get address to the server address
+    # After working more on the backend
+    # http://144.6.226.34:3000/nlpTrainingEndpoint/5
+
     dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint/5').json()
     tweetData = []
     for t in dataJson:
