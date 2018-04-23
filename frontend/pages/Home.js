@@ -54,10 +54,10 @@ export default class Home extends React.Component {
                     dataLoaded: true,
                     dataSource: resJson,
                 });
-            })
-            .catch((error) => {
-                console.error(error);
             });
+            // .catch((error) => {
+            //     console.error(error);
+            // });
     }
 
     // Part of the react lifecyle
