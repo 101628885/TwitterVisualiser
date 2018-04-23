@@ -12,10 +12,3 @@ it('renders without crashing', () => {
   ).toJSON();
   expect(rendered).toBeTruthy();
 });
-
-test('renders correctly', () => {
-  const tree = renderer.create(
-    <App />
-  ).toJSON();
-  expect(tree).toMatchSnapshot();
-});

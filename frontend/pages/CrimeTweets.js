@@ -66,7 +66,8 @@ export default class CrimeTweets extends React.Component {
         }));
       })
       .catch((error) => {
-        console.error(error);
+        // commented out until I figure out how to mock XMLHTTPRequest calls in tests
+        // console.error(error); 
       });
   }
 
