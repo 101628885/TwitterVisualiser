@@ -7,7 +7,7 @@ block content
       img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
     div(class="col-sm-11")
       h1 Twitter Word Visualisation Checking
-      
+
     br
   br
   .row
@@ -23,12 +23,18 @@ block content
         p#tweetText #{tweet.full_text}
         .row
           .col-sm-3
-            
+
           .col-sm-3
             .row
               label(for="crime-type") Type of Crime 
             .row
-              input(id="crime-type" type="text" placeholder="Enter a Crime")
+              select(id="crime-type")
+                option(value="assault") Assault
+                option(value="rape") Rape
+                option(value="theft") Theft
+                option(value="burglary") Burglary
+                option(value="vandalism") Vandalism
+                option(value="drugs") Drugs
             .row
               label(for="pac-input") Location (approximate)
             .row
@@ -39,6 +45,4 @@ block content
               .col-sm-6
                 button.btn.btn-danger#tweetFalse(onclick=`sendData('false',${tweet.id})`) False 
   script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgTDSvRy9VcwykRu_OWRnB_xcva3YwIpU&libraries=places&callback=initAutocomplete"
-        async defer)
-
-  
+  async defer)
