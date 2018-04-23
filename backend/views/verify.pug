@@ -10,11 +10,13 @@ block content
 
     br
   br
-  .row
-    .col-3
-      p Tweets Counted:
-    .col-1
-      p#counter  0
+
+  div(class="card" style="height: 85px")
+    .row
+      .col-3
+        p Tweets Counted:
+      .col-1
+        p#counter  0
   each tweet, index in data
     div(class="card" id="cardbody")
       h5#tweetHead(class="card-title") #{tweet.user_name} -  #{tweet.created_at} - Tweet Location: #{tweet.geo} - User Default Location:#{tweet.user_location}
