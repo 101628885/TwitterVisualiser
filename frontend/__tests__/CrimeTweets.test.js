@@ -25,12 +25,4 @@ describe('Testing CrimeTweets page', () => {
   it('has default state', () => {
     expect(wrapper.state()).toEqual(defaultState);
   });
-
-  it('fetches api data', () => {
-    this.componentDidMount();
-    // expect(wrapper.state()).dataLoaded.toEqual(true);
-    expect(0).toEqual(1);
-  });
-
-
 });

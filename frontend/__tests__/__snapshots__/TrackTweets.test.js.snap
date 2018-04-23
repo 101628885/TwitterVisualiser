@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing TrackTweets page renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {},
+      Object {
+        "marginBottom": 15,
+        "padding": 20,
+      },
+    ]
+  }
+  virtual={undefined}
+>
+  <ActivityIndicator
+    animating={true}
+    color="#999999"
+    hidesWhenStopped={true}
+    size="small"
+  />
+</View>
+`;

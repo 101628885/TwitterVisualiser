@@ -118,7 +118,7 @@ export default class TrackTweets extends React.Component {
     return (
       this.state.fontLoaded ? (
         <Container style={style.containerStyle}>
-        <View style={style.statusBar} />
+          <View style={style.statusBar} />
           <Header>
             <Left>
               <Button
@@ -166,4 +166,4 @@ const style = StyleSheet.create({
     height: Dimensions.get('window').height - Constants.statusBarHeight,
     width: Dimensions.get('window').width
   }
-})
+});
