@@ -17,17 +17,28 @@ block content
       p#counter  0
   each tweet, index in data
     div(class="card" id="cardbody")
-      h5#tweetHead(class="card-title") #{tweet.user_name} -  #{tweet.created_at} - #{tweet.geo}
+      h5#tweetHead(class="card-title") #{tweet.user_name} -  #{tweet.created_at} - Tweet Location: #{tweet.geo} - User Default Location:#{tweet.user_location}
       div(class="card-body")
         img#tweetImg(src=`${tweet.user_profile_image_url}`)
         p#tweetText #{tweet.full_text}
         .row
           .col-sm-3
+            
           .col-sm-3
-            button.btn.btn-success#tweetTrue(onclick=`sendData('true',${tweet.id})`) True
-          .col-sm-3
-            button.btn.btn-danger#tweetFalse(onclick=`sendData('false',${tweet.id})`) False
-
-    
+            .row
+              label(for="crime-type") Type of Crime 
+            .row
+              input(id="crime-type" type="text" placeholder="Enter a Crime")
+            .row
+              label(for="pac-input") Location (approximate)
+            .row
+              input(id="pac-input" type="text" placeholder="Enter a location")
+            .row
+              .col-sm-6
+                button.btn.btn-success#tweetTrue(onclick=`sendData('true',${tweet.id})`) True
+              .col-sm-6
+                button.btn.btn-danger#tweetFalse(onclick=`sendData('false',${tweet.id})`) False 
+  script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgTDSvRy9VcwykRu_OWRnB_xcva3YwIpU&libraries=places&callback=initAutocomplete"
+        async defer)
 
   

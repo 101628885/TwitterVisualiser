@@ -39,6 +39,12 @@ var tweetSchema = mongoose.Schema({
     },
     crime: {
         type: Boolean
+    },
+    type_of_crime: {
+        type: String
+    },
+    location: {
+        type: Object
     }
 });
 

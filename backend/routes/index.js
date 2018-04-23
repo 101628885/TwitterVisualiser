@@ -27,6 +27,7 @@ router.get('/getDBPedia', dbpediaController.getDBPedia)
 //Verify Controller
 router.get('/check', verifyController.getUncheckedTweets)
 router.post('/check/:id/:value', verifyController.checkTweets)
+router.post('/check/:id/:value/:location/:type', verifyController.checkTweets)
 
 //NLP Controller
 router.get('/nlpTrainingEndpoint/:count', nlpTrainingController.returnNLPDataSet);
