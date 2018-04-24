@@ -50,7 +50,7 @@ exports.checkTweets = async (req,res, next) =>
                     if(!err)
                     {
                         console.log("Successfully updated")
-                        tweet.find({checked: false}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
+                        tweet.find({crime: true, type_of_crime : null}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
                         {
                             if(!err)
                             {
@@ -69,7 +69,7 @@ exports.checkTweets = async (req,res, next) =>
             if(!err)
             {
                 console.log("Successfully updated")
-                tweet.find({checked: false}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
+                tweet.find({crime: true, type_of_crime : null}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
                 {
                     if(!err)
                     {
