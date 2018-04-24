@@ -23,7 +23,7 @@ exports.getUncheckedTweets = async (req,res, next) =>
     {
         if(!err)
         {
-            res.render('verify', {data: posts, title : "Twitter Word Visualisation Re-Checking -.-"});
+            res.render('reverify', {data: posts, title : "Twitter Word Visualisation Re-Checking -.-"});
         }
     });
 }
@@ -49,7 +49,7 @@ exports.checkTweets = async (req,res, next) =>
                 {
                     if(!err)
                     {
-                        console.log("Successfully updated")
+                        console.log("Successfully updated_1")
                         tweet.find({crime: true, type_of_crime : null}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
                         {
                             if(!err)
@@ -68,7 +68,7 @@ exports.checkTweets = async (req,res, next) =>
         {
             if(!err)
             {
-                console.log("Successfully updated")
+                console.log("Successfully updated_2")
                 tweet.find({crime: true, type_of_crime : null}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
                 {
                     if(!err)
