@@ -16,7 +16,7 @@ db.on('error', function()
 
 db.once('open', function(){
     console.log("Connected to DB at " + url);
-    exports.checkConsistency();
+    //exports.checkConsistency();
 });
 
 exports.getLastId = function(tweetToStore)
