@@ -19,7 +19,7 @@ exports.getUncheckedTweets = async (req,res, next) =>
 {
     Math.floor((Math.random() * 50) + 1);
     var tweet = db.model('tweets', tweet);
-    tweet.find({crime: true}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
+    tweet.find({crime: true, type_of_crime : null}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
     {
         if(!err)
         {
