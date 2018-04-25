@@ -7,13 +7,13 @@ const verifyController = require("../controllers/verifyController");
 const reverifyController = require("../controllers/reverificationController");
 const reactController = require("../controllers/reactController");
 const nlpTrainingController = require("../controllers/nlpTrainingController");
-
+const autoController = require("../controllers/autoController");
 /* GET home page. */
 router.get('/', twitterController.test)
 
 //Twitter Controller
-router.get('/auto', twitterController.autoGet)
-router.post('/auto', twitterController.autoPost)
+router.get('/auto', autoController.autoGet)
+router.post('/auto', autoController.autoPost)
 router.post('/getTweets', dbpediaController.getDataMuse, twitterController.getTweets)
 
 router.get('/filterTweets', twitterController.getFilterTweets)
