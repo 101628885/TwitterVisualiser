@@ -14,41 +14,10 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-exports.test = (req,res) => 
-{
-	tweets = ""
-	res.render('index', {data: tweets});
-}
-
-var query = "";
-var autoCollect = false;
-
 exports.test = async(req,res) => 
 {
 	tweets = ""
 	res.render('index', {data: tweets});
-}
-
-exports.autoGet = function(req, res)
-{
-	if (autoCollect)
-	{
-        res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query});
-	} else {
-        res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Query to monitor: "});
-	}
-}
-
-exports.autoPost = function(req, res)
-{
-    autoCollect = !autoCollect; //toggle autoCollect
-
-    query = req.body.word;
-
-    autoController.updateState(query, autoCollect);
-
-    res.redirect('/auto');
-
 }
 
 exports.getBulkTweetsOld = (req,res) => 
