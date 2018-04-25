@@ -1,7 +1,9 @@
 const twitterController = require("../controllers/twitterController");
 const request = require('request');
 var shouldRun = false;
-var query = "";
+var query = [];
+
+var autoCollect = false;
 
 function collect(query)
 {
@@ -17,14 +19,75 @@ function collect(query)
 
 exports.updateState = function(word, autoCollect)
 {
-    query = word;
     shouldRun = autoCollect;
 
     setInterval(function(){
 
         if (shouldRun)
         {
-            collect(query);
+            for (var i = 0; i < query.length; i++)
+            {
+
+                console.log("Checking word: " + query[i]);
+                collect(query[i]);
+
+            }
+
         }
     }, 30000);
 };
+
+exports.autoGet = function(req, res)
+{
+    if (autoCollect)
+    {
+        res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query.join(', ')});
+    } else {
+        query.length = 0;
+        res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Queries to monitor: "});
+    }
+}
+
+exports.autoPost = function(req, res)
+{
+    autoCollect = !autoCollect; //toggle autoCollect
+
+    if (req.body.word1 != "")
+    {
+        query.push(req.body.word1);
+    }
+
+    if (req.body.word2 != "")
+    {
+        query.push(req.body.word2);
+    }
+
+    if (req.body.word3 != "")
+    {
+        query.push(req.body.word3);
+    }
+
+    if (req.body.word4 != "")
+    {
+        query.push(req.body.word4);
+    }
+
+    if (req.body.word5 != "")
+    {
+        query.push(req.body.word5);
+    }
+
+    if (query.length == 0)
+    {
+        query.push("crime"); //default search therm if no entry is specified
+    }
+
+
+
+
+
+    exports.updateState(query, autoCollect);
+
+    res.redirect('/auto');
+
+}
