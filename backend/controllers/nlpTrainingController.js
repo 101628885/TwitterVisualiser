@@ -18,7 +18,9 @@ exports.returnNLPDataSet = async (req,res) =>
             {
                 post = {
                     "full_text": posts[count].full_text,
-                    "crime": posts[count].crime
+                    "crime": posts[count].crime,
+                    "type_of_crime" : posts[count].type_of_crime,
+                    "location" : posts[count].location
                 };
                 count += 1;
                 result.push(post);
