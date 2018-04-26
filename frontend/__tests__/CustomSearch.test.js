@@ -1,11 +1,8 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 import CustomSearch from '../pages/CustomSearch';
-
 import renderer from 'react-test-renderer';
 
-describe('Testing CustomSearch component', () => {
-  it('works', () => {
-    expect(0).toBe(0);
-  });
+it('renders without crashing', () => {
+  const rendered = renderer.create(<CustomSearch />).toJSON();
+  expect(rendered).toBeTruthy();
 });
