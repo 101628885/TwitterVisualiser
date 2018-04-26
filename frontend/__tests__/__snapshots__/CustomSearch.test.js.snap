@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing CustomSearch component renders as expected 1`] = `
+<View>
+  <Styled(Button)
+    onPress={[Function]}
+    transparent={true}
+  >
+    <Styled(Icon)
+      name="ios-list-box"
+    />
+  </Styled(Button)>
+</View>
+`;
