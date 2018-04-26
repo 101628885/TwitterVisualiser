@@ -13,11 +13,6 @@ describe('Testing CrimeTweets page', () => {
     tweetAmount: "10"
   };
 
-  test('renders correctly', () => {
-    const snapshot = renderer.create(<CrimeTweets />).toJSON();
-    expect(snapshot).toMatchSnapshot();
-  });
-
   beforeEach(() => {
     wrapper = shallow(<CrimeTweets />);
   });

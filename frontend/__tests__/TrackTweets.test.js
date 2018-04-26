@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import TrackTweets from '../pages/TrackTweets';
 import { Content } from 'native-base';
+import TrackTweets from '../pages/TrackTweets';
 
 import renderer from 'react-test-renderer';
 
@@ -17,11 +17,6 @@ describe('Testing TrackTweets page', () => {
     },
     apiKey: 'AIzaSyB8BoNj8oknFsfTBWhNdAFTiMhI9Gkz8e8'
   };
-
-  test('renders correctly', () => {
-    const snapshot = renderer.create(<TrackTweets />).toJSON();
-    expect(snapshot).toMatchSnapshot();
-  });
 
   beforeEach(() => {
     wrapper = shallow(<TrackTweets />);
