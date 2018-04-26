@@ -25,10 +25,10 @@ router.get('/bulk', twitterController.getBulkTweetsOld)
 //Dpedia Controller
 router.get('/getDBPedia', dbpediaController.getDBPedia)
 
-//Re-verify Controller
-router.get('/temp', reverifyController.getUncheckedTweets)
-router.post('/temp/:id/:value', reverifyController.checkTweets)
-router.post('/temp/:id/:value/:location/:type', reverifyController.checkTweets)
+//Re-verify Controller - don't need this now that DB is consistent
+//router.get('/temp', reverifyController.getUncheckedTweets)
+//router.post('/temp/:id/:value', reverifyController.checkTweets)
+//router.post('/temp/:id/:value/:location/:type', reverifyController.checkTweets)
 
 //Verify Controller
 router.get('/check', verifyController.getUncheckedTweets)
