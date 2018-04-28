@@ -59,7 +59,36 @@ exports.returnNLPDataSet = async (req,res) => {
                 count += 1;
                 newRes.push(post);
             }
+            
+            console.log("count", count);
+            res.send(newRes);
+        } else {
+            console.log(err);
+        }
+    });
+}
 
+// Returns all data
+exports.returnAllData = async (req,res) => {
+    var tweet = db.model('tweets', tweet);
+    
+    await tweet.find({}).lean().exec(function(err, posts) {
+        if(!err) {
+            let count = 0;
+            let post;
+            let newRes = new Array();
+            
+            for (let i in posts) {
+                post = {
+                    "full_text": posts[count].full_text,
+                    "crime": posts[count].crime,
+                    "type_of_crime" : posts[count].type_of_crime,
+                    "location" : posts[count].location
+                };
+
+                count += 1;
+                newRes.push(post);
+            }
             res.send(newRes);
         } else {
             console.log(err);

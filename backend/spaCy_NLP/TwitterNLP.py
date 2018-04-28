@@ -65,11 +65,10 @@ def checkData():
     # After working more on the backend
     # http://144.6.226.34:3000/nlpTrainingEndpoint/5
 
-    dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint').json()
+    dataJson = requests.get('http://localhost:3000/returnAll').json()
     tweetData = []
     for t in dataJson:
-        if (str(t['type_of_crime']) != 'None'):
-            tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
+        tweetData.append((str(t['full_text']), str(t['crime'])))
 
     return tweetData
 
@@ -91,9 +90,13 @@ pipe.fit([x[0] for x in train], [x[1] for x in train])
 pred_data = pipe.predict([x[0] for x in testData]) 
 
 # Print output
+newVar = 0
 for (td, pred) in zip(testData, pred_data):
-    print('---------------------------')
-    print ("Tweet:", td[0], "\nExp:", td[1], "\nKeyword:", td[2], "\nPred:", pred)
+    if (pred == "True" and td[1] == "True"):
+        print('---------------------------')
+        print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
+        newVar += 1
 
 print("==================")
 print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
+print(newVar)

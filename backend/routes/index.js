@@ -38,6 +38,7 @@ router.post('/check/:id/:value/:location/:type', verifyController.checkTweets)
 //NLP Controller
 router.get('/nlpTrainingEndpoint/:count', nlpTrainingController.returnNLPDataSetCount);
 router.get('/nlpTrainingEndpoint', nlpTrainingController.returnNLPDataSet);
+router.get('/returnAll', nlpTrainingController.returnAllData)
 
 //ReactController
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
