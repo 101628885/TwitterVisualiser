@@ -51,10 +51,10 @@ def loadTrainingData():
     # After working more on the backend
     # http://144.6.226.34:3000/nlpTrainingEndpoint/1000
 
-    dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint/1000').json()
+    dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint').json()
     tweetData = []
     for t in dataJson:
-        tweetData.append((str(t['full_text']), str(t['crime'])))
+        tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
 
     return tweetData
 
@@ -65,10 +65,11 @@ def checkData():
     # After working more on the backend
     # http://144.6.226.34:3000/nlpTrainingEndpoint/5
 
-    dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint/5').json()
+    dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint').json()
     tweetData = []
     for t in dataJson:
-        tweetData.append((str(t['full_text']), str(t['crime'])))
+        if (str(t['type_of_crime']) != 'None'):
+            tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
 
     return tweetData
 
@@ -81,17 +82,18 @@ pipe = Pipeline([('cleaner', predictors()),
                  ('classifier', classifier)])
 
 train = loadTrainingData()
-test = checkData()
+testData = checkData()
 
 # Fit vector and predict data
 # Imagine like a x,y graph with fit line
+# newPipe = pipe.FeatureUnion()
 pipe.fit([x[0] for x in train], [x[1] for x in train]) 
-pred_data = pipe.predict([x[0] for x in test]) 
+pred_data = pipe.predict([x[0] for x in testData]) 
 
 # Print output
-for (sample, pred) in zip(test, pred_data):
+for (td, pred) in zip(testData, pred_data):
     print('---------------------------')
-    print ("Tweet:", sample[0], "\nExp:", sample[1], "\nPred:", pred)
+    print ("Tweet:", td[0], "\nExp:", td[1], "\nKeyword:", td[2], "\nPred:", pred)
 
 print("==================")
-print ("Accuracy:", accuracy_score([x[1] for x in test], pred_data))
+print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
