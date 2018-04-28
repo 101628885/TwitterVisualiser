@@ -72,31 +72,42 @@ def checkData():
 
     return tweetData
 
+
+def printOutput():
+    # Print output
+    cFalse = 0
+    cTrue = 0
+    for (td, pred) in zip(testData, pred_data):
+        print('---------------------------')
+        print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
+        if (td[1] == "True" and pred == "True"):
+            cTrue += 1
+        elif (pred == "True"):
+            cTrue += 1
+        else:
+            cFalse += 1
+    print("==================")
+    print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
+    print("False:", cFalse)
+    print("True:", cTrue)
+
+## Main equivalent
 # Create vector object and set relevant ngrams
 vectorizer = CountVectorizer(tokenizer = spacy_tokenizer, ngram_range=(1,1))
 classifier = LinearSVC()
 
+# Creating a piple for predictions
 pipe = Pipeline([('cleaner', predictors()),
                  ('vectorizer', vectorizer),
                  ('classifier', classifier)])
 
+# Train and load data
 train = loadTrainingData()
 testData = checkData()
 
 # Fit vector and predict data
 # Imagine like a x,y graph with fit line
-# newPipe = pipe.FeatureUnion()
 pipe.fit([x[0] for x in train], [x[1] for x in train]) 
-pred_data = pipe.predict([x[0] for x in testData]) 
+pred_data = pipe.predict([x[0] for x in testData])
 
-# Print output
-newVar = 0
-for (td, pred) in zip(testData, pred_data):
-    if (pred == "True" and td[1] == "True"):
-        print('---------------------------')
-        print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
-        newVar += 1
-
-print("==================")
-print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
-print(newVar)
+printOutput()
