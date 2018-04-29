@@ -6,29 +6,31 @@
 */
 
 import React from 'react';
+import CrimeFilter from './CrimeFilter'
 import { 
   ActivityIndicator,
+  Dimensions,
   StatusBar,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
 import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Icon,
+  ActionSheet,
   Body,
+  Button,
+  Container,
+  Content,
+  Header,
+  Icon,
   Left,
   Right,
+  Text,
+  Title,
   View,
-  Text
 } from 'native-base';
 import { 
+  Constants,
   Font, 
-  MapView,
-  Constants
+  MapView
 } from 'expo';
 
 export default class TrackTweets extends React.Component {
@@ -131,6 +133,9 @@ export default class TrackTweets extends React.Component {
             <Body>
               <Title>Track Tweets</Title>
             </Body>
+            <Right>
+              <CrimeFilter />
+            </Right>
           </Header>
           <Content style={{ flex: 1, alignSelf: 'stretch' }}>
             <MapView
