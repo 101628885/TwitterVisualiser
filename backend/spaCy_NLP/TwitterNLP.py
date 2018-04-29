@@ -49,9 +49,17 @@ def loadTrainingData():
     ## TODO:
     # Change the get address to the server address
     # After working more on the backend
-    # http://144.6.226.34:3000/nlpTrainingEndpoint/1000
+    # http://144.6.226.34:3000/nte/1000
 
-    dataJson = requests.get('http://localhost:3000/nlpTrainingEndpoint').json()
+    dataJson = requests.get('http://localhost:3000/nte').json()
+    tweetData = []
+    for t in dataJson:
+        tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
+
+    return tweetData
+
+def loadKeywordTrainingData():
+    dataJson = requests.get('http://localhost:3000/nteTrue').json()
     tweetData = []
     for t in dataJson:
         tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
@@ -63,7 +71,7 @@ def checkData():
     ## TODO:
     # Change the get address to the server address
     # After working more on the backend
-    # http://144.6.226.34:3000/nlpTrainingEndpoint/5
+    # http://144.6.226.34:3000/nte/5
 
     dataJson = requests.get('http://localhost:3000/returnAll').json()
     tweetData = []
@@ -73,23 +81,32 @@ def checkData():
     return tweetData
 
 
-def printOutput():
+def printOutput(arg):
     # Print output
     cFalse = 0
     cTrue = 0
-    for (td, pred) in zip(testData, pred_data):
-        print('---------------------------')
-        print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
-        if (td[1] == "True" and pred == "True"):
-            cTrue += 1
-        elif (pred == "True"):
-            cTrue += 1
+    
+    for (td, pred, keyPred) in zip(testData, pred_data, newPred_data):
+        if (arg == True):
+            if (pred == "True"):
+                print('---------------------------')
+                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred, "\nKeyPred:", keyPred)
+                cTrue += 1
+            else:
+                cFalse += 1
         else:
-            cFalse += 1
-    print("==================")
+            if (pred == "False"):
+                print('---------------------------')
+                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
+                cFalse += 1
+            else:
+                cTrue += 1
+    
+    print("===========================")
     print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
-    print("False:", cFalse)
-    print("True:", cTrue)
+    print("cFalse:", cFalse)
+    print("cTrue:", cTrue)
+    print("cTotal:", cTrue + cFalse)
 
 ## Main equivalent
 # Create vector object and set relevant ngrams
@@ -103,11 +120,16 @@ pipe = Pipeline([('cleaner', predictors()),
 
 # Train and load data
 train = loadTrainingData()
+keywordTrain = loadKeywordTrainingData()
 testData = checkData()
 
-# Fit vector and predict data
+# Fit vector and predict data for Crime
 # Imagine like a x,y graph with fit line
-pipe.fit([x[0] for x in train], [x[1] for x in train]) 
+pipe.fit([x[0] for x in train], [x[1] for x in train])
 pred_data = pipe.predict([x[0] for x in testData])
 
-printOutput()
+# Fit vector and predict data for type of crime
+pipe.fit([x[0] for x in keywordTrain], [x[2] for x in keywordTrain])
+newPred_data = pipe.predict([x[0] for x in testData])
+
+printOutput(True)
