@@ -19,6 +19,22 @@ exports.shanesAndCoreySpecialsEndPoint = async (req,res) =>
     }); 
 }
 
+exports.stefansPieChartEndPoint = async (req, res) =>
+{
+    var tweet = db.model('tweets', tweet);
+    tweet.find({checked: true}).sort({'date': -1}).limit(parseInt(req.params.count)).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
+    {
+        if (!err)
+        {
+            res.send(posts);
+        }
+        else
+        {
+            console.log(err);
+        }
+    });
+}
+
 exports.getCrimeWordCount = async (req,res, next) => 
 {
     var tweet = db.model('tweets', tweet);
