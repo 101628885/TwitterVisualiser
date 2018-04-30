@@ -5,14 +5,23 @@ var db = mongoose.connection;
 
 exports.returnNLPDataSet = async (req,res) =>
 {
-    var tweet = db.model('tweets', tweet);
-    tweet.find({checked: true}).sort({'date': -1}).limit(parseInt(req.params.count)).skip(Math.floor((Math.random() * 50) + 1)).lean().exec(function(err, posts)
+
+    var query = {
+        checked: true
+    };
+
+
+    if (req.params.crime)
+    {
+        query.crime = req.params.crime;
+    }
+
+    tweet.find(query).sort({'date': -1}).limit(parseInt(req.params.count)).lean().exec(function(err, posts)
     {
         if(!err)
         {
             var post;
-            var result = new Array();
-            console.log(posts.length);
+            var result = [];
             var count = 0;
             for (var i in posts)
             {
@@ -35,3 +44,4 @@ exports.returnNLPDataSet = async (req,res) =>
         }
     });
 }
+
