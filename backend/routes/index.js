@@ -41,6 +41,7 @@ router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSe
 
 //ReactController
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
+router.get('/stefansPieChartEndPoint/:count', reactController.stefansPieChartEndPoint)
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount)
 
 module.exports = router;
