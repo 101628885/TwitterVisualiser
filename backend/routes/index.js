@@ -36,7 +36,8 @@ router.post('/check/:id/:value', verifyController.checkTweets)
 router.post('/check/:id/:value/:location/:type', verifyController.checkTweets)
 
 //NLP Controller
-router.get('/nlpTrainingEndpoint/:count', nlpTrainingController.returnNLPDataSet);
+router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);
+router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet); //deprecated, tell Shane before removing
 
 //ReactController
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
