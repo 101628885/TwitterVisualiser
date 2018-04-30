@@ -5,7 +5,7 @@
 |--------------------------------------------------
 */
 
-import React from 'react';
+import React, { Component } from 'react';
 import { 
   ActivityIndicator,
   StatusBar,
@@ -31,17 +31,40 @@ import {
   MapView,
   Constants
 } from 'expo';
+import Pie from 'react-native-pie';
 
 export default class Home extends React.Component {
         constructor(props) {
             super(props);
-            this.state = { fontLoaded: false }
-        }
+            this.state = { 
+              crimes: 0,
+              not_crimes: 0,
+              fontLoaded: false
+            };
+          }
 
         static navigationOptions = {
             drawerIcon: (
                 <Icon name="pie" style={{ color: "#0084b4" }} />
             )
+        }
+
+        async generatePieChart() {
+          var crime_tweets = 0;
+          var not_crime_tweets = 0;
+
+          await fetch('http://144.6.226.34:3000/stefansPieChartEndPoint/1000')
+            .then(res => res.json())
+            .then(tweetData => {
+              for (let tweet of tweetData) {
+                if (tweet.crime == true) {
+                  crime_tweets++;
+                } else {
+                  not_crime_tweets++;
+                }
+              }
+              this.setState({crimes: (crime_tweets / 10), not_crimes: (not_crime_tweets / 10)});
+            });
         }
 
         // Part of the react lifecyle
@@ -51,9 +74,13 @@ export default class Home extends React.Component {
                 'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
             });
             this.setState({ fontLoaded: true });
+            this.generatePieChart();
         }
 
         render() {
+          const r = 75
+          const innerR = 40
+
             return (
                 this.state.fontLoaded ?
                     <Container style={style.container}>
@@ -67,13 +94,27 @@ export default class Home extends React.Component {
                                 </Button>
                             </Left>
                             <Body>
-                                <Title style={{ alignSelf: 'center' }}>Visualisation</Title>
+                                <Title>Visualisation</Title>
                             </Body>
-                            <Right />
                         </Header>
-                            <View style = { style.titleView }>
-                                <H2 style = { style.title }>Visualisation</H2>
+                          <View style = { style.titleView }>
+                            <H2 style = { style.title }>Checked Tweets</H2>
+
+                            <View>
+                              <Pie
+                                radius={r}
+                                innerRadius={innerR}
+                                series={[this.state.crimes, this.state.not_crimes]}
+                                colors={['#0f0', '#f00']}
+                              />
+
+                              <View style={style.gauge}>
+                                <Text style={style.gaugeText}>{this.state.crimes}%</Text>
+                              </View>
                             </View>
+                          </View>
+
+                          
                     </Container>
                     :
                     <View style={style.mb}>
@@ -87,7 +128,7 @@ export default class Home extends React.Component {
 
 const style = StyleSheet.create({
     container: {
-        backgroundColor: "#2196F3",
+        backgroundColor: "#2196F3"
     },
     title: {
         fontStyle: 'italic',
@@ -95,8 +136,15 @@ const style = StyleSheet.create({
     },
     titleView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+    },
+    gauge: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    gaugeText: {
+      backgroundColor: 'transparent',
+      fontSize: 20,
     },
     statusBar: {
         marginTop: Constants.statusBarHeight,
