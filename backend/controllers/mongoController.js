@@ -4,6 +4,7 @@ const async = require('async');
 const tweet = require('../models/tweet_schema');
 const url = 'mongodb://team:swinburne@144.6.226.34/tweets';
 //const url = 'mongodb://localhost:27017/tweets';
+const ObjectId = require('mongodb').ObjectId;
 
 mongoose.connect(url);
 
@@ -16,7 +17,10 @@ db.on('error', function()
 
 db.once('open', function(){
     console.log("Connected to DB at " + url);
-    //exports.checkConsistency();
+    // exports.removeDuplicates(function()
+    // {
+    //     console.log("Duplicate removal complete");
+    // });
 });
 
 exports.getLastId = function(tweetToStore)
@@ -61,11 +65,9 @@ exports.storeTweets = function(tweetToStore)
     });
 };
 
-exports.checkConsistency = async() =>
+exports.removeDuplicates = async(callback) =>
 {
-    //var tweet = db.model('tweets', tweet);
-
-    console.log("Starting consistency check...");
+    console.log("Starting duplicate check...");
     tweet.find().lean().exec(function(err, tweets)
     {
         var count_outer = 0;
@@ -95,33 +97,7 @@ exports.checkConsistency = async() =>
 
         }
     })
-    
-    //Still very buggy, don't run
-    /* 
-    tweet.find().lean().exec(function (err, tweets) {
-        var count = 0;
-        for (var i in tweets)
-        {
-            if ((tweets[count].full_text == null) || (tweets[count].created_at == null) || (tweets[count].user_name == null))
-            {
-                tweet.remove({_id: ObjectId(tweets[count]._id)}).exec();
-            }
 
-            if (tweets[count].type_of_crime === undefined) //required field doesn't exist
-            {
+    callback();
 
-                tweet.update({id : tweets[count].id}, {$set: {type_of_crime : null }}).exec(); //add field and set to null
-            }
-
-            if (tweets[count].location === undefined)
-            {
-                tweet.update({id : tweets[count].id}, {$set: {location : null }}).exec(); //add field and set to null
-            }
-
-            count += 1;
-        }
-
-    })
-    */
-    console.log("Consistency checking complete.");
 }

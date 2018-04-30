@@ -59,7 +59,7 @@ exports.getDBPedia = async(req,res, next) =>
 //https://www.datamuse.com/api/
 exports.getDataMuse = async(req, res, callback) =>
 {
-    var wordQuery = req.body.word;
+    let wordQuery = req.body.word;
 
     if (wordQuery == "")
     {
@@ -93,7 +93,7 @@ exports.getDataMuse = async(req, res, callback) =>
                     labels += " OR " ;
                 }
             }
-            var result = {
+            let result = {
                 words : words,
                 labels : labels
             };
@@ -110,7 +110,7 @@ exports.getDataMuse = async(req, res, callback) =>
 //gets words from the wordsAPI and creates an array out of them
 exports.getWordsAPI = async(req, res, callback) =>
 {
-    var wordQuery = req.body.word;
+    let wordQuery = req.body.word;
 
 
     if (wordQuery == "" || wordQuery == undefined)
@@ -140,7 +140,7 @@ exports.getWordsAPI = async(req, res, callback) =>
 			}
 			else
 			{
-                for(var word in body.hasCategories)
+                for(let word in body.hasCategories)
                 {
 					labels.push(body.hasCategories[word]);
                 }
@@ -148,6 +148,7 @@ exports.getWordsAPI = async(req, res, callback) =>
 
                 //sort alphabatically because why not
                 labels.sort();
+
                 callback(labels);
 			}
 
@@ -157,32 +158,39 @@ exports.getWordsAPI = async(req, res, callback) =>
     });
 }
 
+//Gets results from DataMuse and WordsAPI, creates an array and build the query to Twitter
 exports.getCombination = async (req, res, next) =>
 {
-    var result;
-    exports.getDataMuse(req, res, function (dataMuseResults) {
+    let result;
+    exports.getDataMuse(req, res, function (dataMuseResults) { //get results fom DataMuse
 
-
-        result = dataMuseResults; //get results from DataMuse
+        result = dataMuseResults;
 
         exports.getWordsAPI(req, res, function(wordsApiResults){ //get results from WordsAPI and start building query to twitter
 
 
-            result.labels += " OR ";
-
-            for (let i = 0; i < resultLimit; i++)
+            for (let i = 0; i < wordsApiResults.length; i++)
             {
-                if (!/\s/g.test(wordsApiResults[i]))
-                {
-                    result.labels += wordsApiResults[i];
 
-                    if (i < resultLimit - 1)
+                if (i > 20) //Limit to 20 results
+                {
+                    break;
+                }
+
+                if (!/\s/g.test(wordsApiResults[i])) //omit results with spaces
+                {
+
+                    if (i < wordsApiResults.length)
                     {
                         result.labels += " OR ";
                     }
+
+                    result.labels += wordsApiResults[i];
+
                 }
 
                 result.words.push(wordsApiResults[i]);
+
             }
             result.labels += " AND -filter:retweets AND -filter:replies";
 

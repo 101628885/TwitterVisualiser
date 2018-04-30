@@ -9,7 +9,8 @@ const reactController = require("../controllers/reactController");
 const nlpTrainingController = require("../controllers/nlpTrainingController");
 const autoController = require("../controllers/autoController");
 /* GET home page. */
-router.get('/', twitterController.test)
+router.get('/', twitterController.home)
+router.get('/getTweets', twitterController.home)
 
 //Twitter Controller
 router.get('/auto', autoController.autoGet)
