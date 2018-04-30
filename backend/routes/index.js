@@ -14,7 +14,7 @@ router.get('/', twitterController.test)
 //Twitter Controller
 router.get('/auto', autoController.autoGet)
 router.post('/auto', autoController.autoPost)
-router.post('/getTweets', dbpediaController.getDataMuse, twitterController.getTweets)
+router.post('/getTweets', dbpediaController.getCombination, twitterController.getTweets)
 
 router.get('/filterTweets', twitterController.getFilterTweets)
 router.get('/getDBPedia', dbpediaController.getDBPedia)

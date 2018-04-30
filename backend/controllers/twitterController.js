@@ -39,7 +39,7 @@ exports.getBulkTweetsOld = (req,res) =>
 	function getNextBatch(maxid)
 	{
 		params.max_id = maxid;
-		console.log(params);
+		//console.log(params);
 		client.get('search/tweets', params, function(error, tweets, response) 
 		{
 		  	if (!error) 
@@ -220,7 +220,6 @@ exports.getTweets = async(req,res) =>
 
 	  		if (req.body.shouldStoreTweets)
 			{
-				//store tweets
 				storeTweets(tweets);
 			}
 
@@ -249,7 +248,6 @@ exports.getFilterTweets = async(req,res) =>
 	var params = {
 			track: "crime",
 		};
-	console.log(params);
 	client.post('/statuses/filter', params, function(error, tweets, response) 
 	{
 	  	if (!error) 
