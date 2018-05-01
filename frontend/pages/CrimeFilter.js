@@ -7,6 +7,8 @@
 
 import React from 'react';
 import {
+  Dimensions,
+  ScrollView,
   StyleSheet,
   Text,
   View
@@ -30,14 +32,20 @@ export default class CrimeFilter extends React.Component {
     this.state = { 
       fontLoaded: false,
       dialogVisible: false,
-      assaultChecked: true,
-      rapeChecked: true,
-      theftChecked: true,
-      burglaryChecked: true,
-      vandalismChecked: true,
-      drugsChecked: true
+      categories: [
+        { name: "Assault", checked: true },
+        { name: "Murder", checked: true },
+        { name: "Kidnapping", checked: true },
+        { name: "Extortion", checked: true },
+        { name: "Rape", checked: true },
+        { name: "Theft", checked: true },
+        { name: "Burglary", checked: true },
+        { name: "Vandalism", checked: true },
+        { name: "Drugs", checked: true }
+      ]
     };
   }
+
   // Part of the react lifecyle
   async componentWillMount() {
     await Expo.Font.loadAsync({
@@ -47,75 +55,62 @@ export default class CrimeFilter extends React.Component {
     this.setState({ fontLoaded: true });
   }
 
+  toggleChecked(categoryName) {
+    const categories = this.state.categories;
+
+    for (var i = 0; i < categories.length; i++) {
+      if (categories[i].name === categoryName) {
+        categories[i].checked = !categories[i].checked;
+      }
+    }
+
+    this.setState({ categories, });
+  }
+
+  renderCheckBoxes() {
+    return (
+      this.state.categories.map(category => (
+        <ListItem key={category.name}>
+          <CheckBox 
+            checked={category.checked} 
+            onPress={() => this.toggleChecked(category.name)} 
+          />
+          <Body>
+            <Text style={style.categoryLabelStyle}>{category.name}</Text>
+          </Body>
+        </ListItem>
+      ))
+    );
+  }
+
+  onClickOK() {
+    this.setState({ dialogVisible: false });
+    this.props.handleClick(this.state.categories);
+  }
+
   render() {
     return (
       <View>
         <Button transparent onPress={() => this.setState({ dialogVisible: true })}>
-          <Icon name='md-funnel' />
+          <Icon name='md-more' />
         </Button>
+        {/* TODO: create own custom alert component, react-native-simple-dialogs component is slow */}
         <Dialog 
           visible={this.state.dialogVisible} 
           title='Filter'
           onTouchOutside={() => this.setState({ dialogVisible: false })}>
           <View>
-            {/* I know this doesn't look very good-code-reusing-practices-like
-                Since NativeBase checkboxes require manually setting the checked state
-                If you can find a way to make these checkboxes non-painfully autogenerate 
-                Please go ahead */}
-            <ListItem>
-              <CheckBox 
-                checked={this.state.assaultChecked} 
-                onPress={() => this.setState({ assaultChecked: !this.state.assaultChecked })} 
-              />
-              <Body>
-                <Text style={style.categoryLabelStyle}>Assault</Text>
-              </Body>
-            </ListItem>
-            <ListItem>
-              <CheckBox 
-                checked={this.state.rapeChecked} 
-                onPress={() => this.setState({ rapeChecked: !this.state.rapeChecked })} 
-              />
-              <Body>
-                <Text style={style.categoryLabelStyle}>Rape</Text>
-              </Body>
-            </ListItem>
-            <ListItem>
-              <CheckBox 
-                checked={this.state.theftChecked} 
-                onPress={() => this.setState({ theftChecked: !this.state.theftChecked })} 
-              />
-              <Body>
-                <Text style={style.categoryLabelStyle}>Theft</Text>
-              </Body>
-            </ListItem>
-            <ListItem>
-              <CheckBox 
-                checked={this.state.burglaryChecked} 
-                onPress={() => this.setState({ burglaryChecked: !this.state.burglaryChecked })} 
-              />
-              <Body>
-                <Text style={style.categoryLabelStyle}>Burglary</Text>
-              </Body>
-            </ListItem>
-            <ListItem>
-              <CheckBox 
-                checked={this.state.vandalismChecked} 
-                onPress={() => this.setState({ vandalismChecked: !this.state.vandalismChecked })} 
-              />
-              <Body>
-                <Text style={style.categoryLabelStyle}>Vandalism</Text>
-              </Body>
-            </ListItem>
-            <ListItem>
-              <CheckBox 
-                checked={this.state.drugsChecked} 
-                onPress={() => this.setState({ drugsChecked: !this.state.drugsChecked })} 
-              />
-              <Body>
-                <Text style={style.categoryLabelStyle}>Drugs</Text>
-              </Body>
-            </ListItem>
+            <ScrollView style={style.scrollViewStyle}>
+              {this.renderCheckBoxes()}
+            </ScrollView>
+            <View style={style.buttonContainerStyle}>
+              <Button transparent onPress={() => this.setState({ dialogVisible: false })}>
+                <Text style={style.buttonTextStyle}>CANCEL</Text>
+              </Button>
+              <Button transparent onPress={() => this.onClickOK()}>
+                <Text style={style.buttonTextStyle}>OK</Text>
+              </Button>
+            </View>
           </View>
         </Dialog>
       </View>
@@ -127,5 +122,18 @@ export default class CrimeFilter extends React.Component {
 const style = StyleSheet.create({
   categoryLabelStyle: {
     marginLeft: 15
+  },
+  buttonContainerStyle: {
+    flex: 1, 
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 35
+  },
+  buttonTextStyle: {
+    color: '#2196F3',
+    fontWeight: 'bold'
+  },
+  scrollViewStyle: {
+    height: (Dimensions.get('window').height - Constants.statusBarHeight) / 1.5
   }
 });

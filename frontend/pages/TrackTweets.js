@@ -34,16 +34,25 @@ import {
 } from 'expo';
 
 export default class TrackTweets extends React.Component {
+  /**
+   * Default constructor for the TrackTweets class component
+   * Initialises state
+   * 
+   * @param {object} props
+   */
   constructor(props) { 
     super(props); 
+    this.updateMarkers = this.updateMarkers.bind(this);
     this.state = {
       markers: [],
+      tweets: [],
+      dataLoaded: false,
       fontLoaded: false,
       region: {
         latitude: -37.81361,
         longitude: 144.96305,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1
       },
       apiKey: 'AIzaSyB8BoNj8oknFsfTBWhNdAFTiMhI9Gkz8e8'
     };
@@ -55,20 +64,32 @@ export default class TrackTweets extends React.Component {
     )
   };
 
-  // Return a list of map markers based on tweet data
+  /**
+   * renderMarkers() returns a list of markers (i.e. pins) to display on a MapView component
+   * 
+   * @return {object} (JSX)
+   */
   renderMarkers() {
     return (
       this.state.markers.map(marker => (
         <MapView.Marker 
-          key={marker.id}
-          coordinate={marker.latlng}
-          title={marker.title}
-          description={marker.description}
+          /**
+           * TODO: get tweet id from endpoint to use as element key
+           * I'm only using this super scuffed implementation so the 
+           * debugger will shut up about non-indexed elements
+           */
+          key={Math.floor(Math.random() * Math.floor(99999))} 
+          coordinate={{
+            latitude: marker.location.latitude,
+            longitude: marker.location.longitude
+          }}
+          title={marker.type_of_crime}
+          description={marker.full_text}
         >
           <MapView.Callout>
             <View style={{ width: 300 }}>
-              <Text>{marker.title}</Text>
-              <Text note>{marker.description}</Text>
+              <Text>Category: {marker.type_of_crime}</Text>
+              <Text note>{marker.full_text}</Text>
             </View>
           </MapView.Callout>
         </MapView.Marker>
@@ -76,49 +97,76 @@ export default class TrackTweets extends React.Component {
     );
   }
 
-  // Fetch tweets from node endpoint and generate map markers to store in state
-  async generateMarkers() {
-    // TODO: Get data from node NLP server
-    // TODO: Edit for custom search sizes
-    await fetch('http://144.6.226.34:3000/shanesAndCoreysSpecialEndPoint/20')
+  /**
+   * updateMarkers() updates the state with based on objects in passed-in categories array
+   * 
+   * @param {array} categoryFilter 
+   */
+  updateMarkers(categoryFilter) {
+    const tweets = this.state.tweets;
+    checkedMarkers = [];
+
+    for (i = 0; i < tweets.length; i++) {
+      if (categoryFilter.length == 0) {
+        checkedMarkers.push({
+          full_text: tweets[i].full_text,
+          type_of_crime: tweets[i].type_of_crime,
+          location: tweets[i].location[0]
+        });
+      } else {
+        for (j = 0; j < categoryFilter.length; j++) {
+          if (tweets[i].type_of_crime == categoryFilter[j].name.toLowerCase() && categoryFilter[j].checked == true)  {
+            checkedMarkers.push({
+              full_text: tweets[i].full_text,
+              type_of_crime: tweets[i].type_of_crime,
+              location: tweets[i].location[0]
+            });
+            break;
+          }
+        }
+      }
+    }
+
+    this.setState({ markers: checkedMarkers });
+  }
+
+  /**
+   * loadData() fetches tweet data from node endpoint to store in state
+   */
+  async loadData() {
+    await fetch('http://144.6.226.34:3000/nlpTrainingEndpoint/40/true')
       .then(res => res.json())
       .then(tweetData => {
-        let markerArray = [];
-        for (let tweet of tweetData) {
-          // generate and store a marker in state for each element in tweetData
-          fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${tweet.user_location}&key=${this.state.apiKey}`)
-          .then(res => res.json())
-          .then(locationData => this.setState({
-            // strange javascript witchcraft for upating state
-            markers: [...this.state.markers, ({
-              id: tweet.id,
-              latlng: {
-                latitude: locationData.results[0].geometry.location.lat,
-                longitude: locationData.results[0].geometry.location.lng
-              },
-              title: tweet.user_name,
-              description: tweet.full_text
-            })]
-          }));
-        }
+        this.setState({ 
+          tweets: tweetData, 
+          dataLoaded: true 
+        });
+        this.updateMarkers([]);
+      })
+      .catch((error) => {
+        console.error(error); 
       });
   }
 
-  // React lifecycle
-  // Component is being created and inserted into the DOM
+  /**
+   * React lifecycle callback method
+   * Called when Component is being created and inserted into the DOM
+   */
   async componentWillMount() {
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
     this.setState({fontLoaded: true});
-    this.generateMarkers();
+    this.loadData();
   }
 
-  // Render the page to the screen
+  /**
+   * render() renders the component to the screen
+   */
   render() {
     return (
-      this.state.fontLoaded ? (
+      this.state.dataLoaded && this.state.fontLoaded ? (
         <Container style={style.containerStyle}>
           <View style={style.statusBar} />
           <Header>
@@ -134,10 +182,11 @@ export default class TrackTweets extends React.Component {
               <Title>Track Tweets</Title>
             </Body>
             <Right>
-              <CrimeFilter />
+              <CrimeFilter handleClick={this.updateMarkers} />
             </Right>
           </Header>
           <Content style={{ flex: 1, alignSelf: 'stretch' }}>
+            {/* TODO: use d3.js for map visualisation */}
             <MapView
               style={style.mapStyle}
               region={this.state.region}
@@ -155,7 +204,7 @@ export default class TrackTweets extends React.Component {
   }
 }
 
-// Define styles for this component/page
+// Define styles for this component
 const style = StyleSheet.create({
   containerStyle: {
     backgroundColor: '#2196F3'
