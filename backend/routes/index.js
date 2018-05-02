@@ -9,12 +9,13 @@ const reactController = require("../controllers/reactController");
 const nlpTrainingController = require("../controllers/nlpTrainingController");
 const autoController = require("../controllers/autoController");
 /* GET home page. */
-router.get('/', twitterController.test)
+router.get('/', twitterController.home)
+router.get('/getTweets', twitterController.home)
 
 //Twitter Controller
 router.get('/auto', autoController.autoGet)
 router.post('/auto', autoController.autoPost)
-router.post('/getTweets', dbpediaController.getDataMuse, twitterController.getTweets)
+router.post('/getTweets', dbpediaController.getCombination, twitterController.getTweets)
 
 router.get('/filterTweets', twitterController.getFilterTweets)
 router.get('/getDBPedia', dbpediaController.getDBPedia)
@@ -36,11 +37,17 @@ router.post('/check/:id/:value', verifyController.checkTweets)
 router.post('/check/:id/:value/:location/:type', verifyController.checkTweets)
 
 //NLP Controller
+<<<<<<< HEAD
 router.get('/nlpTrainingEndpoint/:count', nlpTrainingController.returnNLPDataSetCount);
 router.get('/nlpTrainingEndpoint', nlpTrainingController.returnNLPDataSet);
+=======
+router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);
+router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);
+>>>>>>> 0bbb68693b63f66c649712d5e1faae77b7acbaf2
 
 //ReactController
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
+router.get('/stefansPieChartEndPoint/:count', reactController.stefansPieChartEndPoint)
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount)
 
 module.exports = router;
