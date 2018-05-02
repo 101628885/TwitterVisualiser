@@ -37,13 +37,8 @@ router.post('/check/:id/:value', verifyController.checkTweets)
 router.post('/check/:id/:value/:location/:type', verifyController.checkTweets)
 
 //NLP Controller
-<<<<<<< HEAD
-router.get('/nlpTrainingEndpoint/:count', nlpTrainingController.returnNLPDataSetCount);
-router.get('/nlpTrainingEndpoint', nlpTrainingController.returnNLPDataSet);
-=======
 router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);
 router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);
->>>>>>> 0bbb68693b63f66c649712d5e1faae77b7acbaf2
 
 //ReactController
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
