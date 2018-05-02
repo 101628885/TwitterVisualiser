@@ -40,6 +40,7 @@
     "react-native-pie": "^0.4.0",
     "react-native-svg": "^6.3.1",
     "react-navigation": "^1.5.11",
-    "victory-native": "^0.17.4"
+    "victory-native": "^0.17.4",
+    "react-native-simple-dialogs": "^0.3.1"
   }
 }

@@ -5959,6 +5959,9 @@ react-native-svg@^6.3.1:
     color "^2.0.1"
     lodash "^4.16.6"
     pegjs "^0.10.0"
+react-native-simple-dialogs@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-simple-dialogs/-/react-native-simple-dialogs-0.3.1.tgz#8b7cee294c6c2b140f3fd3c75f87b178e229936e"
 
 "react-native-svg@https://github.com/expo/react-native-svg/archive/5.5.1-exp.1.tar.gz":
   version "5.5.1"
