@@ -6,12 +6,6 @@ var db = mongoose.connection;
 // Returns relevant data based on the params value
 exports.returnNLPDataSetCount = async (req,res) =>
 {
-<<<<<<< HEAD
-    var tweet = db.model('tweets', tweet);
-    
-    await tweet.find({checked: true}).sort({'date': -1}).limit(parseInt(req.params.count)).skip(Math.floor((Math.random() * 50) + 1)).lean().exec(function(err, posts)
-=======
-
     var query = {
         checked: true
     };
@@ -23,7 +17,6 @@ exports.returnNLPDataSetCount = async (req,res) =>
     }
 
     tweet.find(query).sort({'date': -1}).limit(parseInt(req.params.count)).lean().exec(function(err, posts)
->>>>>>> 0bbb68693b63f66c649712d5e1faae77b7acbaf2
     {
         if(!err)
         {
@@ -52,7 +45,6 @@ exports.returnNLPDataSetCount = async (req,res) =>
     });
 }
 
-<<<<<<< HEAD
 // Returns all relevant data
 exports.returnNLPDataSet = async (req,res) => {
     var tweet = db.model('tweets', tweet);
@@ -81,5 +73,3 @@ exports.returnNLPDataSet = async (req,res) => {
         }
     });
 }
-=======
->>>>>>> 0bbb68693b63f66c649712d5e1faae77b7acbaf2
