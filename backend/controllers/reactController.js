@@ -31,9 +31,9 @@ exports.getPredictedData = async (req, res) => {
         scriptPath: '/Users/shanejoachim/Swinburne/SWE/ReactNative/TwitterVisualiser/backend/spaCy_NLP'
       };
 
-    pythonShell.run('TwitterNLP.py', options, function (err, res) {
+    pythonShell.run('TwitterNLP.py', options, function (err, JSONres) {
         if (err) throw err;
-        console.log(res);
+        res.send(JSONres);
     });
     // return res
 }
