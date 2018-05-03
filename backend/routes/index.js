@@ -44,5 +44,6 @@ router.get('/returnAll', nlpTrainingController.returnAllData);
 //ReactController
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount)
+router.get('/getPredictedData', reactController.getPredictedData)
 
 module.exports = router;

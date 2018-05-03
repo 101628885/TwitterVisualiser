@@ -73,35 +73,43 @@ def checkData():
     # After working more on the backend
     # http://144.6.226.34:3000/nte/5
 
-    dataJson = requests.get('http://localhost:3000/returnAll').json()
+    # dataJson = requests.get('http://localhost:3000/returnAll').json()
+    dataJson = requests.get('http://localhost:3000/nte').json()
     tweetData = []
     for t in dataJson:
-        tweetData.append((str(t['full_text']), str(t['crime'])))
+        tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
 
     return tweetData
-
 
 def printOutput(arg):
     # Print output
     cFalse = 0
     cTrue = 0
-    
+    JSONres = {}    
+    JSONres['predData'] = []
+
     for (td, pred, keyPred) in zip(testData, pred_data, newPred_data):
-        if (arg == True):
-            if (pred == "True"):
-                print('---------------------------')
-                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred, "\nKeyPred:", keyPred)
-                cTrue += 1
-            else:
-                cFalse += 1
-        else:
-            if (pred == "False"):
-                print('---------------------------')
-                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
-                cFalse += 1
-            else:
-                cTrue += 1
-    
+        JSONres['predData'].append({
+            'Tweet' : td[0],
+            'Expected' : td[1],
+            'Predicted' : pred,
+            'KeywordPred' : keyPred
+        })
+        # if (arg == True):
+        #     if (pred == "True"):
+        #         # print('---------------------------')
+        #         # print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred, "\nKeyPred:", keyPred)
+        #         cTrue += 1
+        #     else:
+        #         cFalse += 1
+        # else:
+        #     if (pred == "False"):
+        #         # print('---------------------------')
+        #         # print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
+        #         cFalse += 1
+        #     else:
+        #         cTrue += 1
+    print(JSONres)
     print("===========================")
     print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
     print("cFalse:", cFalse)
@@ -131,5 +139,5 @@ pred_data = pipe.predict([x[0] for x in testData])
 # Fit vector and predict data for type of crime
 pipe.fit([x[0] for x in keywordTrain], [x[2] for x in keywordTrain])
 newPred_data = pipe.predict([x[0] for x in testData])
-
+# print(pred_data)
 printOutput(True)

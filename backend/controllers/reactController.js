@@ -1,6 +1,8 @@
 const mongoController = require('./mongoController'); 
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
+const pythonShell = require('python-shell');
+
 var db = mongoose.connection;
 
 exports.shanesAndCoreySpecialsEndPoint = async (req,res) => 
@@ -17,6 +19,23 @@ exports.shanesAndCoreySpecialsEndPoint = async (req,res) =>
         	console.log(err);
         }  
     }); 
+}
+
+exports.getPredictedData = async (req, res) => {
+    // const pyShell = new PythonShell('../spaCy_NLP/TwitterNLP.py');
+    var options = {
+        mode: 'text',
+        pythonPath: '/usr/local/bin/python3', 
+        pythonOptions: ['-u'],
+        // make sure you use an absolute path for scriptPath
+        scriptPath: '/Users/shanejoachim/Swinburne/SWE/ReactNative/TwitterVisualiser/backend/spaCy_NLP'
+      };
+
+    pythonShell.run('TwitterNLP.py', options, function (err, res) {
+        if (err) throw err;
+        console.log(res);
+    });
+    // return res
 }
 
 exports.getCrimeWordCount = async (req,res, next) => 
