@@ -51,7 +51,7 @@ def loadTrainingData():
     # After working more on the backend
     # http://144.6.226.34:3000/nte/1000
 
-    dataJson = requests.get('http://localhost:3000/nte').json()
+    dataJson = requests.get('http://144.6.226.34:3000/nte').json()
     tweetData = []
     for t in dataJson:
         tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
@@ -59,7 +59,7 @@ def loadTrainingData():
     return tweetData
 
 def loadKeywordTrainingData():
-    dataJson = requests.get('http://localhost:3000/nteTrue').json()
+    dataJson = requests.get('http://144.6.226.34:3000/nteTrue').json()
     tweetData = []
     for t in dataJson:
         tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
@@ -74,7 +74,7 @@ def checkData():
     # http://144.6.226.34:3000/nte/5
 
     # dataJson = requests.get('http://localhost:3000/returnAll').json()
-    dataJson = requests.get('http://localhost:3000/nte').json()
+    dataJson = requests.get('http://144.6.226.34:3000/nte').json()
     tweetData = []
     for t in dataJson:
         tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
