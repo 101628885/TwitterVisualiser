@@ -71,6 +71,7 @@ exports.removeDuplicates = async(callback) =>
     tweet.find().lean().exec(function(err, tweets)
     {
         var count_outer = 0;
+        /*
         for (var i in tweets)
         {
             var count_inner = 0;
@@ -86,6 +87,33 @@ exports.removeDuplicates = async(callback) =>
                     }
                     else
                         {
+                        first_instance = false;
+                    }
+                }
+                count_inner += 1;
+            }
+
+            count_outer += 1;
+
+
+        }
+        */
+
+        for (var i in tweets)
+        {
+            var count_inner = 0;
+            var first_instance = true;
+            for (var j in tweets)
+            {
+                if (tweets[count_outer].full_text === tweets[count_inner].full_text)
+                {
+                    if (!first_instance)
+                    {
+                        console.log("Removing duplicate...");
+                        tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
+                    }
+                    else
+                    {
                         first_instance = false;
                     }
                 }

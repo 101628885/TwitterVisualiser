@@ -41,8 +41,12 @@ router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLP
 router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);
 
 //ReactController
-router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
-router.get('/stefansPieChartEndPoint/:count', reactController.stefansPieChartEndPoint)
+router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint) //deprecated
+router.get('/stefansPieChartEndPoint/:count', reactController.stefansPieChartEndPoint) //deprecated
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount)
+router.get('/getStoredTweets/:count/:checked/:crime', reactController.getStoredTweets)
+router.get('/getStoredTweets/:count/:checked/', reactController.getStoredTweets) //returns unchecked OR checked
+router.get('/getStoredTweets/:count/', reactController.getStoredTweets) //returns unchecked and checked tweets
+
 
 module.exports = router;

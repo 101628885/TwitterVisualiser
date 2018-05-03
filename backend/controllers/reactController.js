@@ -1,7 +1,7 @@
-const mongoController = require('./mongoController'); 
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
 var db = mongoose.connection;
+
 
 exports.shanesAndCoreySpecialsEndPoint = async (req,res) => 
 {
@@ -34,6 +34,48 @@ exports.stefansPieChartEndPoint = async (req, res) =>
         }
     });
 }
+
+exports.getStoredTweets = async (req,res) =>
+{
+
+    let query = {};
+    let count;
+
+
+    if (req.params.checked)
+    {
+        query.checked = req.params.checked;
+    }
+
+    if (req.params.crime)
+    {
+        query.crime = req.params.crime;
+    }
+
+
+    if (req.params.count)
+    {
+        count = req.params.count;
+    }
+    else
+    {
+        count = Number.MAX_SAFE_INTEGER; //get all the tweets
+    }
+
+
+    tweet.find(query).sort({'date': -1}).limit(parseInt(req.params.count)).lean().exec(function(err, posts)
+    {
+        if(!err)
+        {
+            res.send(posts);
+        }
+        else
+        {
+            console.log(err);
+        }
+    });
+}
+
 
 exports.getCrimeWordCount = async (req,res, next) => 
 {
