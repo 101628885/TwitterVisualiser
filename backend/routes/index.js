@@ -39,10 +39,15 @@ router.post('/check/:id/:value/:location/:type', verifyController.checkTweets)
 //NLP Controller
 router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);
 router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);
+router.get('/nte/:count', nlpTrainingController.returnNLPDataSetCount);
+router.get('/nte', nlpTrainingController.returnNLPDataSet);
+router.get('/nteTrue', nlpTrainingController.returnNLPTrueData);
+router.get('/returnAll', nlpTrainingController.returnAllData);
 
 //ReactController
 router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCoreySpecialsEndPoint)
 router.get('/stefansPieChartEndPoint/:count', reactController.stefansPieChartEndPoint)
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount)
+router.get('/getPredictedData', reactController.getPredictedData)
 
 module.exports = router;
