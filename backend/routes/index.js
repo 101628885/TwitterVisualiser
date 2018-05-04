@@ -49,5 +49,9 @@ router.get('/shanesAndCoreysSpecialEndPoint/:count', reactController.shanesAndCo
 router.get('/stefansPieChartEndPoint/:count', reactController.stefansPieChartEndPoint)
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount)
 router.get('/getPredictedData', reactController.getPredictedData)
+router.get('/getStoredTweets/:count/:checked/:crime', reactController.getStoredTweets)
+router.get('/getStoredTweets/:count/:checked/', reactController.getStoredTweets)
+router.get('/getStoredTweets/:count', reactController.getStoredTweets)
+router.get('/getStoredTweets/', reactController.getStoredTweets)
 
 module.exports = router;
