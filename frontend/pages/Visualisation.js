@@ -54,7 +54,7 @@ export default class Home extends React.Component {
           var crime_tweets = 0;
           var not_crime_tweets = 0;
 
-          await fetch('http://144.6.226.34:3000/stefansPieChartEndPoint/1000')
+          await fetch('http://144.6.226.34:3000/getStoredTweets/1000/checked/true')
             .then(res => res.json())
             .then(tweetData => {
               this.setState({dataLoaded: true});
