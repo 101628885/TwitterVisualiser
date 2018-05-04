@@ -58,6 +58,45 @@ exports.getPredictedData = async (req, res) => {
     // return res
 }
 
+exports.getStoredTweets = async (req, res) =>
+{
+    var tweet = db.model('tweets', tweet);
+    var query = {};
+    var count = 0;
+
+    if (req.params.checked)
+    {
+        query.checked = req.params.checked;
+    }
+
+    if (req.params.crime)
+    {
+        query.crime = req.params.crime;
+    }
+
+    if (req.params.count)
+    {
+        count = req.params.count;
+    }
+    else
+    {
+        count = Number.MAX_SAFE_INTEGER;
+    }
+
+
+    tweet.find(query).sort({'date': -1}).limit(parseInt(count)).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
+    {
+        if (!err)
+        {
+            res.send(posts);
+        }
+        else
+        {
+            console.log(err);
+        }
+    });
+}
+
 exports.getCrimeWordCount = async (req,res, next) => 
 {
     var tweet = db.model('tweets', tweet);
