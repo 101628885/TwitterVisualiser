@@ -74,10 +74,11 @@ def checkData():
     # http://144.6.226.34:3000/nte/5
 
     # dataJson = requests.get('http://localhost:3000/returnAll').json()
+    # dataJson = requests.get('http://144.6.226.34:3000/returnAll').json()
     dataJson = requests.get('http://144.6.226.34:3000/nte').json()
     tweetData = []
     for t in dataJson:
-        tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
+        tweetData.append((str(t['full_text']), str(t['crime'])))
 
     return tweetData
 
@@ -89,27 +90,27 @@ def printOutput(arg):
     JSONres['predData'] = []
 
     for (td, pred, keyPred) in zip(testData, pred_data, newPred_data):
-        JSONres['predData'].append({
-            'Tweet' : td[0],
-            'Expected' : td[1],
-            'Predicted' : pred,
-            'KeywordPred' : keyPred
-        })
-        # if (arg == True):
-        #     if (pred == "True"):
-        #         # print('---------------------------')
-        #         # print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred, "\nKeyPred:", keyPred)
-        #         cTrue += 1
-        #     else:
-        #         cFalse += 1
-        # else:
-        #     if (pred == "False"):
-        #         # print('---------------------------')
-        #         # print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
-        #         cFalse += 1
-        #     else:
-        #         cTrue += 1
-    print(JSONres)
+    #     JSONres['predData'].append({
+    #         'Tweet' : td[0],
+    #         'Expected' : td[1],
+    #         'Predicted' : pred,
+    #         'KeywordPred' : keyPred
+    #     })
+        if (arg == True):
+            if (pred == "True"):
+                print('---------------------------')
+                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred, "\nKeyPred:", keyPred)
+                cTrue += 1
+            else:
+                cFalse += 1
+        else:
+            if (pred == "False"):
+                print('---------------------------')
+                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
+                cFalse += 1
+            else:
+                cTrue += 1
+    # print(JSONres)
     print("===========================")
     print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
     print("cFalse:", cFalse)

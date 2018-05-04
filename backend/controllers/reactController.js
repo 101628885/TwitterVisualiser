@@ -41,10 +41,14 @@ exports.getPredictedData = async (req, res) => {
     // const pyShell = new PythonShell('../spaCy_NLP/TwitterNLP.py');
     var options = {
         mode: 'text',
-        pythonPath: '/usr/bin/python3', 
+        // This is server use
+        // pythonPath: '/usr/bin/python3',         
+        pythonPath: '/usr/local/bin/python3', 
         pythonOptions: ['-u'],
         // make sure you use an absolute path for scriptPath
-        scriptPath: '/home/ubuntu/TV/backend/spaCy_NLP'
+        // This is for server use
+        // scriptPath: '/home/ubuntu/TV/backend/spaCy_NLP'
+        scriptPath: '/Users/shanejoachim/Swinburne/SWE/ReactNative/TwitterVisualiser/backend/spaCy_NLP'
       };
 
     pythonShell.run('TwitterNLP.py', options, function (err, JSONres) {
