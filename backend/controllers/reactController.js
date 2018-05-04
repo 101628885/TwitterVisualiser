@@ -1,41 +1,8 @@
-const mongoController = require('./mongoController'); 
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
 const pythonShell = require('python-shell');
 
 var db = mongoose.connection;
-
-exports.shanesAndCoreySpecialsEndPoint = async (req,res) => 
-{
-	var tweet = db.model('tweets', tweet);
-    tweet.find({checked: false}).sort({'date': -1}).limit(parseInt(req.params.count)).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts) 
-    {
-        if(!err)
-        {
-            res.send(posts);
-        }
-        else
-        {
-        	console.log(err);
-        }  
-    }); 
-}
-
-exports.stefansPieChartEndPoint = async (req, res) =>
-{
-    var tweet = db.model('tweets', tweet);
-    tweet.find({checked: true}).sort({'date': -1}).limit(parseInt(req.params.count)).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
-    {
-        if (!err)
-        {
-            res.send(posts);
-        }
-        else
-        {
-            console.log(err);
-        }
-    });
-}
 
 exports.getPredictedData = async (req, res) => {
     // const pyShell = new PythonShell('../spaCy_NLP/TwitterNLP.py');
@@ -56,7 +23,7 @@ exports.getPredictedData = async (req, res) => {
         res.send(JSONres);
     });
     // return res
-}
+};
 
 exports.getStoredTweets = async (req, res) =>
 {
@@ -84,7 +51,7 @@ exports.getStoredTweets = async (req, res) =>
     }
 
 
-    tweet.find(query).sort({'date': -1}).limit(parseInt(count)).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
+    tweet.find(query).sort({'date': -1}).limit(parseInt(count)).exec(function(err, posts)
     {
         if (!err)
         {
@@ -95,7 +62,7 @@ exports.getStoredTweets = async (req, res) =>
             console.log(err);
         }
     });
-}
+};
 
 exports.getCrimeWordCount = async (req,res, next) => 
 {
