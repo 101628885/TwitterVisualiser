@@ -16,6 +16,8 @@ var inherits = require('util').inherits,
   uncompressibleCommands = require('../wireprotocol/compression').uncompressibleCommands,
   resolveClusterTime = require('../topologies/shared').resolveClusterTime;
 
+const apm = require('./apm');
+
 var MongoCR = require('../auth/mongocr'),
   X509 = require('../auth/x509'),
   Plain = require('../auth/plain'),
@@ -210,6 +212,7 @@ function stateTransition(self, newState) {
   // Get current state
   var legalStates = legalTransitions[self.state];
   if (legalStates && legalStates.indexOf(newState) !== -1) {
+    self.emit('stateChanged', self.state, newState);
     self.state = newState;
   } else {
     self.logger.error(
@@ -821,7 +824,7 @@ Pool.prototype.auth = function(mechanism) {
 
     // Authenticate the connections
     for (var i = 0; i < connections.length; i++) {
-      authenticate(self, args, connections[i], function(err) {
+      authenticate(self, args, connections[i], function(err, result) {
         connectionsCount = connectionsCount - 1;
 
         // Store the error
@@ -847,9 +850,9 @@ Pool.prototype.auth = function(mechanism) {
               );
             }
 
-            return cb(error);
+            return cb(error, result);
           }
-          cb(null);
+          cb(null, result);
         }
       });
     }
@@ -866,12 +869,12 @@ Pool.prototype.auth = function(mechanism) {
   // Wait for loggout to finish
   waitForLogout(self, function() {
     // Authenticate all live connections
-    authenticateLiveConnections(self, args, function(err) {
+    authenticateLiveConnections(self, args, function(err, result) {
       // Credentials correctly stored in auth provider if successful
       // Any new connections will now reauthenticate correctly
       self.authenticating = false;
       // Return after authentication connections
-      callback(err);
+      callback(err, result);
     });
   });
 };
@@ -1226,6 +1229,38 @@ Pool.prototype.write = function(commands, options, cb) {
     });
   }
 
+  // If command monitoring is enabled we need to modify the callback here
+  if (self.options.monitorCommands) {
+    // NOTE: there is only ever a single command, for some legacy reason I am unaware of we
+    //       treat this as a potential array of commands
+    const command = commands[0];
+    this.emit('commandStarted', new apm.CommandStartedEvent(this, command));
+
+    operation.started = process.hrtime();
+    operation.cb = (err, reply) => {
+      if (err) {
+        self.emit(
+          'commandFailed',
+          new apm.CommandFailedEvent(this, command, err, operation.started)
+        );
+      } else {
+        if (reply && reply.result && (reply.result.ok === 0 || reply.result.$err)) {
+          self.emit(
+            'commandFailed',
+            new apm.CommandFailedEvent(this, command, reply.result, operation.started)
+          );
+        } else {
+          self.emit(
+            'commandSucceeded',
+            new apm.CommandSucceededEvent(this, command, reply, operation.started)
+          );
+        }
+      }
+
+      if (typeof cb === 'function') cb(err, reply);
+    };
+  }
+
   // Prepare the operation buffer
   serializeCommands(self, commands, [], function(err, serializedCommands) {
     if (err) throw err;
@@ -1533,6 +1568,11 @@ function _execute(self) {
             }
           } else {
             writeSuccessful = connection.write(buffer);
+          }
+
+          // if the command is designated noResponse, call the callback immeditely
+          if (workItem.noResponse && typeof workItem.cb === 'function') {
+            workItem.cb(null, null);
           }
 
           if (writeSuccessful && workItem.immediateRelease && self.authenticating) {
