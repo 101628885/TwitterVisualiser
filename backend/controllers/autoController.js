@@ -1,4 +1,3 @@
-const twitterController = require("../controllers/twitterController");
 const request = require('request');
 var shouldRun = false;
 var query = [];
@@ -52,32 +51,32 @@ exports.autoPost = function(req, res)
 {
     autoCollect = !autoCollect; //toggle autoCollect
 
-    if (req.body.word1 != "")
+    if (req.body.word1 !== "")
     {
         query.push(req.body.word1);
     }
 
-    if (req.body.word2 != "")
+    if (req.body.word2 !== "")
     {
         query.push(req.body.word2);
     }
 
-    if (req.body.word3 != "")
+    if (req.body.word3 !== "")
     {
         query.push(req.body.word3);
     }
 
-    if (req.body.word4 != "")
+    if (req.body.word4 !== "")
     {
         query.push(req.body.word4);
     }
 
-    if (req.body.word5 != "")
+    if (req.body.word5 !== "")
     {
         query.push(req.body.word5);
     }
 
-    if (query.length == 0)
+    if (query.length === 0)
     {
         query.push("crime"); //default search therm if no entry is specified
     }

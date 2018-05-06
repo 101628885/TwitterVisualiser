@@ -47,7 +47,7 @@ export default class Home extends React.Component {
     async componentDidMount() {
         // Use if server down
         // await fetch('https://testtwitter-diigzuppaq.now.sh/shanesAndCoreysSpecialEndPoint/10')
-        await fetch('http://144.6.226.34:3000/shanesAndCoreysSpecialEndPoint/10')
+        await fetch('http://144.6.226.34:3000/getStoredTweets/10/checked/false')
             .then((res) => res.json())
             .then((resJson) => {
                 this.setState({

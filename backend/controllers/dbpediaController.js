@@ -1,6 +1,5 @@
 const sparql = require('sparql')
 const request = require('request')
-const resultLimit = 30;
 exports.getDBPedia = async(req,res, next) =>
 {
     client = new sparql.Client('http://dbpedia.org/sparql')
