@@ -88,7 +88,7 @@ export default class CrimeTweets extends React.Component {
   // Part of the react lifecyle
   async componentDidMount() {
     //await fetch('https://testtwitter-diigzuppaq.now.sh/shanesAndCoreysSpecialEndPoint/10')
-    await fetch('http://144.6.226.34:3000/getStoredTweets/' + this.state.tweetAmount + '/checked/false')
+    await fetch('http://144.6.226.34:3000/nlpTrainingEndpoint/' + this.state.tweetAmount + '/true')
       .then((res) => res.json())
       .then((resJson) => {
         this.setState({
