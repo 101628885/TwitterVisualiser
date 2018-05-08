@@ -1,6 +1,6 @@
 const request = require('request');
 var shouldRun = false;
-var query = [];
+var query = [];]]]
 var autoCollect = false;
 function collect(query)
 {
