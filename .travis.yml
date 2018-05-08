@@ -2,10 +2,14 @@ language: node_js
 node_js:
   - "node"
 cache: yarn
-before_install: 'cd frontend/'
+os: osx
+#before_install: 'cd frontend/'
 script:
-  # - yarn test --maxWorkers=4
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" == "dev" ]; then yarn appr; fi'
+  #- 'cd $TRAVIS_BUILD_DIR/frontend yarn test --maxWorkers=4'
+  - 'echo "Checking mobile app..."'
+  - 'cd $TRAVIS_BUILD_DIR/frontend && if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" == "dev" ]; then yarn appr; fi'
+  - 'echo "Checking backend..."'
+  - 'cd $TRAVIS_BUILD_DIR/backend && find . -path ./node_modules -prune -o -name "*.js" -exec node -c {} \; | grep -q "Error"'
 after_success:
   - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh

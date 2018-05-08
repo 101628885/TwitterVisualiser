@@ -3,7 +3,6 @@ var shouldRun = false;
 var query = [];
 
 var autoCollect = false;
-
 function collect(query)
 {
 
