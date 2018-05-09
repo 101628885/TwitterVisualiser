@@ -3,8 +3,6 @@ node_js:
   - "node"
 cache: yarn
 os: osx
-install:
-  - cd $TRAVIS_BUILD_DIR/frontend && yarn install
 script:
   - 'cd $TRAVIS_BUILD_DIR/frontend && pwd && yarn appr'
   - 'cd $TRAVIS_BUILD_DIR/backend && chmod +x test.sh && ./test.sh'
