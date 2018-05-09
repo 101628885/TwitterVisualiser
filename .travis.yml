@@ -3,12 +3,13 @@ node_js:
   - "node"
 cache: 
   - yarn
-  - npm
 os: osx
 before_install:
   - export PATH=$PATH:`yarn global bin`
+install:
+  - cd $TRAVIS_BUILD_DIR/frontend && yarn install
 script:
-  - 'cd $TRAVIS_BUILD_DIR/frontend && npm appr'
+  - 'cd $TRAVIS_BUILD_DIR/frontend && yarn appr'
   - 'cd $TRAVIS_BUILD_DIR/backend && chmod +x test.sh && ./test.sh'
 after_success:
   - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
