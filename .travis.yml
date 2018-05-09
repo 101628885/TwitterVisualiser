@@ -4,7 +4,7 @@ node_js:
 cache: yarn
 os: osx
 script:
-  - 'cd $TRAVIS_BUILD_DIR/frontend && yarn appr'
+  - 'cd $TRAVIS_BUILD_DIR/frontend && yarn -appr'
   - 'cd $TRAVIS_BUILD_DIR/backend && chmod +x test.sh && ./test.sh'
 after_success:
   - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
