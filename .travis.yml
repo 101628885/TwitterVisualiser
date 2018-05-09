@@ -1,21 +1,16 @@
 language: node_js
 node_js:
   - "node"
-cache: 
-  - yarn
+cache: yarn
 os: osx
-before_install:
-  - export PATH=$PATH:`yarn global bin`
 install:
   - cd $TRAVIS_BUILD_DIR/frontend && yarn install
 script:
-  - 'cd $TRAVIS_BUILD_DIR/frontend && yarn appr'
+  - 'cd $TRAVIS_BUILD_DIR/frontend && pwd && yarn appr'
   - 'cd $TRAVIS_BUILD_DIR/backend && chmod +x test.sh && ./test.sh'
 after_success:
   - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
   - ./send.sh success $WEBHOOK_URL
 after_failure:
-  - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
-  - chmod +x send.sh
-  - ./send.sh failure $WEBHOOK_URL
+  - echo 'failed oops'
