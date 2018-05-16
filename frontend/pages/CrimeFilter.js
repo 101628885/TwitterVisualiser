@@ -11,7 +11,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native';
 import {
   Body,
@@ -76,7 +77,12 @@ export default class CrimeFilter extends React.Component {
             onPress={() => this.toggleChecked(category.name)} 
           />
           <Body>
-            <Text style={style.categoryLabelStyle}>{category.name}</Text>
+            <TouchableOpacity
+              onPress={() => this.toggleChecked(category.name)}
+            >
+              <Text style={style.categoryLabelStyle}> {category.name} </Text>
+            </TouchableOpacity>
+          
           </Body>
         </ListItem>
       ))
