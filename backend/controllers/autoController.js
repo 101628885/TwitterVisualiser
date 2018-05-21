@@ -2,6 +2,25 @@ const request = require('request');
 var shouldRun = false;
 var query = [];
 var autoCollect = false;
+
+
+setInterval(function(){
+
+    if (shouldRun)
+    {
+        for (var i = 0; i < query.length; i++)
+        {
+
+            console.log("Checking word: " + query[i]);
+            collect(query[i]);
+
+        }
+
+    }
+}, 30000);
+
+
+
 function collect(query)
 {
 
@@ -18,20 +37,6 @@ exports.updateState = function(word, autoCollect)
 {
     shouldRun = autoCollect;
 
-    setInterval(function(){
-
-        if (shouldRun)
-        {
-            for (var i = 0; i < query.length; i++)
-            {
-
-                console.log("Checking word: " + query[i]);
-                collect(query[i]);
-
-            }
-
-        }
-    }, 30000);
 };
 
 exports.autoGet = function(req, res)
@@ -78,7 +83,7 @@ exports.autoPost = function(req, res)
     {
         query.push("crime"); //default search therm if no entry is specified
     }
-
+[]
 
 
 

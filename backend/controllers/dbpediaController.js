@@ -107,10 +107,10 @@ exports.getDataMuse = async(req, res, callback) =>
 }
 
 //gets words from the wordsAPI and creates an array out of them
-exports.getWordsAPI = async(req, res, callback) =>
+exports.getWordsAPI = async(req, res, callback) => //disabled for now, will resume once WordsAPI key is reactivated
 {
+    /*
     let wordQuery = req.body.word;
-
 
     if (wordQuery == "" || wordQuery == undefined)
     {
@@ -148,13 +148,14 @@ exports.getWordsAPI = async(req, res, callback) =>
                 //sort alphabatically because why not
                 labels.sort();
 
-                callback(labels);
+
 			}
 
-            return;
 
         }
     });
+    */
+    callback([req.body.word]);
 }
 
 //Gets results from DataMuse and WordsAPI, creates an array and build the query to Twitter

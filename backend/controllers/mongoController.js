@@ -16,21 +16,55 @@ db.on('error', function()
 
 db.once('open', function(){
     console.log("Connected to " + database.type + " DB at " + database.url);
+    //exports.removeDuplicates();
 });
 
-exports.getLastId = function(tweetToStore)
-{
-    return db.tweet.find().limit(1).sort({$natural:-1}).id
-}
 
 exports.storeTweets = function(tweetToStore)
 {
-
     var dbTweet = new tweet();
-    tweet.findOne({id: tweetToStore.id},function(err,existingTweet)
+
+    tweet.find({full_text : tweetToStore.full_text}, function (err, existing)
     {
-        if (!err && !existingTweet)
+       if (existing.length)
+       {
+           console.log("Already have tweet...");
+       }
+       else
+       {
+           console.log("Saving tweet...");
+           dbTweet.created_at = tweetToStore.created_at;
+           dbTweet.id = tweetToStore.id;
+           dbTweet.full_text = tweetToStore.full_text;
+           dbTweet.user_id = tweetToStore.user_id;
+           dbTweet.user_name = tweetToStore.user_name;
+           dbTweet.user_location = tweetToStore.user_location;
+           dbTweet.user_verified = tweetToStore.user_verified;
+           dbTweet.user_profile_image_url = tweetToStore.user_profile_image_url;
+           dbTweet.geo = tweetToStore.geo;
+           dbTweet.coordinates = tweetToStore.coordinates;
+           dbTweet.place = tweetToStore.place;
+           dbTweet.checked = 0;
+           dbTweet.crime = null;
+           dbTweet.save(function(err)
+           {
+               if (err)
+               {
+                   console.log(err);
+               }
+           });
+       }
+
+    });
+
+
+
+    /*
+    tweet.findOne({ full_text: tweetToStore.full_text }, 'full_text id', function (err, existingTweet)
+    {
+        if (!err & !existingTweet)
         {
+            console.log("Saving tweet...");
             dbTweet.created_at = tweetToStore.created_at;
             dbTweet.id = tweetToStore.id;
             dbTweet.full_text = tweetToStore.full_text;
@@ -52,10 +86,15 @@ exports.storeTweets = function(tweetToStore)
                 }
             });
         }
+        else if (existingTweet)
+        {
+            console.log("Already have tweet...");
+        }
     });
+    */
 };
 
-exports.removeDuplicates = async(callback) =>
+exports.removeDuplicates = async() =>
 {
     console.log("Starting duplicate check...");
     tweet.find().lean().exec(function(err, tweets)
@@ -88,7 +127,5 @@ exports.removeDuplicates = async(callback) =>
 
         }
     })
-
-    callback();
 
 }
