@@ -19,11 +19,11 @@ exports.getUncheckedTweets = async (req,res, next) =>
 {
 	Math.floor((Math.random() * 50) + 1);
 	var tweet = db.model('tweets', tweet);
-    tweet.find({checked: false}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts) 
+    tweet.find({checked: false}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
     {
         if(!err)
         {
-            res.render('verify', {data: posts});
+            res.render('verify', {data: posts, title : "Twitter Word Visualisation Checking"});
         }  
     });    	
 }

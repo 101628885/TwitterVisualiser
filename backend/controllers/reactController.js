@@ -1,23 +1,68 @@
-const mongoController = require('./mongoController'); 
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
+const pythonShell = require('python-shell');
+
 var db = mongoose.connection;
 
-exports.shanesAndCoreySpecialsEndPoint = async (req,res) => 
+exports.getPredictedData = async (req, res) => {
+    // const pyShell = new PythonShell('../spaCy_NLP/TwitterNLP.py');
+    var options = {
+        mode: 'text',
+        // This is server use
+        pythonPath: '/usr/bin/python3',
+        //pythonPath: '/usr/local/bin/python3',
+        pythonOptions: ['-u'],
+        // make sure you use an absolute path for scriptPath
+        // This is for server use
+        scriptPath: process.cwd() + '/spaCy_NLP'
+        //scriptPath: '/Users/shanejoachim/Swinburne/SWE/ReactNative/TwitterVisualiser/backend/spaCy_NLP'
+      };
+
+    pythonShell.run('TwitterNLP.py', options, function (err, JSONres) {
+        if (err) throw err;
+        res.send(JSONres);
+    });
+    // return res
+};
+
+exports.getStoredTweets = async (req, res) =>
 {
-	var tweet = db.model('tweets', tweet);
-    tweet.find({checked: false}).sort({'date': -1}).limit(parseInt(req.params.count)).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts) 
+    var tweet = db.model('tweets', tweet);
+    var query = {};
+    var count = 0;
+
+    if (req.params.checked)
     {
-        if(!err)
+        query.checked = req.params.checked;
+    }
+
+    if (req.params.crime)
+    {
+        query.crime = req.params.crime;
+    }
+
+    if (req.params.count)
+    {
+        count = req.params.count;
+    }
+    else
+    {
+        count = Number.MAX_SAFE_INTEGER;
+    }
+
+
+    tweet.find(query).sort({'date': -1}).limit(parseInt(count)).exec(function(err, posts)
+    {
+        if (!err)
         {
             res.send(posts);
         }
         else
         {
-        	console.log(err);
-        }  
-    }); 
-}
+            console.log(err);
+        }
+    });
+};
 
 exports.getCrimeWordCount = async (req,res, next) => 
 {

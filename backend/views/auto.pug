@@ -14,7 +14,11 @@ block content
         form(method='POST', action='/auto')
             #form-group
                 label #{monitoredWord}
-                input.form-control(name='word', type='text', hidden = isHidden)
+                input.form-control(name='word1', type='text', hidden = isHidden)
+                input.form-control(name='word2', type='text', hidden = isHidden)
+                input.form-control(name='word3', type='text', hidden = isHidden)
+                input.form-control(name='word4', type='text', hidden = isHidden)
+                input.form-control(name='word5', type='text', hidden = isHidden)
 
             input.btn.btn-primary(type='submit', value = toggle)
         br

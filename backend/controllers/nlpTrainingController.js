@@ -1,30 +1,37 @@
-const mongoController = require('./mongoController');
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
 var db = mongoose.connection;
 
-exports.returnNLPDataSet = async (req,res) =>
-{
+// Returns all checked: true
+exports.returnNLPDataSet = async (req,res) => {
     var tweet = db.model('tweets', tweet);
-    tweet.find({checked: true}).sort({'date': -1}).limit(parseInt(req.params.count)).skip(Math.floor((Math.random() * 50) + 1)).lean().exec(function(err, posts)
+
+    let query = {};
+
+    if (req.params.crime)
+    {
+        query.crime = req.params.crime;
+        query.checked = true;
+    }
+
+    tweet.find(query).sort({'date': -1}).limit(parseInt(req.params.count)).lean().exec(function(err, posts)
     {
         if(!err)
         {
-            var post;
-            var result = new Array();
-            console.log(posts.length);
-            var count = 0;
-            for (var i in posts)
+            let post;
+            let result = [];
+            let count = 0;
+            for (let i in posts)
             {
                 post = {
                     "full_text": posts[count].full_text,
-                    "crime": posts[count].crime
+                    "crime": posts[count].crime,
+                    "type_of_crime" : posts[count].type_of_crime,
+                    "location" : posts[count].location
                 };
                 count += 1;
                 result.push(post);
-
             }
-
             res.send(result);
         }
         else
@@ -32,4 +39,5 @@ exports.returnNLPDataSet = async (req,res) =>
             console.log(err);
         }
     });
-}
+};
+

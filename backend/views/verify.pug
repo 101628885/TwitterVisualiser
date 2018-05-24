@@ -6,7 +6,7 @@ block content
     div(class="col-sm-1")
       img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
     div(class="col-sm-11")
-      h1 Twitter Word Visualisation Checking
+      h1 #{title}
 
     br
   br
@@ -32,6 +32,9 @@ block content
             .row
               select(id="crime-type")
                 option(value="assault") Assault
+                option(value="murder") Murder
+                option(value="kidnapping") Kidnapping
+                option(value="extortion") Extortion
                 option(value="rape") Rape
                 option(value="theft") Theft
                 option(value="burglary") Burglary
