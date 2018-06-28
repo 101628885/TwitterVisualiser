@@ -13,6 +13,7 @@ exports.home = async(req,res) =>
 {
 	tweets = ""
 	res.render('index', {data: tweets});
+
 }
 
 exports.getTweets = async(req,res) => 

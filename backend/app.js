@@ -1,12 +1,13 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var helmet = require('helmet')
-var index = require('./routes/index');
-var cors = require('cors')
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const helmet = require('helmet')
+const index = require('./routes/index');
+const cors = require('cors')
+const fs = require('fs');
 
 var app = express();
 app.use(cors())
@@ -41,6 +42,20 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+process.on('uncaughtException', (err) => {
+  //Log error to disk...
+  console.log(err);
+  fs.writeFile(process.cwd() + "/stderr-" + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''), err, function (err){
+    if (err)
+    {
+      console.log("Error writing error log to disk: " + err); //That's a bit sad
+    }
+  });
+
+  //process.exit();
+
 });
 
 module.exports = app;

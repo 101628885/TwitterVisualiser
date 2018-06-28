@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 //Load tweet schema
 const tweet = require('../models/tweet_schema');
 const ObjectId = require('mongodb').ObjectId;
-const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
-//const database = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
+//const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
+const database = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
 
 mongoose.connect(database.url);
 
@@ -12,6 +12,7 @@ var db = mongoose.connection;
 db.on('error', function()
 {
     console.log("An error occurred while connecting to the " + database.type + " DB at " + database.url);
+    throw (err);
 });
 
 db.once('open', function(){
