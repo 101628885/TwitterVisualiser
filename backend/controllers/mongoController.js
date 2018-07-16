@@ -7,7 +7,7 @@ const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "
 
 mongoose.connect(database.url);
 
-var db = mongoose.connection;
+let db = mongoose.connection;
 
 db.on('error', function()
 {
@@ -17,14 +17,53 @@ db.on('error', function()
 db.once('open', function(){
     console.log("Connected to " + database.type + " DB at " + database.url);
 
-    //exports.removeDuplicates();
+    exports.removeDuplicates();
 });
 
 
-exports.storeTweets = function(tweetToStore)
+exports.storeTweets = async function(tweetToStore)
 {
-    var dbTweet = new tweet();
+    let dbTweet = new tweet();
 
+    //Attempt 3
+    await tweet.find({full_text: tweetToStore.full_text}).lean().exec().then(function(result) {
+
+    	if(result.length)
+	    {
+	    	//console.log("Already have tweet...");
+	    }
+	    else
+	    {
+		    //console.log("Saving tweet...");
+		    dbTweet.created_at = tweetToStore.created_at;
+		    dbTweet.id = tweetToStore.id;
+		    dbTweet.full_text = tweetToStore.full_text;
+		    dbTweet.user_id = tweetToStore.user_id;
+		    dbTweet.user_name = tweetToStore.user_name;
+		    dbTweet.user_location = tweetToStore.user_location;
+		    dbTweet.user_verified = tweetToStore.user_verified;
+		    dbTweet.user_profile_image_url = tweetToStore.user_profile_image_url;
+		    dbTweet.geo = tweetToStore.geo;
+		    dbTweet.coordinates = tweetToStore.coordinates;
+		    dbTweet.place = tweetToStore.place;
+		    dbTweet.checked = 0;
+		    dbTweet.crime = null;
+		    dbTweet.save(function(err)
+		    {
+			    if (err)
+			    {
+				    console.log(err);
+			    }
+		    });
+	    }
+
+    }).catch(function(err){console.log(err)});
+
+
+
+
+
+    /* Attempt 2
     tweet.find({full_text : tweetToStore.full_text}, function (err, existing)
     {
        if (existing.length)
@@ -58,9 +97,11 @@ exports.storeTweets = function(tweetToStore)
 
     });
 
+    */
 
 
-    /*
+
+    /* Attempt 1
     tweet.findOne({ full_text: tweetToStore.full_text }, 'full_text id', function (err, existingTweet)
     {
         if (!err & !existingTweet)
@@ -100,12 +141,15 @@ exports.removeDuplicates = async function()
 {
     let tweets = {};
     let dupsRemoved = 0;
-    console.log("Retrieving DB...");
+    let iterations = 0;
+
+	process.stdout.write("\n");
+	process.stdout.write("Retrieving DB... ");
     await tweet.find().lean().exec().then(function(result){tweets = result});
+	process.stdout.write("Done");
+	process.stdout.write("\n");
 
-    console.log("Done");
-
-    console.log("Checking DB for duplicates...")
+	process.stdout.write("Checking DB for duplicates... ");
 
     let count_outer = 0;
     for (let i in tweets)
@@ -114,12 +158,13 @@ exports.removeDuplicates = async function()
         let first_instance = true;
         for (let j in tweets)
         {
+        	iterations++;
             if (tweets[count_outer].full_text === tweets[count_inner].full_text)
             {
                 if (!first_instance)
                 {
                     dupsRemoved += 1;
-                    await tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
+                    tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
                 }
                 else
                 {
@@ -133,7 +178,12 @@ exports.removeDuplicates = async function()
         count_outer += 1;
     }
 
+	process.stdout.write("Done");
+	process.stdout.write("\n\n");
 
-    console.log("Removed " + dupsRemoved + " duplicates.");
 
-}
+
+    console.log("Removed " + dupsRemoved + " duplicates in " + iterations + " iterations.");
+	process.stdout.write("\n");
+
+};
