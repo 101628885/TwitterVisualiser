@@ -42,7 +42,7 @@ exports.returnNLPDataSet = async (req,res) => {
     });
 };
 
-exports.runNLP = function()
+exports.runNLP = function(next)
 {
 	var options = {
 		mode: 'text',
@@ -57,7 +57,7 @@ exports.runNLP = function()
 
 	pythonShell.run('TwitterNLP.py', options, function (err, jsonRes) {
 		if (err) throw err;
-		return (jsonRes); //Fix this, currently returns invalid JSON :(
+		next(jsonRes);
 	});
 };
 

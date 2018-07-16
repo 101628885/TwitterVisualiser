@@ -7,7 +7,7 @@ var db = mongoose.connection;
 
 exports.getPredictedData = async (req, res) =>
 {
-    res.send(nlp.runNLP());
+    nlp.runNLP(function(result){res.send(result)});
 };
 
 
