@@ -17,7 +17,7 @@ db.on('error', function()
 db.once('open', function(){
     console.log("Connected to " + database.type + " DB at " + database.url);
 
-    exports.removeDuplicates();
+    //exports.removeDuplicates();
 });
 
 

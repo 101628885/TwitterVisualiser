@@ -1,29 +1,15 @@
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
-const pythonShell = require('python-shell');
-
+const nlp = require('./nlpTrainingController');
 var db = mongoose.connection;
 
-exports.getPredictedData = async (req, res) => {
-    // const pyShell = new PythonShell('../spaCy_NLP/TwitterNLP.py');
-    var options = {
-        mode: 'text',
-        // This is server use
-        pythonPath: '/usr/bin/python3',
-        //pythonPath: '/usr/local/bin/python3',
-        pythonOptions: ['-u'],
-        // make sure you use an absolute path for scriptPath
-        // This is for server use
-        scriptPath: process.cwd() + '/spaCy_NLP'
-        //scriptPath: '/Users/shanejoachim/Swinburne/SWE/ReactNative/TwitterVisualiser/backend/spaCy_NLP'
-      };
 
-    pythonShell.run('TwitterNLP.py', options, function (err, JSONres) {
-        if (err) throw err;
-        res.send(JSONres);
-    });
-    // return res
+
+exports.getPredictedData = async (req, res) =>
+{
+    res.send(nlp.runNLP());
 };
+
 
 exports.getStoredTweets = async (req, res) =>
 {

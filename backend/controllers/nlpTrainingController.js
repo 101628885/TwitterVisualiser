@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
-var db = mongoose.connection;
+const pythonShell = require('python-shell');
+const db = mongoose.connection;
 
 // Returns all checked: true
 exports.returnNLPDataSet = async (req,res) => {
@@ -39,5 +40,24 @@ exports.returnNLPDataSet = async (req,res) => {
             console.log(err);
         }
     });
+};
+
+exports.runNLP = function()
+{
+	var options = {
+		mode: 'text',
+		// This is server use
+		pythonPath: '/usr/bin/python3',
+		//pythonPath: '/usr/local/bin/python3',
+		pythonOptions: ['-u'],
+		// make sure you use an absolute path for scriptPath
+		// This is for server use
+		scriptPath: process.cwd() + '/spaCy_NLP'
+	};
+
+	pythonShell.run('TwitterNLP.py', options, function (err, jsonRes) {
+		if (err) throw err;
+		return (jsonRes); //Fix this, currently returns invalid JSON :(
+	});
 };
 

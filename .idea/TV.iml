@@ -9,5 +9,6 @@
     <content url="file://$MODULE_DIR$/backend/node_modules" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="d3.v4" level="application" />
   </component>
 </module>
