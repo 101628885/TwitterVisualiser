@@ -1,7 +1,7 @@
 function getVisualisationData()
 {
 	let request = new XMLHttpRequest();
-	request.open("GET", "http://localhost:3000/visualisationData", false);
+	request.open("GET", "http://144.6.226.34:3000/visualisationData", false);
 	request.setRequestHeader("Content-type", "application/json");
 	request.send();
 	return JSON.parse(request.responseText);
