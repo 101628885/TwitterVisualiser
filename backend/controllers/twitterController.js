@@ -48,7 +48,6 @@ exports.getTweets = async(req,res) =>
 			lang: 'en',
 			tweet_mode: 'extended',
 		};
-	console.log(params);
 	client.get('search/tweets', params, function(error, tweets, response) 
 	{
 	  	if (!error) 

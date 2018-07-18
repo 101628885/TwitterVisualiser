@@ -81,7 +81,7 @@ exports.autoPost = function(req, res)
 
     if (query.length === 0)
     {
-        query.push("crime"); //default search therm if no entry is specified
+        query.push("crime", "theft", "rape", "assault", "murder"); //default search therm if no entry is specified
     }
 []
 
