@@ -8,6 +8,7 @@ const reactController = require("../controllers/reactController");
 const nlpTrainingController = require("../controllers/nlpTrainingController");
 const autoController = require("../controllers/autoController");
 const visualisationController = require("../controllers/visualisationController");
+const cacheController = require("../controllers/cacheController");
 
 /* GET home page. */
 router.get('/', twitterController.home);
@@ -41,6 +42,10 @@ router.get('/getStoredTweets/', reactController.getStoredTweets); //returns all 
 router.get('/visualisation', visualisationController.getVisualisation);
 router.get('/visualisationData', visualisationController.getVisualisationData);
 router.get('/nlpData', visualisationController.getNLPData);
+
+
+//Test cache controller
+router.get('/test', cacheController.testCache);
 
 
 module.exports = router;

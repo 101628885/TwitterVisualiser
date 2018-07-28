@@ -2,20 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d61b5b73-b7d8-4ddf-b7f9-f150f877688c" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/controllers/visualisationController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/public/scripts/d3.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/public/scripts/d3_render.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/public/stylesheets/d3.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/views/visualisation.pug" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/TV.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TV.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/controllers/cacheController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/mongoController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/mongoController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/nlpTrainingController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/nlpTrainingController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/reactController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/reactController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/dbpediaController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/dbpediaController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/request-promise/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/node_modules/request-promise/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/backend/views/layout.pug" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -33,7 +26,16 @@
         <entry file="file://$PROJECT_DIR$/backend/controllers/reactController.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
-              <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="47" />
+              <caret line="2" column="47" selection-start-line="2" selection-start-column="47" selection-end-line="2" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dbpediaController.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/backend/controllers/dbpediaController.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="250">
+              <caret line="120" selection-start-line="120" selection-end-line="128" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -56,11 +58,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="d3_render.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="d3_render.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backend/public/scripts/d3_render.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="375">
+              <caret line="25" selection-start-line="25" selection-end-line="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cacheController.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/backend/controllers/cacheController.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="508">
+              <caret line="34" column="1" lean-forward="true" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/backend/routes/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="42" column="67" selection-start-line="42" selection-start-column="67" selection-end-line="42" selection-end-column="67" />
             </state>
           </provider>
         </entry>
@@ -78,7 +98,7 @@
         <entry file="file://$PROJECT_DIR$/backend/public/stylesheets/d3.css">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
-              <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+              <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -106,7 +126,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/backend/controllers/dbpediaController.js" />
         <option value="$PROJECT_DIR$/backend/controllers/autoController.js" />
         <option value="$PROJECT_DIR$/backend/start.js" />
         <option value="$PROJECT_DIR$/backend/controllers/twitterController.js" />
@@ -117,12 +136,14 @@
         <option value="$PROJECT_DIR$/backend/public/scripts/d3.min.js" />
         <option value="$PROJECT_DIR$/backend/controllers/nlpTrainingController.js" />
         <option value="$PROJECT_DIR$/backend/controllers/reactController.js" />
-        <option value="$PROJECT_DIR$/backend/routes/index.js" />
         <option value="$PROJECT_DIR$/backend/controllers/visualisationController.js" />
         <option value="$PROJECT_DIR$/backend/public/test.csv" />
         <option value="$PROJECT_DIR$/backend/public/stylesheets/d3.css" />
         <option value="$PROJECT_DIR$/backend/views/visualisation.pug" />
         <option value="$PROJECT_DIR$/backend/public/scripts/d3_render.js" />
+        <option value="$PROJECT_DIR$/backend/routes/index.js" />
+        <option value="$PROJECT_DIR$/backend/controllers/dbpediaController.js" />
+        <option value="$PROJECT_DIR$/backend/controllers/cacheController.js" />
       </list>
     </option>
   </component>
@@ -256,6 +277,7 @@
       <path value="$PROJECT_DIR$/backend/node_modules/esutils/package.json" />
       <path value="$PROJECT_DIR$/backend/node_modules/etag/package.json" />
       <path value="$PROJECT_DIR$/backend/node_modules/expect-ct/package.json" />
+      <path value="$PROJECT_DIR$/backend/node_modules/express/node_modules/setprototypeof/package.json" />
       <path value="$PROJECT_DIR$/backend/node_modules/express/package.json" />
       <path value="$PROJECT_DIR$/backend/node_modules/extend/package.json" />
       <path value="$PROJECT_DIR$/backend/node_modules/extsprintf/package.json" />
@@ -1099,10 +1121,13 @@
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/quahmingsheng/SEPA/TV-dev/backend/controllers/autoController.js" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="10.6.0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
+    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -1143,6 +1168,8 @@
       <workItem from="1531389012028" duration="784000" />
       <workItem from="1531465079791" duration="1039000" />
       <workItem from="1531653792777" duration="11436000" />
+      <workItem from="1532687863198" duration="1411000" />
+      <workItem from="1532766974235" duration="5004000" />
     </task>
     <task id="LOCAL-00001" summary="Rewrote duplicate checking function.">
       <created>1531115433495</created>
@@ -1155,21 +1182,21 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36585000" />
+    <option name="totallyTimeSpent" value="43000000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21388888" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21705426" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3278302" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3272727" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32972136" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32848486" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -1196,13 +1223,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/backend/views/layout.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="67" selection-start-line="19" selection-start-column="67" selection-end-line="19" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backend/public/scripts/d3_render.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -1279,13 +1299,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/models/tweet_schema.js">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/backend/controllers/dbpediaController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1635">
-          <caret line="109" column="115" selection-start-line="109" selection-start-column="115" selection-end-line="109" selection-end-column="115" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/start.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -1367,27 +1380,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/controllers/mongoController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/backend/controllers/twitterController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/backend/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="26" lean-forward="true" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backend/controllers/nlpTrainingController.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -1395,16 +1387,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/controllers/reactController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/backend/public/test.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/public/test.csv" />
     <entry file="file://$PROJECT_DIR$/backend/public/scripts/d3.min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-12416">
@@ -1430,7 +1413,7 @@
     <entry file="file://$PROJECT_DIR$/backend/public/stylesheets/d3.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
-          <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+          <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -1460,8 +1443,50 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/public/scripts/d3_render.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="375">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/controllers/mongoController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/controllers/reactController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="47" selection-start-line="2" selection-start-column="47" selection-end-line="2" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/controllers/twitterController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="42" column="67" selection-start-line="42" selection-start-column="67" selection-end-line="42" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/controllers/dbpediaController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="120" selection-start-line="120" selection-end-line="128" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/controllers/cacheController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="34" column="1" lean-forward="true" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
         </state>
       </provider>
     </entry>
