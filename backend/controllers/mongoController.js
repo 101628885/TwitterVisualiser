@@ -17,6 +17,7 @@ db.on('error', function()
 
 db.once('open', function(){
     console.log("Connected to " + database.type + " DB at " + database.url);
+
     //exports.removeDuplicates();
 });
 
@@ -95,38 +96,45 @@ exports.storeTweets = function(tweetToStore)
     */
 };
 
-exports.removeDuplicates = async() =>
+
+exports.removeDuplicates = async function()
 {
-    console.log("Starting duplicate check...");
-    tweet.find().lean().exec(function(err, tweets)
+    let tweets = {};
+    let dupsRemoved = 0;
+    console.log("Retrieving DB...");
+    await tweet.find().lean().exec().then(function(result){tweets = result});
+
+    console.log("Done");
+
+    console.log("Checking DB for duplicates...")
+
+    let count_outer = 0;
+    for (let i in tweets)
     {
-        var count_outer = 0;
-
-        for (var i in tweets)
+        let count_inner = 0;
+        let first_instance = true;
+        for (let j in tweets)
         {
-            var count_inner = 0;
-            var first_instance = true;
-            for (var j in tweets)
+            if (tweets[count_outer].full_text === tweets[count_inner].full_text)
             {
-                if (tweets[count_outer].full_text === tweets[count_inner].full_text)
+                if (!first_instance)
                 {
-                    if (!first_instance)
-                    {
-                        console.log("Removing duplicate...");
-                        tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
-                    }
-                    else
-                    {
-                        first_instance = false;
-                    }
+                    dupsRemoved += 1;
+                    await tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
                 }
-                count_inner += 1;
+                else
+                {
+                    first_instance = false;
+                }
+
             }
-
-            count_outer += 1;
-
-
+            count_inner += 1;
         }
-    })
+
+        count_outer += 1;
+    }
+
+
+    console.log("Removed " + dupsRemoved + " duplicates.");
 
 }

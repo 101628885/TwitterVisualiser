@@ -1,3 +1,9 @@
+############################
+# Created by Shane Joachim #
+# Software Engineering A   #
+# VISION                   #
+############################
+
 # spaCy essentials
 import spacy
 from spacy.lang.en import English
