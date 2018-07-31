@@ -41,14 +41,13 @@ exports.getTweets = async(req,res) =>
 	}
 
 	var params = {
-			q: req.body.dbResults, 
+			q: req.body.dbResults,
 			 
 			geocode: `-37.8136,144.9631,${req.body.dist || 10}km`,
 			count: 100,
 			lang: 'en',
 			tweet_mode: 'extended',
 		};
-	console.log(params);
 	client.get('search/tweets', params, function(error, tweets, response) 
 	{
 	  	if (!error) 

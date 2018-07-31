@@ -17,21 +17,65 @@ db.on('error', function()
 db.once('open', function(){
     console.log("Connected to " + database.type + " DB at " + database.url);
 
-    //exports.removeDuplicates();
+
+    //
+    exports.removeDuplicates();
 });
+
 
 
 exports.storeTweets = function(tweetToStore)
 {
     var dbTweet = new tweet();
 
-    tweet.find({full_text : tweetToStore.full_text}, function (err, existing)
+    //Fail
+    tweet.find({full_text: tweetToStore.full_text}).lean().exec().then(function(result)
     {
-       if (existing.length)
-       {
-           console.log("Already have tweet...");
-       }
-       else
+        console.log("Result from DB: " + result);
+
+        if (result.length === 0)
+        {
+            //no result, save
+	        console.log("Saving tweet...");
+	        dbTweet.created_at = tweetToStore.created_at;
+	        dbTweet.id = tweetToStore.id;
+	        dbTweet.full_text = tweetToStore.full_text;
+	        dbTweet.user_id = tweetToStore.user_id;
+	        dbTweet.user_name = tweetToStore.user_name;
+	        dbTweet.user_location = tweetToStore.user_location;
+	        dbTweet.user_verified = tweetToStore.user_verified;
+	        dbTweet.user_profile_image_url = tweetToStore.user_profile_image_url;
+	        dbTweet.geo = tweetToStore.geo;
+	        dbTweet.coordinates = tweetToStore.coordinates;
+	        dbTweet.place = tweetToStore.place;
+	        dbTweet.checked = 0;
+	        dbTweet.crime = null;
+	        dbTweet.save(function(err, doc, affected)
+	        {
+		        if (err)
+		        {
+			        console.log(err);
+		        }
+	        });
+
+        }
+        else
+        {
+            console.log("dupe found bitch");
+        }
+    });
+
+
+    /*
+    //Fail
+    tweet.count({full_text: tweetToStore.full_text}, function (err, res) //Can't lean() in this case because a JSON is already returned
+    {
+	    // if (existing[0].exists())
+	    // {
+		//     console.log("Yo dw");
+	    // }
+       // else
+        if (res === 0)
        {
            console.log("Saving tweet...");
            dbTweet.created_at = tweetToStore.created_at;
@@ -54,13 +98,19 @@ exports.storeTweets = function(tweetToStore)
                    console.log(err);
                }
            });
-       }
+       } else {
+            console.log("dupe found bitch", tweetToStore.full_text);
+        }
 
     });
+
+    */
+
 
 
 
     /*
+    //Fail
     tweet.findOne({ full_text: tweetToStore.full_text }, 'full_text id', function (err, existingTweet)
     {
         if (!err & !existingTweet)
@@ -100,12 +150,12 @@ exports.removeDuplicates = async function()
 {
     let tweets = {};
     let dupsRemoved = 0;
-    console.log("Retrieving DB...");
+    process.stdout.write("Retrieving DB... ");
     await tweet.find().lean().exec().then(function(result){tweets = result});
 
-    console.log("Done");
+	process.stdout.write("Done!\n");
 
-    console.log("Checking DB for duplicates...")
+	process.stdout.write("Checking DB for duplicates... ");
 
     let count_outer = 0;
     for (let i in tweets)
@@ -119,7 +169,7 @@ exports.removeDuplicates = async function()
                 if (!first_instance)
                 {
                     dupsRemoved += 1;
-                    await tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
+                    tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
                 }
                 else
                 {
@@ -132,6 +182,8 @@ exports.removeDuplicates = async function()
 
         count_outer += 1;
     }
+
+	process.stdout.write("Done!\n")
 
 
     console.log("Removed " + dupsRemoved + " duplicates.");
