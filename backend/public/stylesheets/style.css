@@ -1,8 +1,8 @@
-html{
+html {
 	background-color: #2AA3EF;
 }
 
-body {
+body:not(#map body) {
   padding: 50px;
   background-color: #2AA3EF;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
@@ -13,25 +13,30 @@ a {
   color: #00B7FF;
 }
 
-div{
+div:not(#map div) {
 	padding: 10px;
 }
 
-h1 {
+h1:not(#map h1) {
 	color: white;
 }
 
-.card{
+.card {
 	background-color: white;
 	border-color: #0084b4;
 	border-width: 0.2em;
 }
 
-img{
+img:not(#map img){
 	border-radius: 100%;
 }
 
 .card-body{
 	padding: 10px;
 
+}
+
+#map {
+	height: 400px;
+	width: 100%;
 }

@@ -1,0 +1,18 @@
+extends layout
+
+block content
+
+	div(class="row")
+		div(class="col-sm-1")
+			img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
+		div(class="col-sm-11")
+			h1 Tracking Tweet Data
+	div(class="card")
+		div(id="map")
+
+	//- Define default position values and render map to the screen
+	script(src="./scripts/map_render.js")
+	//- Marker clusterer for reducing map clutter
+	script(src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js")
+	//- Verify with API key
+	script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8BoNj8oknFsfTBWhNdAFTiMhI9Gkz8e8&callback=initMap")
