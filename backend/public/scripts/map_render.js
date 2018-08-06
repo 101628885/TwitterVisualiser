@@ -1,10 +1,12 @@
 let historicCoords = {}
 let gMarkers = [];
 dataMap= null;
+var histCentre = [41.881832, -87.623177]
 
-function setHistoricCoords(coords)
+function setHistoricCoords(coords, centre)
 {
   historicCoords = coords;
+  histCentre = centre;
 }
 
 function initMap() {
@@ -48,8 +50,7 @@ function initMap() {
 
 function initHistoricMap() 
 {
-	var defaultRegion = new google.maps.LatLng(41.881832, -87.623177);
-
+	var defaultRegion = new google.maps.LatLng(histCentre[0], histCentre[1]);
 	dataMap = new google.maps.Map(
 	document.getElementById('map'), 
 	{

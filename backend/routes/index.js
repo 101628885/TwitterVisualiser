@@ -48,7 +48,9 @@ router.get('/nlpData', visualisationController.getNLPData);
 router.get('/tweetMap', tweetMapController.getTweetMap);
 
 //Historic Controller
-router.get('/chicagoCrime', historicCrimeController.chicagoHandler); //returns all tweets stored in the DB
+router.get('/chicago', historicCrimeController.chicagoHandler); 
+router.get('/seattle', historicCrimeController.seattleHandler); 
+router.get('/baltimore', historicCrimeController.baltimoreHandler); 
 
 
 module.exports = router;

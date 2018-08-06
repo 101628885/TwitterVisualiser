@@ -29,7 +29,8 @@ block content
 	script.
 		//Best way to pass vairables to a script in pug
 		var i = !{JSON.stringify(coords)}
-		setHistoricCoords(i)
+		var center = !{JSON.stringify(centre)}
+		setHistoricCoords(i, center)
 	//- Marker clusterer for reducing map clutter
 	script(src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js")
 	//- Verify with API key
