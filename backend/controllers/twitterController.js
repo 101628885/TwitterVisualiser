@@ -21,6 +21,7 @@ exports.getTweets = async(req,res) =>
 
 	function storeTweets(tweets)
 	{
+		let results = [];
         for(let i in tweets.statuses) {
             let tweet = {
                 "created_at": tweets.statuses[i].created_at,
@@ -36,9 +37,13 @@ exports.getTweets = async(req,res) =>
                 "place": tweets.statuses[i].place,
                 "checked": false,
                 "crime": null
-            }
-            mongoController.storeTweets(tweet);
+            };
+
+            results.push(tweet);
+
+            //mongoController.storeTweets(tweet);
         }
+        mongoController.storeTweets(results);
 	}
 
 	var params = {
@@ -49,7 +54,6 @@ exports.getTweets = async(req,res) =>
 			lang: 'en',
 			tweet_mode: 'extended',
 		};
-	console.log(params);
 	client.get('search/tweets', params, function(error, tweets, response) 
 	{
 	  	if (!error) 
