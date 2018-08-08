@@ -107,6 +107,15 @@ exports.storeTweets = function(tweetsToStore)
 	thread.send({tweetsToStore: tweetsToStore, database: database}).on('message', function(){thread.kill()});
 };
 
+
+exports.queryDB = async(query) =>
+{
+	let result = "";
+	await tweet.find(query).lean().exec().then(function(res){result = res}).catch(function(err){console.log(err)});
+	return result;
+};
+
+
 exports.removeDuplicates = async function() //deprecated
 {
     let tweets = {};
