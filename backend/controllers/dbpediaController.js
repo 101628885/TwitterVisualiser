@@ -1,5 +1,6 @@
-const sparql = require('sparql')
-const request = require('request')
+const sparql = require('sparql');
+const request = require('request');
+const test = require('./cacheController');
 exports.getDBPedia = async(req,res, next) =>
 {
     client = new sparql.Client('http://dbpedia.org/sparql')
@@ -65,11 +66,11 @@ exports.getDataMuse = async(req, res, callback) =>
         wordQuery = "crime";
     }
 
-    options =
-        {
-            method: "GET",
-            url: `https://api.datamuse.com/words?rel_trg=` + wordQuery
-        }
+	options =
+		{
+			method: "GET",
+			url: `https://api.datamuse.com/words?rel_trg=` + wordQuery
+		}
 
     request(options, function (error, response, body)
     {
