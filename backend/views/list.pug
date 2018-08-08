@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    div(class="row")
+        div(class="col-sm-1")
+            img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
+        div(class="col-sm-11")
+            h1 Twitter Word Visualisation
+    div(class="card")
+        form(action='/list', method='POST')
+
+            h6 Enter the amount of results to return:
+            input(type='text' name='count' id='count')
+            br
+            br
+
+
+            h6 Random?
+            input(type='checkbox' name='random' id='random')
+
+            br
+            br
+
+            h6 Checked
+            input(type='checkbox' name='checked' id='checked')
+            br
+            br
+
+
+            h6 Crime
+            input(type='checkbox' name='crime' id='crime')
+            br
+            br
+
+
+            input(type='submit', value='Search Stored Tweets')
+
+
+    br
+    br
+    each tweet in data
+        div(class="card")
+            h5(class="card-title") #{tweet.user_name} -  #{tweet.created_at} - #{tweet.geo}
+            div(class="card-body")
+                img(src=`${tweet.user_profile_image_url}`)
+                p #{tweet.full_text}
+    br

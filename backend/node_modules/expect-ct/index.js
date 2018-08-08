@@ -22,7 +22,7 @@ function getHeaderValue (options) {
     directives.push('report-uri="' + options.reportUri + '"')
   }
 
-  return directives.join('; ')
+  return directives.join(', ')
 }
 
 function parseMaxAge (option) {

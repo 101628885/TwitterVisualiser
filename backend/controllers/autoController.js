@@ -2,22 +2,27 @@ const request = require('request');
 var shouldRun = false;
 var query = [];
 var autoCollect = false;
-
+var querySelect = 0;
 
 setInterval(function(){
 
     if (shouldRun)
     {
-        for (var i = 0; i < query.length; i++)
+        console.log("Checking word: ", query[querySelect]);
+        collect(query[querySelect]);
+
+        if (querySelect < query.length - 1)
         {
-
-            console.log("Checking word: " + query[i]);
-            collect(query[i]);
-
+            querySelect++;
+        }
+        else if (querySelect >= query.length -1)
+        {
+            querySelect = 0;
         }
 
+
     }
-}, 30000);
+}, 4000);
 
 
 
@@ -27,7 +32,7 @@ function collect(query)
     request.post({
         headers: {'content-type' : 'application/x-www-form-urlencoded'},
         url:     'http://localhost:3000/getTweets',
-        form:    { word: query,shouldStoreTweets: true }
+        form:    { word: query, shouldStoreTweets: true }
     }, function(error, response, body){
         //console.log(err);
     });
@@ -48,7 +53,7 @@ exports.autoGet = function(req, res)
         query.length = 0;
         res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Queries to monitor: "});
     }
-}
+};
 
 exports.autoPost = function(req, res)
 {
@@ -81,15 +86,16 @@ exports.autoPost = function(req, res)
 
     if (query.length === 0)
     {
-        query.push("crime"); //default search therm if no entry is specified
+        query.push("crime");
+	    query.push("assault");
+	    query.push("theft");
+	    query.push("rape");
+	    query.push("murder");//default search therm if no entry is specified
     }
-[]
-
-
 
 
     exports.updateState(query, autoCollect);
 
     res.redirect('/auto');
 
-}
+};

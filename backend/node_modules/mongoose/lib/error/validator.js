@@ -20,6 +20,8 @@ function ValidatorError(properties) {
 
   var message = this.formatMessage(msg, properties);
   MongooseError.call(this, message);
+
+  properties = Object.assign({}, properties, { message: message });
   this.name = 'ValidatorError';
   if (Error.captureStackTrace) {
     Error.captureStackTrace(this);
@@ -56,6 +58,9 @@ Object.defineProperty(ValidatorError.prototype, 'properties', {
  */
 
 ValidatorError.prototype.formatMessage = function(msg, properties) {
+  if (typeof msg === 'function') {
+    return msg(properties);
+  }
   var propertyNames = Object.keys(properties);
   for (var i = 0; i < propertyNames.length; ++i) {
     var propertyName = propertyNames[i];
