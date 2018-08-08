@@ -3,12 +3,16 @@ var router = express.Router();
 
 const twitterController = require("../controllers/twitterController");
 const dbpediaController = require("../controllers/dbpediaController");
+const mongoController = require("../controllers/mongoController");
 const verifyController = require("../controllers/verifyController");
 const reactController = require("../controllers/reactController");
 const nlpTrainingController = require("../controllers/nlpTrainingController");
 const autoController = require("../controllers/autoController");
 const visualisationController = require("../controllers/visualisationController");
 const cacheController = require("../controllers/cacheController");
+const tweetMapController = require("../controllers/tweetMapController");
+const historicCrimeController = require("../controllers/historicCrimeController");
+const listviewController = require("../controllers/listviewController");
 
 /* GET home page. */
 router.get('/', twitterController.home);
@@ -42,6 +46,21 @@ router.get('/getStoredTweets/', reactController.getStoredTweets); //returns all 
 router.get('/visualisation', visualisationController.getVisualisation);
 router.get('/visualisationData', visualisationController.getVisualisationData);
 router.get('/nlpData', visualisationController.getNLPData);
+
+//TweetMap Controller
+router.get('/tweetMap', tweetMapController.getTweetMap);
+
+
+//List View Controller
+router.get('/list', listviewController.listTweets);
+router.post('/list', listviewController.findTweets);
+
+
+//Historic Controller
+router.get('/chicago', historicCrimeController.chicagoHandler); 
+router.get('/seattle', historicCrimeController.seattleHandler); 
+router.get('/baltimore', historicCrimeController.baltimoreHandler); 
+
 
 
 //Test cache controller

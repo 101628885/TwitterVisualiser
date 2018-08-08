@@ -1,161 +1,122 @@
 const mongoose = require('mongoose');
 //Load tweet schema
 const tweet = require('../models/tweet_schema');
+
 const ObjectId = require('mongodb').ObjectId;
 const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
 //const database = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
+const spawn = require('threads').spawn;
 
+
+//Create a connection for querying the DB /////////////////////////////////////////////////////////////////////////////
 mongoose.connect(database.url);
 
 var db = mongoose.connection;
 
 db.on('error', function()
 {
-    console.log("An error occurred while connecting to the " + database.type + " DB at " + database.url);
+	console.log("An error occurred while connecting to the " + database.type + " DB at " + database.url);
+
 });
 
 db.once('open', function(){
-    console.log("Connected to " + database.type + " DB at " + database.url);
+	console.log("Connected to " + database.type + " DB at " + database.url);
 
-
-    //
-    exports.removeDuplicates();
+  // Removes dupes during server boot
+  // exports.removeDuplicates();
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-exports.storeTweets = function(tweetToStore)
+exports.storeTweets = function(tweetsToStore)
 {
-    var dbTweet = new tweet();
+	const thread = spawn(function(input, done) {
+		const process = require('process');
+		let filteredArray = [];
+		let resultArray = [];
 
-    //Fail
-    tweet.find({full_text: tweetToStore.full_text}).lean().exec().then(function(result)
-    {
-        console.log("Result from DB: " + result);
+		const mongoose = require('mongoose');
+		const tweet = require(process.cwd() + "/models/tweet_schema");
 
-        if (result.length === 0)
-        {
-            //no result, save
-	        console.log("Saving tweet...");
-	        dbTweet.created_at = tweetToStore.created_at;
-	        dbTweet.id = tweetToStore.id;
-	        dbTweet.full_text = tweetToStore.full_text;
-	        dbTweet.user_id = tweetToStore.user_id;
-	        dbTweet.user_name = tweetToStore.user_name;
-	        dbTweet.user_location = tweetToStore.user_location;
-	        dbTweet.user_verified = tweetToStore.user_verified;
-	        dbTweet.user_profile_image_url = tweetToStore.user_profile_image_url;
-	        dbTweet.geo = tweetToStore.geo;
-	        dbTweet.coordinates = tweetToStore.coordinates;
-	        dbTweet.place = tweetToStore.place;
-	        dbTweet.checked = 0;
-	        dbTweet.crime = null;
-	        dbTweet.save(function(err, doc, affected)
-	        {
-		        if (err)
-		        {
-			        console.log(err);
-		        }
-	        });
+		mongoose.connect(input.database.url);
 
-        }
-        else
-        {
-            console.log("dupe found bitch");
-        }
-    });
+		let writeConnection = mongoose.connection;
 
+		writeConnection.on('error', function ()
+		{
+			console.log("An error occurred while establishing a write connection to the", input.database.type, "database.");
+		});
 
-    /*
-    //Fail
-    tweet.count({full_text: tweetToStore.full_text}, function (err, res) //Can't lean() in this case because a JSON is already returned
-    {
-	    // if (existing[0].exists())
-	    // {
-		//     console.log("Yo dw");
-	    // }
-       // else
-        if (res === 0)
-       {
-           console.log("Saving tweet...");
-           dbTweet.created_at = tweetToStore.created_at;
-           dbTweet.id = tweetToStore.id;
-           dbTweet.full_text = tweetToStore.full_text;
-           dbTweet.user_id = tweetToStore.user_id;
-           dbTweet.user_name = tweetToStore.user_name;
-           dbTweet.user_location = tweetToStore.user_location;
-           dbTweet.user_verified = tweetToStore.user_verified;
-           dbTweet.user_profile_image_url = tweetToStore.user_profile_image_url;
-           dbTweet.geo = tweetToStore.geo;
-           dbTweet.coordinates = tweetToStore.coordinates;
-           dbTweet.place = tweetToStore.place;
-           dbTweet.checked = 0;
-           dbTweet.crime = null;
-           dbTweet.save(function(err)
-           {
-               if (err)
-               {
-                   console.log(err);
-               }
-           });
-       } else {
-            console.log("dupe found bitch", tweetToStore.full_text);
-        }
+		writeConnection.on('open', async () =>
+		{
+			writeModel = writeConnection.model('tweets');
 
-    });
+			let alreadyInArray;
 
-    */
+			for (let post in input.tweetsToStore) //This nested for loop checks that we don't have any duplicates in the array we get from Twitter
+			{
 
+				for (let j in filteredArray)
+				{
+					alreadyInArray = (input.tweetsToStore[post].full_text === input.tweetsToStore[j].full_text);
 
+					if (alreadyInArray)
+					{
+						break;
+					}
 
+				}
+				if (!alreadyInArray)
+				{
+					filteredArray.push(input.tweetsToStore[post]);
+				}
+			}
 
-    /*
-    //Fail
-    tweet.findOne({ full_text: tweetToStore.full_text }, 'full_text id', function (err, existingTweet)
-    {
-        if (!err & !existingTweet)
-        {
-            console.log("Saving tweet...");
-            dbTweet.created_at = tweetToStore.created_at;
-            dbTweet.id = tweetToStore.id;
-            dbTweet.full_text = tweetToStore.full_text;
-            dbTweet.user_id = tweetToStore.user_id;
-            dbTweet.user_name = tweetToStore.user_name;
-            dbTweet.user_location = tweetToStore.user_location;
-            dbTweet.user_verified = tweetToStore.user_verified;
-            dbTweet.user_profile_image_url = tweetToStore.user_profile_image_url;
-            dbTweet.geo = tweetToStore.geo;
-            dbTweet.coordinates = tweetToStore.coordinates;
-            dbTweet.place = tweetToStore.place;
-            dbTweet.checked = 0;
-            dbTweet.crime = null;
-            dbTweet.save(function(err)
-            {
-                if (err)
-                {
-                    console.log(err);
-                }
-            });
-        }
-        else if (existingTweet)
-        {
-            console.log("Already have tweet...");
-        }
-    });
-    */
+			for (let post in filteredArray) //Check that items in the array aren't already in the DB
+			{
+				await writeModel.find({full_text: filteredArray[post].full_text}).lean().exec().then(function (result)
+				{
+					if (result.length === 0)
+					{
+						resultArray.push(filteredArray[post]);
+					}
+				})
+			}
+
+			for (let post in resultArray) { //Save the documents to the DB one by one
+				var dbTweet = new tweet();
+				dbTweet.created_at = resultArray[post].created_at;
+				dbTweet.id = resultArray[post].id;
+				dbTweet.full_text = resultArray[post].full_text;
+				dbTweet.user_id = resultArray[post].user_id;
+				dbTweet.user_name = resultArray[post].user_name;
+				dbTweet.user_location = resultArray[post].user_location;
+				dbTweet.user_verified = resultArray[post].user_verified;
+				dbTweet.user_profile_image_url = resultArray[post].user_profile_image_url;
+				dbTweet.geo = resultArray[post].geo;
+				dbTweet.coordinates = resultArray[post].coordinates;
+				dbTweet.place = resultArray[post].place;
+				dbTweet.checked = 0;
+				dbTweet.crime = null;
+				await dbTweet.save().catch(function(err){console.log(err)});
+			}
+			done({}); //Notify parent we're done
+		});
+	});
+
+	//Spawn worker thread then kill it once its done
+	thread.send({tweetsToStore: tweetsToStore, database: database}).on('message', function(){thread.kill()});
 };
 
-
-exports.removeDuplicates = async function()
+exports.removeDuplicates = async function() //deprecated
 {
     let tweets = {};
     let dupsRemoved = 0;
     process.stdout.write("Retrieving DB... ");
     await tweet.find().lean().exec().then(function(result){tweets = result});
 
-	process.stdout.write("Done!\n");
-
-	process.stdout.write("Checking DB for duplicates... ");
+    process.stdout.write("Done!\n");
+    process.stdout.write("Checking DB for duplicates... ");
 
     let count_outer = 0;
     for (let i in tweets)
@@ -183,9 +144,9 @@ exports.removeDuplicates = async function()
         count_outer += 1;
     }
 
-	process.stdout.write("Done!\n")
+	  process.stdout.write("Done!\n")
 
 
     console.log("Removed " + dupsRemoved + " duplicates.");
 
-}
+};

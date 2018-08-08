@@ -13,6 +13,7 @@ exports.home = async(req,res) =>
 {
 	tweets = ""
 	res.render('index', {data: tweets});
+
 }
 
 exports.getTweets = async(req,res) => 
@@ -20,6 +21,7 @@ exports.getTweets = async(req,res) =>
 
 	function storeTweets(tweets)
 	{
+		let results = [];
         for(let i in tweets.statuses) {
             let tweet = {
                 "created_at": tweets.statuses[i].created_at,
@@ -35,14 +37,17 @@ exports.getTweets = async(req,res) =>
                 "place": tweets.statuses[i].place,
                 "checked": false,
                 "crime": null
-            }
-            mongoController.storeTweets(tweet);
+            };
+
+            results.push(tweet);
+
+            //mongoController.storeTweets(tweet);
         }
+        mongoController.storeTweets(results);
 	}
 
 	var params = {
 			q: req.body.dbResults,
-			 
 			geocode: `-37.8136,144.9631,${req.body.dist || 10}km`,
 			count: 100,
 			lang: 'en',
@@ -59,13 +64,12 @@ exports.getTweets = async(req,res) =>
                     tweets.statuses[tweet].created_at = moment(tweets.statuses[tweet].created_at).startOf('hour').fromNow();
                 }
 			}
-
+			
 	  		let wordCount = {};
 	  		for(word in req.body.words)
 	  		{
 	  			for(tweet in tweets.statuses)
 	  			{
-
 	  				if(tweets.statuses[tweet].full_text.includes(req.body.words[word]))
 	  				{
 	  					if(wordCount.hasOwnProperty(req.body.words[word]))
