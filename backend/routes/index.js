@@ -10,6 +10,7 @@ const nlpTrainingController = require("../controllers/nlpTrainingController");
 const autoController = require("../controllers/autoController");
 const visualisationController = require("../controllers/visualisationController");
 const tweetMapController = require("../controllers/tweetMapController");
+const historicCrimeController = require("../controllers/historicCrimeController");
 const listviewController = require("../controllers/listviewController");
 
 /* GET home page. */
@@ -48,10 +49,16 @@ router.get('/nlpData', visualisationController.getNLPData);
 //TweetMap Controller
 router.get('/tweetMap', tweetMapController.getTweetMap);
 
+
 //List View Controller
 router.get('/list', listviewController.listTweets);
 router.post('/list', listviewController.findTweets);
 
+
+//Historic Controller
+router.get('/chicago', historicCrimeController.chicagoHandler); 
+router.get('/seattle', historicCrimeController.seattleHandler); 
+router.get('/baltimore', historicCrimeController.baltimoreHandler); 
 
 
 

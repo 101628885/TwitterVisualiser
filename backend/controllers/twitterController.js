@@ -48,7 +48,6 @@ exports.getTweets = async(req,res) =>
 
 	var params = {
 			q: req.body.dbResults, 
-			 
 			geocode: `-37.8136,144.9631,${req.body.dist || 10}km`,
 			count: 100,
 			lang: 'en',
@@ -65,13 +64,12 @@ exports.getTweets = async(req,res) =>
                     tweets.statuses[tweet].created_at = moment(tweets.statuses[tweet].created_at).startOf('hour').fromNow();
                 }
 			}
-
+			
 	  		let wordCount = {};
 	  		for(word in req.body.words)
 	  		{
 	  			for(tweet in tweets.statuses)
 	  			{
-
 	  				if(tweets.statuses[tweet].full_text.includes(req.body.words[word]))
 	  				{
 	  					if(wordCount.hasOwnProperty(req.body.words[word]))

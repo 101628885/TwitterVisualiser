@@ -1,0 +1,38 @@
+extends layout
+
+block content
+
+	div(class="row")
+		div(class="col-sm-1")
+			img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
+		div(class="col-sm-11")
+			h1 Tracking Tweet Data
+	.row
+		.col-sm-3
+			select#crime-type
+				option(value="All" selected) All Crime
+				for type in primary_types
+					option(value=`${type}`) #{type}
+			script.
+				$('#crime-type').on('change', function() {
+				    hideMarkers($(this).find(":selected").val());
+				});
+		.col-sm-3
+			select
+				for date in dates
+					option(value=`${date}`) #{date}
+	
+	div(class="card")
+		div(id="map")
+
+	//- Define default position values and render map to the screen
+	script.
+		//Best way to pass vairables to a script in pug
+		var i = !{JSON.stringify(coords)}
+		var center = !{JSON.stringify(centre)}
+		setHistoricCoords(i, center)
+	//- Marker clusterer for reducing map clutter
+	script(src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js")
+	//- Verify with API key
+	script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8BoNj8oknFsfTBWhNdAFTiMhI9Gkz8e8&callback=initHistoricMap")
+
