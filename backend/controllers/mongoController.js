@@ -22,7 +22,6 @@ db.on('error', function()
 db.once('open', function(){
 	console.log("Connected to " + database.type + " DB at " + database.url);
 
-	//exports.removeDuplicates();
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +107,7 @@ exports.storeTweets = function(tweetsToStore)
 	thread.send({tweetsToStore: tweetsToStore, database: database}).on('message', function(){thread.kill()});
 };
 
-exports.removeDuplicates = async function()
+exports.removeDuplicates = async function() //deprecated
 {
     let tweets = {};
     let dupsRemoved = 0;

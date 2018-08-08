@@ -9,20 +9,13 @@ exports.findTweets = async(req,res) =>
 {
 
 	//Start building query to DB...
-	query = {};
-	limit = 0;
-
-	if (req.body.count)
-	{
-		limit = req.body.count;
-	}
-
-	console.log("Form crime ", req.body.crime);
-
+	let query = {};
+	let limit = 0;
+	let skip = 0;
 
 	if (!req.body.crime)
 	{
-		query.checked = req.body.checked;
+		query.checked = (req.body.checked === "on");
 	}
 	else
 	{
@@ -30,16 +23,26 @@ exports.findTweets = async(req,res) =>
 	}
 
 
-	tweet.find(query).limit(limit).lean().exec()
+	if (!req.body.count)
+	{
+		limit = 20; //return 20 tweets if not defined
+	}
+	else
+	{
+		limit = parseInt(req.body.count);
+	}
+
+	//returns random results
+	if (req.body.random)
+	{
+		skip = Math.floor(Math.random() * limit);
+	}
+
+
+	tweet.find(query).limit(limit).skip(skip).lean().exec()
 	.then(function(result){
 		res.render('list', {data: result});
 	})
 	.catch(function(err){console.log(err)});
-
-
-
-
-
-
 
 };
