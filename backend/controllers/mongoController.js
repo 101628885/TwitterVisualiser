@@ -22,10 +22,11 @@ db.on('error', function()
 db.once('open', function(){
 	console.log("Connected to " + database.type + " DB at " + database.url);
 
+  // Removes dupes during server boot
+  // exports.removeDuplicates();
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 exports.storeTweets = function(tweetsToStore)
 {
@@ -123,12 +124,11 @@ exports.removeDuplicates = async function() //deprecated
 {
     let tweets = {};
     let dupsRemoved = 0;
-    console.log("Retrieving DB...");
+    process.stdout.write("Retrieving DB... ");
     await tweet.find().lean().exec().then(function(result){tweets = result});
 
-    console.log("Done");
-
-    console.log("Checking DB for duplicates...");
+    process.stdout.write("Done!\n");
+    process.stdout.write("Checking DB for duplicates... ");
 
     let count_outer = 0;
     for (let i in tweets)
@@ -155,6 +155,8 @@ exports.removeDuplicates = async function() //deprecated
 
         count_outer += 1;
     }
+
+	  process.stdout.write("Done!\n")
 
 
     console.log("Removed " + dupsRemoved + " duplicates.");

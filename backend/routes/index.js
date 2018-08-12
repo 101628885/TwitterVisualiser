@@ -9,6 +9,7 @@ const reactController = require("../controllers/reactController");
 const nlpTrainingController = require("../controllers/nlpTrainingController");
 const autoController = require("../controllers/autoController");
 const visualisationController = require("../controllers/visualisationController");
+const cacheController = require("../controllers/cacheController");
 const tweetMapController = require("../controllers/tweetMapController");
 const historicCrimeController = require("../controllers/historicCrimeController");
 const listviewController = require("../controllers/listviewController");
@@ -60,6 +61,10 @@ router.get('/chicago', historicCrimeController.chicagoHandler);
 router.get('/seattle', historicCrimeController.seattleHandler); 
 router.get('/baltimore', historicCrimeController.baltimoreHandler); 
 
+
+
+//Test cache controller
+router.get('/test', cacheController.testCache);
 
 
 module.exports = router;
