@@ -128,7 +128,7 @@ describe('storeTweets()', function(){
 
 		mongo.storeTweets(testArray);
 
-		await timeout(2000);
+		await timeout(2500);
 
 		let result = [];
 
