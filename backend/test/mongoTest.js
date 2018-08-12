@@ -49,9 +49,9 @@ describe('storeTweets()', function(){
 
 		mongo.storeTweets(testArray);
 
-		await timeout(2000); //Bit hacky but we have to give the DB a moment to save the test items
+		await timeout(2500); //Bit hacky but we have to give the DB a moment to save the test items
 
-		//ASSERT, ask mongoController to return items from DB.
+		//ACTION, ask mongoController to return items from DB.
 
 		let sample1FromDB = {};
 		let sample2FromDB = {};

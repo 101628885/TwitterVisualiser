@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node start",
-    "test": "mocha --timeout 4000 --exit"
+    "test": "mocha --timeout 9000 --exit"
   },
   "dependencies": {
     "ajv": "^6.5.2",
