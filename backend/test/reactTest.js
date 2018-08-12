@@ -28,7 +28,7 @@ describe('queryDB()', function(){
 
 		for (let i in testCheckedTrue)
 		{
-			expect(testCheckedTrue[i].checked).to.be.equal(false);
+			expect(testCheckedTrue[i].checked).to.be.equal(true);
 		}
 
 		for (let i in testCheckedFalse)
