@@ -22,7 +22,7 @@ setInterval(function(){
 
 
     }
-}, 4000);
+}, 8000);
 
 
 

@@ -10,12 +10,22 @@ exports.getPredictedData = async (req, res) =>
     nlp.runNLP(function(result){res.send(result)});
 };
 
+exports.queryDB = async(query, limit) =>
+{
+    let result = [];
+    await tweet.find(query).sort({'date': -1}).lean().limit(parseInt(limit)).exec().then(function(res){result = res}).catch(function(err){console.log(err)});
+    return result;
+
+
+
+};
 
 exports.getStoredTweets = async (req, res) =>
 {
-    var tweet = db.model('tweets', tweet);
-    var query = {};
-    var count = 0;
+    //var tweet = db.model('tweets', tweet);
+    let query = {};
+    let count = 0;
+    let result = [];
 
     if (req.params.checked)
     {
@@ -36,19 +46,14 @@ exports.getStoredTweets = async (req, res) =>
         count = Number.MAX_SAFE_INTEGER;
     }
 
+    await exports.queryDB(query, count).then(function(res){result = res});
 
-    tweet.find(query).sort({'date': -1}).limit(parseInt(count)).exec(function(err, posts)
-    {
-        if (!err)
-        {
-            res.send(posts);
-        }
-        else
-        {
-            console.log(err);
-        }
-    });
+    res.send(result);
+
+
 };
+
+
 
 exports.getCrimeWordCount = async (req,res, next) => 
 {
@@ -67,7 +72,7 @@ exports.getCrimeWordCount = async (req,res, next) =>
                 for (i in temp)
                 {
                     wordsFound += 1;
-                    word = temp[i]
+                    word = temp[i];
                     if(!words.hasOwnProperty(word) && word.length > 2)
                     {
                         words[word] = 1;
@@ -91,4 +96,4 @@ exports.getCrimeWordCount = async (req,res, next) =>
             res.send({crime_tweets: tweetNum, unique_words: uniqueWords, words_found: wordsFound, words: sortedWords});
         }  
     });     
-}
+};
