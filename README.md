@@ -62,6 +62,16 @@ the items from the sprints.
 2. If you're using `yarn` be sure to run a `yarn install`.
 3. Open up your preferred IDE or Text Editor - like VS Code ;) - and edit `app.js` or create and import new files.
 
+##Running kepler.gl map
+
+```
+cd vision-map
+npm install
+export MapboxAccessToken=pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ
+npm start
+
+```
+
 ## Running the application
 
 ### macOS
