@@ -201,7 +201,7 @@ class App extends Component {
           }}
         >
           <KeplerGl
-            mapboxApiAccessToken={MAPBOX_TOKEN}
+            mapboxApiAccessToken="pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ"
             id="map"
             /*
              * Specify path to keplerGl state, because it is not mount at the root
