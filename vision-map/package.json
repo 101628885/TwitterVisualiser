@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "webpack-dev-server --progress --hot --open",
+    "start": "webpack-dev-server --progress --host 0.0.0.0 --port 8080 --open",
     "start-local": "webpack-dev-server --env.es6 --progress --hot --open",
     "start-local-es5": "webpack-dev-server --env.local --progress --hot --open"
   },
