@@ -3,13 +3,15 @@ var shouldRun = false;
 var query = [];
 var autoCollect = false;
 var querySelect = 0;
+var geo = "melbourne";
 
 setInterval(function(){
 
     if (shouldRun)
     {
-        console.log("Checking word: ", query[querySelect]);
-        collect(query[querySelect]);
+
+        console.log("Checking word: ", query[querySelect], " in location ", geo);
+        collect(query[querySelect], geo);
 
         if (querySelect < query.length - 1)
         {
@@ -18,21 +20,30 @@ setInterval(function(){
         else if (querySelect >= query.length -1)
         {
             querySelect = 0;
+
+	        if (geo === "melbourne")
+	        {
+	            console.log("Finished run, setting location to Chicago");
+		        geo = "chicago";
+	        }
+	        else if(geo === "chicago")
+	        {
+	            console.log("Finished run, setting location to Melbourne");
+		        geo = "melbourne";
+	        }
         }
-
-
     }
 }, 8000);
 
 
 
-function collect(query)
+function collect(query, geo)
 {
 
     request.post({
         headers: {'content-type' : 'application/x-www-form-urlencoded'},
         url:     'http://localhost:3000/getTweets',
-        form:    { word: query, shouldStoreTweets: true }
+        form:    { word: query, shouldStoreTweets: true, location: geo }
     }, function(error, response, body){
         //console.log(err);
     });
@@ -90,7 +101,7 @@ exports.autoPost = function(req, res)
         query.push("assault");
         query.push("murder");
         query.push("rape");
-        query.push("theft");//default search therm if no entry is specified
+        query.push("theft");//default search term if no entry is specified
     }
 
 

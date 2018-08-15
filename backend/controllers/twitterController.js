@@ -11,7 +11,7 @@ var client = new Twitter({
 
 exports.home = async(req,res) =>
 {
-	tweets = ""
+	tweets = "";
 	res.render('index', {data: tweets});
 
 }
@@ -19,7 +19,7 @@ exports.home = async(req,res) =>
 exports.getTweets = async(req,res) => 
 {
 
-	function storeTweets(tweets)
+	function storeTweets(tweets, geo)
 	{
 		let results = [];
         for(let i in tweets.statuses) {
@@ -41,18 +41,35 @@ exports.getTweets = async(req,res) =>
 
             results.push(tweet);
 
-            //mongoController.storeTweets(tweet);
         }
-        mongoController.storeTweets(results);
+        mongoController.storeTweets(results, req.body.location);
+	}
+
+	let geo = "";
+	if (req.body.location === "melbourne")
+	{
+		console.log("Location is set to Melbourne...");
+		geo = `-37.8136,144.9631,${req.body.dist || 100}km`;
+	}
+	else if (req.body.location === "chicago")
+	{
+		console.log("Location is set to Chicago...");
+		geo = `41.881832,-87.623177,${req.body.dist || 320}km`;
+	}
+	else
+	{
+		console.log("Invalid form data, setting location to Melbourne...");
+		geo = `-37.8136,144.9631,${req.body.dist || 100}km`;
 	}
 
 	var params = {
 			q: req.body.dbResults,
-			geocode: `-37.8136,144.9631,${req.body.dist || 10}km`,
+			geocode: geo,
 			count: 100,
 			lang: 'en',
 			tweet_mode: 'extended',
 		};
+	console.log(params);
 	client.get('search/tweets', params, function(error, tweets, response) 
 	{
 	  	if (!error) 
@@ -86,7 +103,7 @@ exports.getTweets = async(req,res) =>
 
 	  		if (req.body.shouldStoreTweets)
 			{
-				storeTweets(tweets);
+				storeTweets(tweets, geo);
 			}
 
 	    	res.render('index', {data: tweets.statuses, searchwords: req.body.dbResults, wordCount: wordCount})

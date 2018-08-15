@@ -1,10 +1,10 @@
 html {
-	background-color: #2AA3EF;
+	background-color: black;
 }
 
 body:not(#map body) {
   padding: 50px;
-  background-color: #2AA3EF;
+  background-color: black;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
   font-weight: 300;
 }
@@ -22,13 +22,13 @@ h1:not(#map h1) {
 }
 
 .card {
-	background-color: white;
-	border-color: #0084b4;
+	background-color: #696969;
+	border-color: black;
 	border-width: 0.2em;
 }
 
 img:not(#map img){
-	border-radius: 100%;
+
 }
 
 .card-body{

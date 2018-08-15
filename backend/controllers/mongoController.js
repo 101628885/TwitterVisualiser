@@ -3,8 +3,13 @@ const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
 
 const ObjectId = require('mongodb').ObjectId;
-const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
-//const database = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
+//const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
+const database = { url : "mongodb://localhost:27017/tweetsChicago", type: "Testing"};
+
+//const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
+const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Production"};
+
+
 const spawn = require('threads').spawn;
 
 
@@ -21,15 +26,13 @@ db.on('error', function()
 
 db.once('open', function(){
 	console.log("Connected to " + database.type + " DB at " + database.url);
-
-  // Removes dupes during server boot
-  // exports.removeDuplicates();
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-exports.storeTweets = function(tweetsToStore)
+exports.storeTweets = function(tweetsToStore, geo)
 {
+	console.log("Trying to write to DB: ", geo);
 	let id = Math.floor(Math.random() * Math.floor(25));
 
 	const thread = spawn(function(input, done, progress) {
@@ -112,10 +115,21 @@ exports.storeTweets = function(tweetsToStore)
 		});
 	});
 
-	//Spawn worker thread then kill it once its done
-	thread.send({tweetsToStore: tweetsToStore, database: database})
-		.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
-		.on('message', function(){thread.kill()});
+	if (geo === "melbourne")
+	{
+		console.log("Using Melbourne Database...");
+		thread.send({tweetsToStore: tweetsToStore, database: database})
+			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
+			.on('message', function(){thread.kill()});
+
+	}
+	else if (geo === "chicago")
+	{
+		console.log("Using Chicago Database...");
+		thread.send({tweetsToStore: tweetsToStore, database: databaseChicago})
+			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
+			.on('message', function(){thread.kill()});
+	}
 };
 
 
