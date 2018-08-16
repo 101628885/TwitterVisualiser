@@ -3,32 +3,37 @@ const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
 
 const ObjectId = require('mongodb').ObjectId;
-//const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
-const database = { url : "mongodb://localhost:27017/tweetsChicago", type: "Testing"};
+const databaseMelb = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
+//const databaseMelb = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
 
-//const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
-const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Production"};
-
+const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
+//const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Production"};
 
 const spawn = require('threads').spawn;
 
 
-//Create a connection for querying the DB /////////////////////////////////////////////////////////////////////////////
-mongoose.connect(database.url);
 
-var db = mongoose.connection;
+var db = mongoose.createConnection(databaseMelb.url);
+var tweet1 = db.model('tweets');
+//module.exports = tweet1;
 
-db.on('error', function()
+var db2 = mongoose.createConnection(databaseChicago.url);
+var tweet2 = db2.model('tweets');
+//module.exports = tweet2;
+
+module.exports = {'tweet1': tweet1, 'tweet2': tweet2};
+
+
+
+
+//init().then(()=>{module.exports = {'tweet': tweet, 'tweetChicago': tweetChicago}});
+
+
+async function init()
 {
-	console.log("An error occurred while connecting to the " + database.type + " DB at " + database.url);
 
-});
 
-db.once('open', function(){
-	console.log("Connected to " + database.type + " DB at " + database.url);
-});
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
 
 exports.storeTweets = function(tweetsToStore, geo)
 {
@@ -117,15 +122,15 @@ exports.storeTweets = function(tweetsToStore, geo)
 
 	if (geo === "melbourne")
 	{
-		console.log("Using Melbourne Database...");
-		thread.send({tweetsToStore: tweetsToStore, database: database})
+		console.log("Using Melbourne Database at ", databaseMelb.url);
+		thread.send({tweetsToStore: tweetsToStore, database: databaseMelb})
 			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
 			.on('message', function(){thread.kill()});
 
 	}
 	else if (geo === "chicago")
 	{
-		console.log("Using Chicago Database...");
+		console.log("Using Chicago Database at ", databaseChicago.url);
 		thread.send({tweetsToStore: tweetsToStore, database: databaseChicago})
 			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
 			.on('message', function(){thread.kill()});

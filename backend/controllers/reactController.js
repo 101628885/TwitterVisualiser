@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
-const tweet = require('../models/tweet_schema');
+var schemas = require('./mongoController');
+var tweet1 = schemas.tweet1;
+var tweet2 = schemas.tweet2;
+
+
 const nlp = require('./nlpTrainingController');
 var db = mongoose.connection;
 
@@ -13,11 +17,8 @@ exports.getPredictedData = async (req, res) =>
 exports.queryDB = async(query, limit) =>
 {
     let result = [];
-    await tweet.find(query).sort({'date': -1}).lean().limit(parseInt(limit)).exec().then(function(res){result = res}).catch(function(err){console.log(err)});
+    await tweet2.find(query).sort({'date': -1}).lean().limit(parseInt(limit)).exec().then(function(res){result = res}).catch(function(err){console.log(err)});
     return result;
-
-
-
 };
 
 exports.getStoredTweets = async (req, res) =>

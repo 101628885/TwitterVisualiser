@@ -47,7 +47,7 @@ app.use(function(err, req, res, next) {
 process.on('uncaughtException', (err) => {
   //Log error to disk...
   console.log(err);
-  fs.writeFile(process.cwd() + "/stderr-" + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''), err, function (err){
+  fs.writeFile(process.cwd() + "/logs/stderr-" + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''), err, function (err){
     if (err)
     {
       console.log("Error writing error log to disk: " + err); //That's a bit sad

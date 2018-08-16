@@ -5,9 +5,16 @@ block content
         div(class="col-sm-1")
             img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
         div(class="col-sm-11")
-            h1 Twitter Word Visualisation
+            h1 VISION: List Tweets
     div(class="card")
         form(action='/list', method='POST')
+
+            h6 Select Database
+            select(id='location', name='location')
+                option(value='melbourne') Melbourne
+                option(value='chicago') Chicago
+            br
+            br
 
             h6 Enter the amount of results to return:
             input(type='text' name='count' id='count')

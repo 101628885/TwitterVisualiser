@@ -12,7 +12,7 @@ const visualisationController = require("../controllers/visualisationController"
 const cacheController = require("../controllers/cacheController");
 const tweetMapController = require("../controllers/tweetMapController");
 const historicCrimeController = require("../controllers/historicCrimeController");
-const listviewController = require("../controllers/listviewController");
+const listviewController = require("../controllers/listViewController");
 
 /* GET home page. */
 router.get('/', twitterController.home);
