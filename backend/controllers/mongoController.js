@@ -1,37 +1,52 @@
 const mongoose = require('mongoose');
-//Load tweet schema
 const tweet = require('../models/tweet_schema');
-
 const ObjectId = require('mongodb').ObjectId;
+const spawn = require('threads').spawn;
+
+
 const databaseMelb = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
 //const databaseMelb = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
 
 const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
 //const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Production"};
 
-const spawn = require('threads').spawn;
-
-
-
-var db = mongoose.createConnection(databaseMelb.url);
-var tweet1 = db.model('tweets');
-//module.exports = tweet1;
-
-var db2 = mongoose.createConnection(databaseChicago.url);
-var tweet2 = db2.model('tweets');
-//module.exports = tweet2;
-
-module.exports = {'tweet1': tweet1, 'tweet2': tweet2};
 
 
 
 
-//init().then(()=>{module.exports = {'tweet': tweet, 'tweetChicago': tweetChicago}});
 
 
-async function init()
+
+init();
+
+
+
+function init()
 {
 
+	let dbMelb = mongoose.createConnection(databaseMelb.url);
+	let tweetMelb = dbMelb.model('tweets');
+
+	dbMelb.on('error', ()=>{
+		console.log("Failed to connect to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url)
+	});
+
+	dbMelb.on('open', ()=>{
+		console.log("Connected to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url)
+	});
+
+	let dbChicago = mongoose.createConnection(databaseChicago.url);
+	let tweetChicago = dbChicago.model('tweets');
+
+	dbChicago.on('error', ()=>{
+		console.log("Failed to connect to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
+	});
+
+	dbChicago.on('open', ()=>{
+		console.log("Connected to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
+	});
+
+	module.exports = {'tweetMelb': tweetMelb, 'tweetChicago': tweetChicago};
 
 }
 

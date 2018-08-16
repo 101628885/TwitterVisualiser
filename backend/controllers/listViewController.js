@@ -1,4 +1,7 @@
 const tweet = require('../models/tweet_schema');
+var schemas = require('./mongoController');
+var tweetMelb = schemas.tweetMelb;
+var tweetChicago = schemas.tweetChicago;
 
 exports.listTweets = async(req,res) =>
 {
@@ -39,10 +42,26 @@ exports.findTweets = async(req,res) =>
 	}
 
 
-	tweet.find(query).limit(limit).skip(skip).lean().exec()
-	.then(function(result){
-		res.render('list', {data: result});
-	})
-	.catch(function(err){console.log(err)});
+	if (req.body.location === "melbourne")
+	{
+		console.log("List Controller: Location is Melbourne");
+		tweetMelb.find(query).limit(limit).skip(skip).lean().exec()
+			.then(function(result){
+				res.render('list', {data: result});
+			})
+			.catch(function(err){console.log(err)});
+	}
+	else
+	{
+		console.log("List Controller: Location is Chicago");
+		tweetChicago.find(query).limit(limit).skip(skip).lean().exec()
+			.then(function(result){
+				res.render('list', {data: result});
+			})
+			.catch(function(err){console.log(err)});
+	}
+
+
+
 
 };
