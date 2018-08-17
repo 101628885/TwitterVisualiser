@@ -1,9 +1,27 @@
 const request = require('request');
+const fs = require('fs');
 var shouldRun = false;
 var query = [];
 var autoCollect = false;
+var shouldResume = false;
 var querySelect = 0;
 var geo = "melbourne";
+
+if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
+{
+
+
+	let data = JSON.parse(fs.readFileSync(process.cwd() + "/preferences/auto.json", 'utf-8'));
+
+
+	query = data.query;
+
+
+	shouldRun = data.shouldResume;
+	autoCollect = data.shouldResume;
+    shouldResume = data.shouldResume;
+}
+
 
 setInterval(function(){
 
@@ -37,37 +55,59 @@ setInterval(function(){
 
 
 
-function collect(query, geo)
-{
 
-    request.post({
-        headers: {'content-type' : 'application/x-www-form-urlencoded'},
-        url:     'http://localhost:3000/getTweets',
-        form:    { word: query, shouldStoreTweets: true, location: geo }
-    }, function(error, response, body){
-        //console.log(err);
-    });
-}
 
-exports.updateState = function(word, autoCollect)
+
+exports.updateState = function(autoCollect)
 {
-    shouldRun = autoCollect;
+	shouldRun = autoCollect;
 
 };
+
+function collect(query, geo)
+{
+    if (!query)
+    {
+        console.log("Query length is 0, its gone wrong...");
+    }
+    else
+    {
+	    request.post({
+		    headers: {'content-type' : 'application/x-www-form-urlencoded'},
+		    url:     'http://localhost:3000/getTweets',
+		    form:    { word: query, shouldStoreTweets: true, location: geo }
+	    }, function(error, response, body){
+		    //console.log(err);
+	    });
+    }
+
+}
+
 
 exports.autoGet = function(req, res)
 {
     if (autoCollect)
     {
-        res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query.join(', ')});
+        let resumeText = "";
+        if (shouldResume)
+        {
+            resumeText = "VISION will automatically resume data collection if it restarts.";
+        }
+        else
+        {
+            resumeText = "Data collection will be stopped if VISION restarts."
+        }
+
+        res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query.join(', '), shouldResume: resumeText});
     } else {
         query.length = 0;
-        res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Queries to monitor: "});
+        res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Queries to monitor: ", shouldResume: ""});
     }
 };
 
 exports.autoPost = function(req, res)
 {
+
     autoCollect = !autoCollect; //toggle autoCollect
 
     if (req.body.word1 !== "")
@@ -105,7 +145,40 @@ exports.autoPost = function(req, res)
     }
 
 
-    exports.updateState(query, autoCollect);
+	if (req.body.resume)
+	{
+		console.log("VISION will automatically resume...");
+		//handle writing params to disk
+
+        shouldResume = true;
+
+
+		let data = {shouldResume: true, query: query};
+
+		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
+			if (err)
+			{
+				console.log(err);
+			}
+		})
+	}
+	else
+	{
+	    shouldResume = false;
+		console.log("A restart will stop data collection...");
+
+		let data = {shouldResume: false, query: []};
+
+		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
+			if (err)
+			{
+				console.log(err);
+			}
+		})
+	}
+
+
+    exports.updateState(autoCollect);
 
     res.redirect('/auto');
 

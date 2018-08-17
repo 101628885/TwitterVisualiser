@@ -8,18 +8,10 @@ const databaseMelb = { url : "mongodb://team:swinburne@144.6.226.34/tweets", typ
 //const databaseMelb = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
 
 const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
-//const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Production"};
-
-
-
-
-
-
+//const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Testing"};
 
 
 init();
-
-
 
 function init()
 {
@@ -46,7 +38,9 @@ function init()
 		console.log("Connected to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
 	});
 
-	module.exports = {'tweetMelb': tweetMelb, 'tweetChicago': tweetChicago};
+	//module.exports = {'tweetMelb': tweetMelb, 'tweetChicago': tweetChicago};
+	module.exports.tweetMelb = tweetMelb;
+	module.exports.tweetChicago = tweetChicago;
 
 }
 

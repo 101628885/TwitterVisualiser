@@ -18,7 +18,6 @@ exports.home = async(req,res) =>
 
 exports.getTweets = async(req,res) => 
 {
-
 	function storeTweets(tweets, geo)
 	{
 		let results = [];
@@ -69,7 +68,6 @@ exports.getTweets = async(req,res) =>
 			lang: 'en',
 			tweet_mode: 'extended',
 		};
-	console.log(params);
 	client.get('search/tweets', params, function(error, tweets, response) 
 	{
 	  	if (!error) 

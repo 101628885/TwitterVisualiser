@@ -8,7 +8,6 @@ const nlp = require('./nlpTrainingController');
 var db = mongoose.connection;
 
 
-
 exports.getPredictedData = async (req, res) =>
 {
     nlp.runNLP(function(result){res.send(result)});

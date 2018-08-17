@@ -12,12 +12,18 @@ block content
         form(method='POST', action='/auto')
             #form-group
                 label #{monitoredWord}
+                br
+                br
+                label(hidden = !isHidden) #{shouldResume}
                 input.form-control(name='word1', type='text', hidden = isHidden)
                 input.form-control(name='word2', type='text', hidden = isHidden)
                 input.form-control(name='word3', type='text', hidden = isHidden)
                 input.form-control(name='word4', type='text', hidden = isHidden)
                 input.form-control(name='word5', type='text', hidden = isHidden)
-
+                br
+                label(for='resume', hidden = isHidden) Automatically resume collection if VISION restarts:
+                input.form-control(name='resume', id = 'resume', type = 'checkbox', hidden = isHidden)
+                br
             input.btn.btn-primary(type='submit', value = toggle)
         br
         br
