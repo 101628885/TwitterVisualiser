@@ -58,17 +58,20 @@ def loadTrainingData():
     # http://144.6.226.34:3000/nte/1000
 
     dataJson = requests.get('http://144.6.226.34:3000/getStoredTweets/10000/checked/true').json()
+    chicagoJson = requests.get('http://localhost:3000/getStoredTweets/10000/checked/true').json()
     tweetData = []
     for t in dataJson:
-        tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
-
+        tweetData.append((str(t['full_text']).replace("#", ""), str(t['crime']), str(t['type_of_crime'])))
+    for t in chicagoJson:
+        tweetData.append((str(t['full_text']).replace("#", ""), str(t['crime']), 'null'))
+    
     return tweetData
 
 def loadKeywordTrainingData():
     dataJson = requests.get('http://144.6.226.34:3000/getStoredTweets/10000/crime/true').json()
     tweetData = []
     for t in dataJson:
-        tweetData.append((str(t['full_text']), str(t['crime']), str(t['type_of_crime'])))
+        tweetData.append((str(t['full_text']).replace("#", ""), str(t['crime']), str(t['type_of_crime'])))
 
     return tweetData
 
@@ -81,7 +84,8 @@ def checkData():
 
     # dataJson = requests.get('http://localhost:3000/returnAll').json()
     # dataJson = requests.get('http://144.6.226.34:3000/returnAll').json()
-    dataJson = requests.get('http://144.6.226.34:3000/getStoredTweets/10000/checked/true').json()
+    # dataJson = requests.get('http://144.6.226.34:3000/getStoredTweets/10000/checked/true').json()
+    dataJson = requests.get('http://localhost:3000/getStoredTweets').json()
     tweetData = []
     for t in dataJson:
         tweetData.append((str(t['full_text']), str(t['crime'])))
@@ -96,32 +100,40 @@ def printOutput(arg):
     JSONres['predData'] = []
 
     for (td, pred, keyPred) in zip(testData, pred_data, newPred_data):
+        if (pred == "True"):
+            print('---------------------------')
+            print ("Tweet:", td[0], "\nPred:", pred, "\nKeyPred:", keyPred)
+            print('+++++++++++++++++++++++++++')
+            for i in nlp(td[0]).ents:
+                if (i.label_ == 'GPE' or i.label_ == 'LOC'):
+                    print(i, i.label_)
+            cTrue += 1
     #     JSONres['predData'].append({
     #         'Tweet' : td[0],
     #         'Expected' : td[1],
     #         'Predicted' : pred,
     #         'KeywordPred' : keyPred
     #     })
-        if (arg == True):
-            if (pred == "True"):
-                print('---------------------------')
-                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred, "\nKeyPred:", keyPred)
-                cTrue += 1
-            else:
-                cFalse += 1
-        else:
-            if (pred == "False"):
-                print('---------------------------')
-                print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
-                cFalse += 1
-            else:
-                cTrue += 1
-    # print(JSONres)
+    #     if (arg == True):
+    #         if (pred == "True"):
+    #             print('---------------------------')
+    #             print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred, "\nKeyPred:", keyPred)
+    #             cTrue += 1
+    #         else:
+    #             cFalse += 1
+    #     else:
+    #         if (pred == "False"):
+    #             print('---------------------------')
+    #             print ("Tweet:", td[0], "\nExp:", td[1], "\nPred:", pred)
+    #             cFalse += 1
+    #         else:
+    #             cTrue += 1
+    # # print(JSONres)
     print("===========================")
-    print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
-    print("cFalse:", cFalse)
+    # print ("Accuracy:", accuracy_score([x[1] for x in testData], pred_data))
+    # print("cFalse:", cFalse)
     print("cTrue:", cTrue)
-    print("cTotal:", cTrue + cFalse)
+    # print("cTotal:", cTrue + cFalse)
 
 ## Main equivalent
 # Create vector object and set relevant ngrams
