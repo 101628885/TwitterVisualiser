@@ -12,7 +12,7 @@ const visualisationController = require("../controllers/visualisationController"
 const cacheController = require("../controllers/cacheController");
 const tweetMapController = require("../controllers/tweetMapController");
 const historicCrimeController = require("../controllers/historicCrimeController");
-const listviewController = require("../controllers/listviewController");
+const listviewController = require("../controllers/listViewController");
 
 /* GET home page. */
 router.get('/', twitterController.home);
@@ -25,8 +25,8 @@ router.post('/getTweets', dbpediaController.getCombination, twitterController.ge
 
 //Verify Controller
 router.get('/check', verifyController.getUncheckedTweets);
-router.post('/check/:id/:value', verifyController.checkTweets);
-router.post('/check/:id/:value/:location/:type', verifyController.checkTweets);
+router.post('/check/:id/:value/:geo', verifyController.checkTweets);
+router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTweets);
 
 //NLP Controller
 router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet); //returns crime: true or false

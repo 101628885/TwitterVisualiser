@@ -3,14 +3,14 @@ html {
 }
 
 body:not(#map body) {
-  padding: 50px;
-  background-color: #2AA3EF;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-  font-weight: 300;
+	padding: 50px;
+	background-color: #2AA3EF;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 300;
 }
 
 a {
-  color: #00B7FF;
+	color: #00B7FF;
 }
 
 div:not(#map div) {

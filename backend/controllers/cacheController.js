@@ -31,13 +31,13 @@ exports.getJSON = async(options) =>
 	return result;
 };
 
-exports.testCache = async(req, res) =>
+exports.testCache = async(req, res) => //move to unit testing
 {
 	options =
 		{
 			method: "GET",
 			url: `https://api.datamuse.com/words?rel_trg=test`
-		}
+		};
 
 
 	let result = await exports.getJSON(options);

@@ -1,35 +1,52 @@
 const mongoose = require('mongoose');
-//Load tweet schema
 const tweet = require('../models/tweet_schema');
-
 const ObjectId = require('mongodb').ObjectId;
-const database = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
-//const database = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
 const spawn = require('threads').spawn;
 
 
-//Create a connection for querying the DB /////////////////////////////////////////////////////////////////////////////
-mongoose.connect(database.url);
+const databaseMelb = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
+//const databaseMelb = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
 
-var db = mongoose.connection;
+const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
+//const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Testing"};
 
-db.on('error', function()
+
+init();
+
+function init()
 {
-	console.log("An error occurred while connecting to the " + database.type + " DB at " + database.url);
 
-});
+	let dbMelb = mongoose.createConnection(databaseMelb.url);
+	let tweetMelb = dbMelb.model('tweets');
 
-db.once('open', function(){
-	console.log("Connected to " + database.type + " DB at " + database.url);
+	dbMelb.on('error', ()=>{
+		console.log("Failed to connect to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url)
+	});
 
-  // Removes dupes during server boot
-  // exports.removeDuplicates();
-});
+	dbMelb.on('open', ()=>{
+		console.log("Connected to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url)
+	});
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	let dbChicago = mongoose.createConnection(databaseChicago.url);
+	let tweetChicago = dbChicago.model('tweets');
 
-exports.storeTweets = function(tweetsToStore)
+	dbChicago.on('error', ()=>{
+		console.log("Failed to connect to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
+	});
+
+	dbChicago.on('open', ()=>{
+		console.log("Connected to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
+	});
+
+	//module.exports = {'tweetMelb': tweetMelb, 'tweetChicago': tweetChicago};
+	module.exports.tweetMelb = tweetMelb;
+	module.exports.tweetChicago = tweetChicago;
+
+}
+
+exports.storeTweets = function(tweetsToStore, geo)
 {
+	console.log("Trying to write to DB: ", geo);
 	let id = Math.floor(Math.random() * Math.floor(25));
 
 	const thread = spawn(function(input, done, progress) {
@@ -112,10 +129,21 @@ exports.storeTweets = function(tweetsToStore)
 		});
 	});
 
-	//Spawn worker thread then kill it once its done
-	thread.send({tweetsToStore: tweetsToStore, database: database})
-		.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
-		.on('message', function(){thread.kill()});
+	if (geo === "melbourne")
+	{
+		console.log("Using Melbourne Database at ", databaseMelb.url);
+		thread.send({tweetsToStore: tweetsToStore, database: databaseMelb})
+			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
+			.on('message', function(){thread.kill()});
+
+	}
+	else if (geo === "chicago")
+	{
+		console.log("Using Chicago Database at ", databaseChicago.url);
+		thread.send({tweetsToStore: tweetsToStore, database: databaseChicago})
+			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
+			.on('message', function(){thread.kill()});
+	}
 };
 
 

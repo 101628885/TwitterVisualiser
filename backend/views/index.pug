@@ -5,7 +5,7 @@ block content
     div(class="col-sm-1")
       img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
     div(class="col-sm-11")
-      h1 Twitter Word Visualisation
+      h1 VISION
   div(class="card")
     form(action='/getTweets', method='POST')
               h6 Enter a word to find tweets:  
@@ -17,6 +17,11 @@ block content
               br
               br
               input(type='text', name='shouldStoreTweets',  hidden, value=false)
+              select(id='location', name='location')
+                  option(value='melbourne') Melbourne
+                  option(value='chicago') Chicago
+              br
+              br
               input(type='submit', value='Find Tweets')
   br
   br

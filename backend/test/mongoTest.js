@@ -1,5 +1,7 @@
 const expect = require('chai').expect;
-const mongo = require('../controllers/mongoController');
+var mongo = require('../controllers/mongoController');
+var tweetMelb = mongo.tweetMelb;
+var tweetChicago = mongo.tweetChicago;
 const mongoose = require('mongoose');
 const db = mongoose.connection;
 const tweet = require('../models/tweet_schema');
@@ -47,7 +49,7 @@ describe('storeTweets()', function(){
 
 		//ACTION, ask mongoController to store the array.
 
-		mongo.storeTweets(testArray);
+		mongo.storeTweets(testArray, "melbourne");
 
 		await timeout(2800); //Bit hacky but we have to give the DB a moment to save the test items
 
@@ -56,13 +58,13 @@ describe('storeTweets()', function(){
 		let sample1FromDB = {};
 		let sample2FromDB = {};
 
-		await tweet.findOne({id: "9999"}).lean().exec().then(function(res){sample1FromDB = res});
-		await tweet.findOne({id: "99999"}).lean().exec().then(function(res){sample2FromDB = res});
+		await tweetMelb.findOne({id: "9999"}).lean().exec().then(function(res){sample1FromDB = res});
+		await tweetMelb.findOne({id: "99999"}).lean().exec().then(function(res){sample2FromDB = res});
 
 		//CLEANUP
 
-		await tweet.remove({id: "9999"}).exec();
-		await tweet.remove({id: "99999"}).exec();
+		await tweetMelb.remove({id: "9999"}).exec();
+		await tweetMelb.remove({id: "99999"}).exec();
 
 
 
@@ -126,14 +128,14 @@ describe('storeTweets()', function(){
 
 		//ACTION
 
-		mongo.storeTweets(testArray);
+		mongo.storeTweets(testArray, "melbourne");
 
 		await timeout(2500);
 
 		let result = [];
 
-		await tweet.find({id: "9999"}).lean().exec().then(function(res){result = res});
-		await tweet.remove({id: "9999"}).exec();
+		await tweetMelb.find({id: "9999"}).lean().exec().then(function(res){result = res});
+		await tweetMelb.remove({id: "9999"}).exec();
 
 
 
@@ -142,3 +144,4 @@ describe('storeTweets()', function(){
 	});
 });
 
+//create a new test to check that correct tweets are being written to the right DB...

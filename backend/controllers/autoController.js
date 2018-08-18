@@ -1,15 +1,35 @@
 const request = require('request');
+const fs = require('fs');
 var shouldRun = false;
 var query = [];
 var autoCollect = false;
+var shouldResume = false;
 var querySelect = 0;
+var geo = "melbourne";
+
+if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
+{
+
+
+	let data = JSON.parse(fs.readFileSync(process.cwd() + "/preferences/auto.json", 'utf-8'));
+
+
+	query = data.query;
+
+
+	shouldRun = data.shouldResume;
+	autoCollect = data.shouldResume;
+    shouldResume = data.shouldResume;
+}
+
 
 setInterval(function(){
 
     if (shouldRun)
     {
-        console.log("Checking word: ", query[querySelect]);
-        collect(query[querySelect]);
+
+        console.log("Checking word: ", query[querySelect], " in location ", geo);
+        collect(query[querySelect], geo);
 
         if (querySelect < query.length - 1)
         {
@@ -18,45 +38,76 @@ setInterval(function(){
         else if (querySelect >= query.length -1)
         {
             querySelect = 0;
+
+	        if (geo === "melbourne")
+	        {
+	            console.log("Finished run, setting location to Chicago");
+		        geo = "chicago";
+	        }
+	        else if(geo === "chicago")
+	        {
+	            console.log("Finished run, setting location to Melbourne");
+		        geo = "melbourne";
+	        }
         }
-
-
     }
 }, 8000);
 
 
 
-function collect(query)
-{
 
-    request.post({
-        headers: {'content-type' : 'application/x-www-form-urlencoded'},
-        url:     'http://localhost:3000/getTweets',
-        form:    { word: query, shouldStoreTweets: true }
-    }, function(error, response, body){
-        //console.log(err);
-    });
-}
 
-exports.updateState = function(word, autoCollect)
+
+exports.updateState = function(autoCollect)
 {
-    shouldRun = autoCollect;
+	shouldRun = autoCollect;
 
 };
+
+function collect(query, geo)
+{
+    if (!query)
+    {
+        console.log("Query length is 0, its gone wrong...");
+    }
+    else
+    {
+	    request.post({
+		    headers: {'content-type' : 'application/x-www-form-urlencoded'},
+		    url:     'http://localhost:3000/getTweets',
+		    form:    { word: query, shouldStoreTweets: true, location: geo }
+	    }, function(error, response, body){
+		    //console.log(err);
+	    });
+    }
+
+}
+
 
 exports.autoGet = function(req, res)
 {
     if (autoCollect)
     {
-        res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query.join(', ')});
+        let resumeText = "";
+        if (shouldResume)
+        {
+            resumeText = "VISION will automatically resume data collection if it restarts.";
+        }
+        else
+        {
+            resumeText = "Data collection will be stopped if VISION restarts."
+        }
+
+        res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query.join(', '), shouldResume: resumeText});
     } else {
         query.length = 0;
-        res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Queries to monitor: "});
+        res.render('auto', {toggle: 'Start', status: 'Idle...', isHidden: false, monitoredWord: "Queries to monitor: ", shouldResume: ""});
     }
 };
 
 exports.autoPost = function(req, res)
 {
+
     autoCollect = !autoCollect; //toggle autoCollect
 
     if (req.body.word1 !== "")
@@ -90,11 +141,44 @@ exports.autoPost = function(req, res)
         query.push("assault");
         query.push("murder");
         query.push("rape");
-        query.push("theft");//default search therm if no entry is specified
+        query.push("theft");//default search term if no entry is specified
     }
 
 
-    exports.updateState(query, autoCollect);
+	if (req.body.resume)
+	{
+		console.log("VISION will automatically resume...");
+		//handle writing params to disk
+
+        shouldResume = true;
+
+
+		let data = {shouldResume: true, query: query};
+
+		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
+			if (err)
+			{
+				console.log(err);
+			}
+		})
+	}
+	else
+	{
+	    shouldResume = false;
+		console.log("A restart will stop data collection...");
+
+		let data = {shouldResume: false, query: []};
+
+		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
+			if (err)
+			{
+				console.log(err);
+			}
+		})
+	}
+
+
+    exports.updateState(autoCollect);
 
     res.redirect('/auto');
 
