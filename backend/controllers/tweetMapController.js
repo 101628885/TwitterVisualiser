@@ -1,4 +1,10 @@
+const fs = require('fs');
+
 exports.getTweetMap = function(req, res)
 {
-    res.render('tweetmap');
+    let chicagoTestData = JSON.parse(fs.readFileSync('poc_chicago.json'));
+
+    res.render('tweetmap', {
+        chicagoTestData: chicagoTestData,
+    })
 };
