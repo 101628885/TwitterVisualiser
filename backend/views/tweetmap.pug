@@ -10,10 +10,14 @@ block content
 	div(class="card")
 		div(id="map")
 
+	script.
+		var data = !{JSON.stringify(chicagoTestData)}
+		setTrajectoryData(data)
+
 	//- Define default position values and render map to the screen
 	script(src="./scripts/map_render.js")
 	//- Marker clusterer for reducing map clutter
 	script(src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js")
 	//- Verify with API key
-	script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8BoNj8oknFsfTBWhNdAFTiMhI9Gkz8e8&callback=initMap")
+	script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8BoNj8oknFsfTBWhNdAFTiMhI9Gkz8e8&callback=initPOCTrajectoryAlgorithm")
 
