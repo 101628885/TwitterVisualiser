@@ -48,17 +48,17 @@ exports.getTweets = async(req,res) =>
 	if (req.body.location === "melbourne")
 	{
 		console.log("Location is set to Melbourne...");
-		geo = `-37.8136,144.9631,${req.body.dist || 100}km`;
+		geo = `-37.8136,144.9631,${req.body.dist || 50}km`;
 	}
 	else if (req.body.location === "chicago")
 	{
 		console.log("Location is set to Chicago...");
-		geo = `41.881832,-87.623177,${req.body.dist || 320}km`;
+		geo = `41.881832,-87.623177,${req.body.dist || 50}km`;
 	}
 	else
 	{
 		console.log("Invalid form data, setting location to Melbourne...");
-		geo = `-37.8136,144.9631,${req.body.dist || 100}km`;
+		geo = `-37.8136,144.9631,${req.body.dist || 50}km`;
 	}
 
 	var params = {
