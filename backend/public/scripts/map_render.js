@@ -89,6 +89,33 @@ function initHistoricMap()
 	gMarkers = markers
 }
 
+getDistanceBetweenPoints = (e, d) => {
+	let lat1 = e.coordinates[1];
+	let lon1 = e.coordinates[0];
+	let lat2 = d.coordinates[1];
+	let lon2 = d.coordinates[0];
+
+	//Calc Distance in terms of metres between Two Points
+	let R = 6371e3;
+	let φ1 = lat1 * Math.PI / 180;
+	let φ2 = lat2 * Math.PI / 180;
+	let λ1 = (lat2 - lat1) * Math.PI / 180;
+	let λ2 = (lon2 - lon1) * Math.PI / 180;
+	let a = Math.sin(λ1/2) * Math.sin(λ1/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(λ2) * Math.sin(λ2);
+	let c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+		
+	console.log("RC", R*c);
+	return R*c;		
+}
+
+getTimeDifferenceBetweenPoints = (a,b) => {
+	let time1 = new Date(a.time);
+	let time2 = new Date(b.time);
+
+	console.log((((time2 - time1) / 60) / 60) / 1000);	
+	return ((((time2 - time1) / 60) / 60) / 1000)
+}
+
 initPOCTrajectoryAlgorithm = () =>
 {	
 	// console.log(trajectoryData);
@@ -103,17 +130,19 @@ initPOCTrajectoryAlgorithm = () =>
 	let tDistThreshold = 500;
 	
 	for(const i in trajectoryData.data) {
-		if (!(crimeCategories.get(i.type_of_crime))) {
+		if (!(crimeCategories.get(trajectoryData.data[i].type_of_crime))) {
 			crimeCategories.set(trajectoryData.data[i].type_of_crime, [trajectoryData.data[i]]);
+		} else
+		{
+			crimeCategories.set(trajectoryData.data[i].type_of_crime, 
+				Array.from(crimeCategories.get(trajectoryData.data[i].type_of_crime)).concat(trajectoryData.data[i]));
 		}
 	}
+			
+	console.log("FINAL", crimeCategories);
 
-	console.log(crimeCategories);
-
-	// let lat1 = trajectoryData.data[0].coordinates[1]; //change to first latitude coord
-	// let lon1 = trajectoryData.data[0].coordinates[0]; //change to first longitude coord
-	// let lat2 = trajectoryData.data[1].coordinates[1]; //change to second latitude coord
-	// let lon2 = trajectoryData.data[1].coordinates[0]; //change to second longitude coord	 
+	getTimeDifferenceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
+	getDistanceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
 	dataMap = new google.maps.Map(
 	document.getElementById('map'), 
 	{
@@ -121,19 +150,6 @@ initPOCTrajectoryAlgorithm = () =>
 		center: defaultRegion,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
-
-
-
-	//Calc Distance in terms of metres between Two Points
-	let R = 6371e3;
-	let φ1 = lat1 * Math.PI / 180;
-	let φ2 = lat2 * Math.PI / 180;
-  let λ1 = (lat2 - lat1) * Math.PI / 180;
-	let λ2 = (lon2 - lon1) * Math.PI / 180;
-	let a = Math.sin(λ1/2) * Math.sin(λ1/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(λ2) * Math.sin(λ2);
-	let c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-	let d = R*c;
-	console.log("THE D:", d);
 }
 
 function hideMarkers(crime)
