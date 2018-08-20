@@ -112,8 +112,8 @@ getTimeDifferenceBetweenPoints = (a,b) => {
 	let time1 = new Date(a.time);
 	let time2 = new Date(b.time);
 
-	console.log((((time2 - time1) / 60) / 60) / 1000);	
-	return ((((time2 - time1) / 60) / 60) / 1000)
+	console.log(((((time2 - time1) / 60) / 60) / 1000) * 60);	
+	return (((((time2 - time1) / 60) / 60) / 1000) * 60);
 }
 
 initPOCTrajectoryAlgorithm = () =>
@@ -122,6 +122,7 @@ initPOCTrajectoryAlgorithm = () =>
 	// console.log("yp", trajectoryData.data[0].coordinates);
 
 	let crimeCategories = new Map();
+	let crimeTrajectories = new Array();
 
 	let defaultRegion = new google.maps.LatLng( 41.881832, -87.623177);
 	let n = 48;
@@ -138,7 +139,18 @@ initPOCTrajectoryAlgorithm = () =>
 				Array.from(crimeCategories.get(trajectoryData.data[i].type_of_crime)).concat(trajectoryData.data[i]));
 		}
 	}
-			
+
+	for(const i of crimeCategories.keys()) {
+		// console.log(i);
+		var firstTime = true;
+		for(const c of crimeCategories.get(i)) {
+			if (firstTime) {
+					
+				return;
+			}
+		}
+	}
+
 	console.log("FINAL", crimeCategories);
 
 	getTimeDifferenceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
