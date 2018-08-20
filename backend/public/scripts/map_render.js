@@ -91,10 +91,10 @@ function initHistoricMap()
 
 initPOCTrajectoryAlgorithm = () =>
 {	
-	console.log(trajectoryData);
-	console.log("yp", trajectoryData.data[0].coordinates);
+	// console.log(trajectoryData);
+	// console.log("yp", trajectoryData.data[0].coordinates);
 
-	let crimeCategories = [[]];
+	let crimeCategories = new Map();
 
 	let defaultRegion = new google.maps.LatLng( 41.881832, -87.623177);
 	let n = 48;
@@ -102,9 +102,13 @@ initPOCTrajectoryAlgorithm = () =>
 	let tTimeThreshold = 180;
 	let tDistThreshold = 500;
 	
-	for(var i in trajectoryData.data) {
-		//TODO: Tomorrow :P
+	for(const i in trajectoryData.data) {
+		if (!(crimeCategories.get(i.type_of_crime))) {
+			crimeCategories.set(trajectoryData.data[i].type_of_crime, [trajectoryData.data[i]]);
+		}
 	}
+
+	console.log(crimeCategories);
 
 	// let lat1 = trajectoryData.data[0].coordinates[1]; //change to first latitude coord
 	// let lon1 = trajectoryData.data[0].coordinates[0]; //change to first longitude coord
