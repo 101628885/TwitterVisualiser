@@ -89,6 +89,7 @@ function initHistoricMap()
 	gMarkers = markers
 }
 
+// NEED TO MOVE THIS TO NODE JS and Just send trajectory data for render.
 getDistanceBetweenPoints = (e, d) => {
 	let lat1 = e.coordinates[1];
 	let lon1 = e.coordinates[0];
@@ -104,7 +105,6 @@ getDistanceBetweenPoints = (e, d) => {
 	let a = Math.sin(λ1/2) * Math.sin(λ1/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(λ2) * Math.sin(λ2);
 	let c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 		
-	console.log("RC", R*c);
 	return R*c;		
 }
 
@@ -112,19 +112,11 @@ getTimeDifferenceBetweenPoints = (a,b) => {
 	let time1 = new Date(a.time);
 	let time2 = new Date(b.time);
 
-	console.log(((((time2 - time1) / 60) / 60) / 1000) * 60);	
-	if (time2-time1 <= 0)
-	{
-		console.log(a,b);
-	}
 	return (((((time2 - time1) / 60) / 60) / 1000) * 60);
 }
 
 initPOCTrajectoryAlgorithm = () =>
-{	
-	// console.log(trajectoryData);
-	// console.log("yp", trajectoryData.data[0].coordinates);
-
+{
 	let crimeCategories = new Map();
 	let crimeTrajectories = new Array();
 
@@ -143,18 +135,16 @@ initPOCTrajectoryAlgorithm = () =>
 		}
 	}
 
-	var firstTime = true;
-	var prevData = {};
 	var count = 0;
-
+	
 	for(const i of crimeCategories.keys()) {
+		var prevData = {};
+		var firstTime = true;
 		for(const c of crimeCategories.get(i)) {
 			if (firstTime) {
 				prevData = c;
 				firstTime = false;
 			} else {
-				count++;
-				console.log(count);
 				let timeDiff = getTimeDifferenceBetweenPoints(prevData, c);
 				let distDiff = getDistanceBetweenPoints(prevData, c);
 				
@@ -170,17 +160,74 @@ initPOCTrajectoryAlgorithm = () =>
 	}
 		
 	console.log("Trajectoreis", crimeTrajectories);
-	//console.log("FINAL", crimeCategories);
+	createTrajectories(crimeTrajectories);
+}
 
-	//getTimeDifferenceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
-	//getDistanceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
-	dataMap = new google.maps.Map(
-	document.getElementById('map'), 
-	{
-		zoom: 15, 
-		center: defaultRegion,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-	});
+createTrajectories = (crimeTrajectories) => {
+	dataMap = new google.maps.Map(document.getElementById('map'), 
+		{
+			zoom: 10, 
+			center: {lat: 41.881832, lng: -87.623177},
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		});
+
+	for(const i of crimeTrajectories) {
+		// console.log(i, i.length);
+		if(i.length == 2)
+		{
+			var aTrajectory = [
+				{lat: i[0].coordinates[1], lng: i[0].coordinates[0]},
+				{lat: i[1].coordinates[1], lng: i[1].coordinates[0]},
+			];
+			
+			var lineSymbol = {
+				path: google.maps.SymbolPath.CIRCLE,
+				scale: 8,
+				strokeColor: '#393'
+			  };
+
+			animateTrajectory(new google.maps.Polyline({
+				path: aTrajectory,
+				geodesic: true,
+				strokeColor: '#FF0000',
+				strokeOpacity: 1.0,
+				strokeWeight: 4,
+				icons: [{
+					icon: lineSymbol,
+					offset: '100%'
+				}],
+				map: dataMap,
+			}));
+		}
+
+		i.map((t) => {
+			let marker = new google.maps.Marker({
+				position: {lat: t.coordinates[1], lng: t.coordinates[0]},
+				map: dataMap,
+				title: `${t.type_of_crime} ${t.time}`,
+			})
+			
+			marker.addListener('click', () => {
+				new google.maps.InfoWindow({
+					content: 
+						`Type: ${t.type_of_crime} <br /> 
+						Time: ${t.time}  <br /> 
+						Coordinates: ${t.coordinates[1]},${t.coordinates[0]}`
+				}).open(dataMap, marker);
+			});
+		});
+	}
+}
+
+animateTrajectory = (line) => {
+	var count = 0;
+	window.setInterval(function() {
+	  count = (count + 1) % 200;
+
+	  var icons = line.get('icons');
+	  icons[0].offset = (count / 2) + '%';
+	  line.set('icons', icons);
+  }, 20);
 }
 
 function hideMarkers(crime)
