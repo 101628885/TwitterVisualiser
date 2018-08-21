@@ -113,6 +113,10 @@ getTimeDifferenceBetweenPoints = (a,b) => {
 	let time2 = new Date(b.time);
 
 	console.log(((((time2 - time1) / 60) / 60) / 1000) * 60);	
+	if (time2-time1 <= 0)
+	{
+		console.log(a,b);
+	}
 	return (((((time2 - time1) / 60) / 60) / 1000) * 60);
 }
 
@@ -126,9 +130,8 @@ initPOCTrajectoryAlgorithm = () =>
 
 	let defaultRegion = new google.maps.LatLng( 41.881832, -87.623177);
 	let n = 48;
-	let dt = trajectoryData.data[0].time;
 	let tTimeThreshold = 180;
-	let tDistThreshold = 500;
+	let tDistThreshold = 1000;
 	
 	for(const i in trajectoryData.data) {
 		if (!(crimeCategories.get(trajectoryData.data[i].type_of_crime))) {
@@ -140,21 +143,37 @@ initPOCTrajectoryAlgorithm = () =>
 		}
 	}
 
+	var firstTime = true;
+	var prevData = {};
+	var count = 0;
+
 	for(const i of crimeCategories.keys()) {
-		// console.log(i);
-		var firstTime = true;
 		for(const c of crimeCategories.get(i)) {
 			if (firstTime) {
-					
-				return;
+				prevData = c;
+				firstTime = false;
+			} else {
+				count++;
+				console.log(count);
+				let timeDiff = getTimeDifferenceBetweenPoints(prevData, c);
+				let distDiff = getDistanceBetweenPoints(prevData, c);
+				
+				if ((timeDiff >= tTimeThreshold ? false : distDiff >= tDistThreshold ? false : true)) {
+					crimeTrajectories.push([prevData, c]);
+				} else {
+					crimeTrajectories.push([c]);
+				}
+				
+				prevData = c;
 			}
 		}
 	}
+		
+	console.log("Trajectoreis", crimeTrajectories);
+	//console.log("FINAL", crimeCategories);
 
-	console.log("FINAL", crimeCategories);
-
-	getTimeDifferenceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
-	getDistanceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
+	//getTimeDifferenceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
+	//getDistanceBetweenPoints(crimeCategories.get("Assault")[0], crimeCategories.get("Assault")[1]);
 	dataMap = new google.maps.Map(
 	document.getElementById('map'), 
 	{
