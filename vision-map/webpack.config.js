@@ -53,7 +53,8 @@ const CONFIG = {
         loader: 'json-loader',
         exclude: [/node_modules/]
       }
-    ]
+    ],
+    
   },
 
   node: {

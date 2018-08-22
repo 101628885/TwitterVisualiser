@@ -14,6 +14,8 @@ const tweetMapController = require("../controllers/tweetMapController");
 const historicCrimeController = require("../controllers/historicCrimeController");
 const listviewController = require("../controllers/listViewController");
 
+const chicago_data_factory = require("../controllers/chicago-data-factory");
+
 /* GET home page. */
 router.get('/', twitterController.home);
 router.get('/getTweets', twitterController.home);
@@ -60,6 +62,9 @@ router.post('/list', listviewController.findTweets);
 router.get('/chicago', historicCrimeController.chicagoHandler); 
 router.get('/seattle', historicCrimeController.seattleHandler); 
 router.get('/baltimore', historicCrimeController.baltimoreHandler); 
+
+
+router.get('/checkData', chicago_data_factory.checkLocalData); 
 
 
 
