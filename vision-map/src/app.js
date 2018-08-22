@@ -20,8 +20,12 @@
 
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 import window from 'global/window';
 import {connect} from 'react-redux';
+import * as fs from 'fs';
+import axios from 'axios';
+
 import Banner from './components/banner';
 import Announcement from './components/announcement';
 // Kepler.gl Data processing APIs
@@ -32,14 +36,18 @@ const KeplerGl = require('kepler.gl/components').injectComponents([
   replaceLoadDataModal()
 ]);
 
+
+
+function requireAll( requireContext ) 
+{
+  return requireContext.keys().map( requireContext );
+}
+var jsonTypes = requireAll( require.context("./data", false, /.json$/) );
+
 const MAPBOX_TOKEN = process.env.MapboxAccessToken; // eslint-disable-line
 
 // Sample data
 /* eslint-disable no-unused-vars */
-import chicagoData from './data/chicagoData-geojson.json';
-import sampleTripData from './data/sample-trip-data';
-import sampleGeojson from './data/sample-geojson.json';
-import sampleIconCsv, {config as savedMapConfig} from './data/sample-icon-csv';
 import {updateVisData, addDataToMap} from 'kepler.gl/actions';
 import Processors from 'kepler.gl/processors';
 /* eslint-enable no-unused-vars */
@@ -71,6 +79,7 @@ class App extends Component {
   componentWillMount() {
     // if we pass an id as part of the url
     // we ry to fetch along map configurations
+    //data_fetcher.checkLocalData();
     const {params: {id: sampleMapId} = {}} = this.props;
     this.props.dispatch(loadSampleConfigurations(sampleMapId));
     window.addEventListener('resize', this._onResize);
@@ -78,26 +87,37 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // delay 2s to show the banner
-    if (!window.localStorage.getItem('kgHideBanner')) {
-      window.setTimeout(this._showBanner, 3000);
+    
+    // if no json files make a get request to node server which will then get the data.
+    if(jsonTypes.length == 0)
+    {
+      axios.get("http://localhost:3000/checkData")
+      .then( (response) => {
+        console.log("response", response);
+        window.location.reload();
+      })
+      .catch( (error) => {
+        console.log(error);
+      });  
     }
-    const data = Processors.processGeojson(chicagoData);
-    // Create dataset structure
-    const dataset = {
-      data,
-      info: {
-        // `info` property are optional, adding an `id` associate with this dataset makes it easier
-        // to replace it later
-        id: 'my_data'
-      }
-    };
-    // addDataToMap action to inject dataset into kepler.gl instance
-    this.props.dispatch(addDataToMap({datasets: dataset}));
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this._onResize);
+    else
+    {
+      //jsonTypes is an array of all the files in data/'todays-date-file'
+      //we loop through each one process the file, then add the data to the map
+      jsonTypes.forEach((type) => {
+        let label = type.features[0].properties.primary_type
+        let data = Processors.processGeojson(type);
+        const dataset = {
+        data,
+        info: {
+          label: `${label}`,
+          id: `${label}`
+        }
+      };
+      this.props.dispatch(addDataToMap({datasets: dataset}));
+    })
+    }
+    
   }
 
   _onResize = () => {
@@ -119,65 +139,6 @@ class App extends Component {
     this._hideBanner();
     window.localStorage.setItem('kgHideBanner', 'true');
   };
-
-  _loadSampleData() {
-    this.props.dispatch(
-      updateVisData(
-        // datasets
-        {
-          info: {
-            label: 'Sample Taxi Trips in New York City',
-            id: 'test_trip_data'
-          },
-          data: sampleTripData
-        },
-        // option
-        {
-          centerMap: true,
-          readOnly: false
-        },
-        // config
-        {
-          filters: [
-            {
-              id: 'me',
-              dataId: 'test_trip_data',
-              name: 'tpep_pickup_datetime',
-              type: 'timeRange',
-              enlarged: true
-            }
-          ]
-        }
-      )
-    );
-
-    // load icon data and config and process csv file
-    this.props.dispatch(
-      addDataToMap({
-        datasets: [
-          {
-            info: {
-              label: 'Icon Data',
-              id: 'test_icon_data'
-            },
-            data: Processors.processCsvData(sampleIconCsv)
-          }
-        ],
-        options: {
-          centerMap: false
-        },
-        config: savedMapConfig
-      })
-    );
-
-    // load geojson
-    this.props.dispatch(
-      updateVisData({
-        info: {label: 'SF Zip Geo'},
-        data: Processors.processGeojson(sampleGeojson)
-      })
-    );
-  }
 
   render() {
     const {showBanner, width, height} = this.state;
