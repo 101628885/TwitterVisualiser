@@ -7,6 +7,12 @@ var shouldResume = false;
 var querySelect = 0;
 var geo = "melbourne";
 
+
+
+if (fs.existsSync(fs.existsSync(process.cwd() + "/preferences"))) {
+
+}
+
 if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
 {
 
@@ -107,7 +113,7 @@ exports.autoGet = function(req, res)
 
 exports.autoPost = function(req, res)
 {
-
+	//hold value in between POSTs
     autoCollect = !autoCollect; //toggle autoCollect
 
     if (req.body.word1 !== "")
@@ -144,10 +150,9 @@ exports.autoPost = function(req, res)
         query.push("theft");//default search term if no entry is specified
     }
 
-
+	//Write a preference file to disk if asked to resume
 	if (req.body.resume)
 	{
-		console.log("VISION will automatically resume...");
 		//handle writing params to disk
 
         shouldResume = true;
@@ -165,7 +170,6 @@ exports.autoPost = function(req, res)
 	else
 	{
 	    shouldResume = false;
-		console.log("A restart will stop data collection...");
 
 		let data = {shouldResume: false, query: []};
 

@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
+var schemas = require('./mongoController');
+var tweetMelb = schemas.tweetMelb;
+var tweetChicago = schemas.tweetChicago;
 const tweet = require('../models/tweet_schema');
-const db = mongoose.connection;
+//const db = mongoose.connection;
 const nlp = require('./nlpTrainingController');
 
 exports.getVisualisation = function (req,res)
@@ -15,14 +17,14 @@ exports.getVisualisationData = async function (req,res)
 	let result = [];
 
 	//query DB for number of Crime tweets
-	await tweet
+	await tweetMelb
 		.count({crime: true})
 		.lean()
 		.exec()
 		.then(function(crimeTweets){result.push({type: "Crime", count: crimeTweets})})
 		.catch(function(err){console.log(err)});
 
-	await tweet //query DB for number of non-Crime tweets
+	await tweetMelb //query DB for number of non-Crime tweets
 		.count({crime: false})
 		.lean()
 		.exec()

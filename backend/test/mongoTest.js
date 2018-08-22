@@ -2,11 +2,8 @@ const expect = require('chai').expect;
 var mongo = require('../controllers/mongoController');
 var tweetMelb = mongo.tweetMelb;
 var tweetChicago = mongo.tweetChicago;
-const mongoose = require('mongoose');
-const db = mongoose.connection;
-const tweet = require('../models/tweet_schema');
-const sleep = require('sleep');
 const timeout = ms => new Promise(res => setTimeout(res, ms));
+const should = require('chai').should();
 
 
 describe('storeTweets()', function(){
@@ -144,9 +141,7 @@ describe('storeTweets()', function(){
 	});
 });
 
-//create a new test to check that correct tweets are being written to the right DB...
 
-/*WIP
 describe('storeTweets()', function(){
 	it('should write a tweet to the DB specified', async()=>{
 
@@ -194,33 +189,30 @@ describe('storeTweets()', function(){
 		mongo.storeTweets(melbArray, "melbourne");
 		mongo.storeTweets(chicagoArray, "chicago");
 
-		await timeout(2700);
+		await timeout(2800);
 
 		let melbTweetFromMelbDB = {};
 		let melbTweetFromChicagoDB = {};
 		let chicagoTweetFromChicagoDB = {};
 		let chicagoTweetFromMelbDB = {};
 
-		await tweetMelb.find({id: "1111"}).lean().exec().then((res) => {melbTweetFromMelbDB = res}); //Try to get melb tweet from Melb DB
-		await tweetMelb.find({id: "2222"}).lean().exec().then((res) => {chicagoTweetFromMelbDB = res}); //Try to get chicago tweet from Melb DB
-		await tweetChicago.find({id: "2222"}).lean().exec().then((res) => {chicagoTweetFromChicagoDB = res}); //Try to get chicago tweet from Chicago DB
-		await tweetChicago.find({id: "1111"}).lean().exec().then((res) => {melbTweetFromChicagoDB = res}); //Try to get melb tweet from Chicago DB
+		await tweetMelb.findOne({id: "1111"}).lean().exec().then(function (res) {melbTweetFromMelbDB = res}); //Try to get melb tweet from Melb DB
+		await tweetMelb.findOne({id: "2222"}).lean().exec().then(function (res) {chicagoTweetFromMelbDB = res}); //Try to get chicago tweet from Melb DB
+		await tweetChicago.findOne({id: "2222"}).lean().exec().then(function (res) {chicagoTweetFromChicagoDB = res}); //Try to get chicago tweet from Chicago DB
+		await tweetChicago.findOne({id: "1111"}).lean().exec().then(function (res) {melbTweetFromChicagoDB = res}); //Try to get melb tweet from Chicago DB
 
 		await tweetMelb.remove({id: "1111"}).exec();
 
 		await tweetChicago.remove({id: "2222"}).exec();
 
 
-
 		//ASSERT
-		expect(melbTweetFromMelbDB.full_text).to.be.equal(sampleTweetMelb.full_text);
-		expect(chicagoTweetFromMelbDB.full_text).to.be.equal(undefined);
+		expect(melbTweetFromMelbDB.full_text).to.be.equal(sampleTweetMelb.full_text); //should return
+		should.not.exist(chicagoTweetFromMelbDB);
 
 		expect(chicagoTweetFromChicagoDB.full_text).to.be.equal(sampleTweetChicago.full_text);
-		expect(melbTweetFromChicagoDB.full_text).to.be.equal(undefined);
-
+		should.not.exist(chicagoTweetFromMelbDB);
 
 
 	})
 });
-*/

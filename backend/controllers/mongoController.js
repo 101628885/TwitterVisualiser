@@ -13,6 +13,7 @@ const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChi
 
 init();
 
+//Create DB connection handles and export them
 function init()
 {
 
@@ -46,7 +47,6 @@ function init()
 
 exports.storeTweets = function(tweetsToStore, geo)
 {
-	console.log("Trying to write to DB: ", geo);
 	let id = Math.floor(Math.random() * Math.floor(25));
 
 	const thread = spawn(function(input, done, progress) {
@@ -131,7 +131,6 @@ exports.storeTweets = function(tweetsToStore, geo)
 
 	if (geo === "melbourne")
 	{
-		console.log("Using Melbourne Database at ", databaseMelb.url);
 		thread.send({tweetsToStore: tweetsToStore, database: databaseMelb})
 			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
 			.on('message', function(){thread.kill()});
@@ -139,7 +138,6 @@ exports.storeTweets = function(tweetsToStore, geo)
 	}
 	else if (geo === "chicago")
 	{
-		console.log("Using Chicago Database at ", databaseChicago.url);
 		thread.send({tweetsToStore: tweetsToStore, database: databaseChicago})
 			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
 			.on('message', function(){thread.kill()});

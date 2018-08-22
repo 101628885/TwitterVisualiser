@@ -28,7 +28,7 @@ function sendData(bool, tweetid)
 			$('#counter').html(function(i, val) { return +val+1 });
 
 	    }
-	}
+	};
 	http.send();
 }
 
