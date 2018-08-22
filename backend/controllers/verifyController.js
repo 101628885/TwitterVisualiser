@@ -8,7 +8,7 @@ var NodeGeocoder = require('node-geocoder');
 var options = {
 	httpAdapter: 'https',
 	provider: 'google',
-	apiKey: process.env.GOOGLE_PLACES_API,got
+	apiKey: process.env.GOOGLE_PLACES_API
 };
 
 var geocoder = NodeGeocoder(options);

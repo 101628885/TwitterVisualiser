@@ -13,6 +13,7 @@ const cacheController = require("../controllers/cacheController");
 const tweetMapController = require("../controllers/tweetMapController");
 const historicCrimeController = require("../controllers/historicCrimeController");
 const listviewController = require("../controllers/listViewController");
+const chicagoDataFactory = require("../controllers/chicago-data-factory");
 
 const chicago_data_factory = require("../controllers/chicago-data-factory");
 
@@ -67,9 +68,8 @@ router.get('/baltimore', historicCrimeController.baltimoreHandler);
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 
 
-
-//Test cache controller
-router.get('/test', cacheController.testCache);
+//Test dummy data
+router.post('/trajectoryData', chicagoDataFactory.getDummyData);
 
 
 module.exports = router;

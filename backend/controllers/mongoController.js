@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
+const crime = require('../models/crime_schema');
 const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
 
@@ -9,6 +10,8 @@ const databaseMelb = { url : "mongodb://team:swinburne@144.6.226.34/tweets", typ
 
 const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
 //const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Testing"};
+
+const databaseChicagoCrime = { url : "mongodb://team:swinburne@144.6.226.34/chicagoCrime", type: "Production"};
 
 
 init();
@@ -39,9 +42,20 @@ function init()
 		console.log("Connected to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
 	});
 
-	//module.exports = {'tweetMelb': tweetMelb, 'tweetChicago': tweetChicago};
+	let dbChicagoCrime = mongoose.createConnection(databaseChicagoCrime.url);
+	let chicagoCrime = dbChicagoCrime.model('crime');
+
+	dbChicagoCrime.on('error', ()=>{
+		console.log("Failed to connect to the Chicago Crime DB at", databaseChicagoCrime.url)
+	});
+
+	dbChicagoCrime.on('open', ()=>{
+		console.log("Connected to the Chicago Crime DB at", databaseChicagoCrime.url)
+	});
+
 	module.exports.tweetMelb = tweetMelb;
 	module.exports.tweetChicago = tweetChicago;
+	module.exports.chicagoCrime = chicagoCrime;
 
 }
 
