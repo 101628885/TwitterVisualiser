@@ -1,5 +1,6 @@
 const request = require('request');
 const fs = require('fs');
+const chicagoAuto = require('./chicagoDataFactory');
 var shouldRun = false;
 var query = [];
 var autoCollect = false;
@@ -57,7 +58,13 @@ setInterval(function(){
 	        }
         }
     }
-}, 8000);
+}, 12000);
+
+setInterval(function(){
+
+	chicagoAuto.saveCrimeData().catch((err) => console.log(err));
+
+}, 7200000); //call once every 2 hours
 
 
 
