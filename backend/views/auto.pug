@@ -10,12 +10,15 @@ block content
 					p Enter a set of keyword(s) for the app to query the public Twitter API.
 					label #{monitoredWord}
 					label(hidden = !isHidden) #{shouldResume}
-					input.form-control.mb-2(name='word1', type='text', hidden = isHidden)
-					input.form-control.mb-2(name='word2', type='text', hidden = isHidden)
-					input.form-control.mb-2(name='word3', type='text', hidden = isHidden)
-					input.form-control.mb-2(name='word4', type='text', hidden = isHidden)
-					input.form-control.mb-2(name='word5', type='text', hidden = isHidden)
+					.row
+						.col-md-4
+							input.form-control.mb-2(name='word1', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word2', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word3', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word4', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word5', type='text', hidden = isHidden)
 					.custom-control.custom-checkbox.my-4
 						input#resume.custom-control-input(name='resume', type='checkbox', hidden = isHidden)
 						label.custom-control-label(for='resume', hidden = isHidden) Automatically resume collection if the app restarts
 					button.btn.btn-primary(type='submit') #{toggle}
+					

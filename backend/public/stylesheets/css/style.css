@@ -27,17 +27,37 @@ h1:not(#map h1) {
 	border-width: 0.2em;
 }
 
-img:not(#map img){
+img:not(#map img) {
 	border-radius: 100%;
 }
 
-.card-body{
+.card-body {
 	padding: 10px;
+}
 
+#tweetdp {
+  grid-area: tweetdp;
+  display: inline-block;
+  width: 48px;
+}
+
+#tweetheader {
+  grid-area: tweetheader
+}
+
+#tweetbody {
+  grid-area: tweetbody
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'tweetdp tweetheader'
+    'tweetdp tweetbody'
 }
 
 #map {
 	height: 400px;
 	width: 100%;
 }
-
