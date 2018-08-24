@@ -17,59 +17,57 @@ const chicagoDataFactory = require("../controllers/chicago-data-factory");
 
 const chicago_data_factory = require("../controllers/chicago-data-factory");
 
-/* GET home page. */
-router.get('/', twitterController.home);
-router.get('/getTweets', twitterController.home);
+// get homepage
+router.get('/', function (req, res) {
+  res.render('home');
+});
 
-//Twitter Controller
+// twitter controller
+// router.get('/', twitterController.tweetindex);
+// router.get('/getTweets', twitterController.tweetindex);
+
+// auto controller
 router.get('/auto', autoController.autoGet);
 router.post('/auto', autoController.autoPost);
 router.post('/getTweets', dbpediaController.getCombination, twitterController.getTweets);
 
-//Verify Controller
+// verify controller
 router.get('/check', verifyController.getUncheckedTweets);
 router.post('/check/:id/:value/:geo', verifyController.checkTweets);
 router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTweets);
 
-//NLP Controller
-router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet); //returns crime: true or false
-router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet); //returns both checked and unchecked
+// nlp training controller
+router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);  //returns crime: true or false
+router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);  //returns both checked and unchecked
 
-//React Controller
+// react controller
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount);
 router.get('/getPredictedData', reactController.getPredictedData);
+router.get('/getStoredTweets/:count/checked/:checked', reactController.getStoredTweets);  //returns checked: true or false
+router.get('/getStoredTweets/:count/crime/:crime', reactController.getStoredTweets);  //returns crime: true or false
+router.get('/getStoredTweets/:count', reactController.getStoredTweets);  //returns tweets from DB
+router.get('/getStoredTweets/', reactController.getStoredTweets);  //returns all tweets stored in the DB
 
-//React Controller get tweet data
-router.get('/getStoredTweets/:count/checked/:checked', reactController.getStoredTweets); //returns checked: true or false
-router.get('/getStoredTweets/:count/crime/:crime', reactController.getStoredTweets); //returns crime: true or false
-router.get('/getStoredTweets/:count', reactController.getStoredTweets); //returns tweets from DB
-router.get('/getStoredTweets/', reactController.getStoredTweets); //returns all tweets stored in the DB
-
-//Visualisation Controller
+// visualisation controller
 router.get('/visualisation', visualisationController.getVisualisation);
 router.get('/visualisationData', visualisationController.getVisualisationData);
 router.get('/nlpData', visualisationController.getNLPData);
 
-//TweetMap Controller
+// tweetmap controller
 router.get('/tweetMap', tweetMapController.getTweetMap);
 
-
-//List View Controller
+// listview Controller
 router.get('/list', listviewController.listTweets);
 router.post('/list', listviewController.findTweets);
 
-
-//Historic Controller
+// historic crime controller
 router.get('/chicago', historicCrimeController.chicagoHandler); 
 router.get('/seattle', historicCrimeController.seattleHandler); 
 router.get('/baltimore', historicCrimeController.baltimoreHandler); 
 
-
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 
-
-//Test dummy data
+// test dummy data
 router.post('/trajectoryData', chicagoDataFactory.getDummyData);
-
 
 module.exports = router;

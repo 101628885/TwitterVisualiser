@@ -9,7 +9,7 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-exports.home = async(req,res) =>
+exports.tweetindex = async(req,res) =>
 {
 	tweets = "";
 	res.render('index', {data: tweets});
