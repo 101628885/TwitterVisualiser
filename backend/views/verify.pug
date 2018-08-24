@@ -1,58 +1,53 @@
 extends layout
 
 block content
-  script(src="./scripts/checkScript.js")
-  div(class="row")
-    div(class="col-sm-1")
-      img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
-    div(class="col-sm-11")
-      h1 VISION: Check Tweets
-
-  div(class="card" style="height: 120px")
-    .row
-      .col-3
-        p Tweets Checked:
-        h6 Select Database:
-
-      .col-1
-        p#counter  0
-
-        select(id='location', name='location' onchange=`skip()`)
-          option(value='melbourne') Melbourne
-          option(value='chicago') Chicago
-
-
-  each tweet, index in data
-    div(class="card" id="cardbody")
-      h5#tweetHead(class="card-title") #{tweet.user_name} -  #{tweet.created_at} - Tweet Location: #{tweet.geo} - User Default Location:#{tweet.user_location}
-      div(class="card-body")
-        img#tweetImg(src=`${tweet.user_profile_image_url}`)
-        p#tweetText #{tweet.full_text}
-        .row
-          .col-sm-3
-
-          .col-sm-3
-            .row
-              label(for="crime-type") Type of Crime 
-            .row
-              select(id="crime-type")
-                option(value="assault") Assault
-                option(value="murder") Murder
-                option(value="kidnapping") Kidnapping
-                option(value="extortion") Extortion
-                option(value="rape") Rape
-                option(value="theft") Theft
-                option(value="burglary") Burglary
-                option(value="vandalism") Vandalism
-                option(value="drugs") Drugs
-            .row
-              label(for="pac-input") Location (approximate)
-            .row
-              input(id="pac-input" type="text" placeholder="Enter a location")
-            .row
-              .col-sm-6
-                button.btn.btn-success#tweetTrue(onclick=`sendData('true',${tweet.id})`) True
-              .col-sm-6
-                button.btn.btn-danger#tweetFalse(onclick=`sendData('false',${tweet.id})`) False 
-  script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-PIPhjfg5Cm1f8eTaJ9jPsACSuZ7gViU&libraries=places&callback=initAutocomplete"
-  async defer)
+	.container-fluid
+		.row.mx-5
+			.col-md-12.mt-5
+				p.h4.mb-4 Manual Checking
+				p Your input will aid the NLP model in learning how to recognise tweets.
+				p 
+					| You have checked a total of 
+					span#counter 0
+					|  tweet(s) so far.
+				label(for="location") Select Database
+				.row
+					.col-md-4
+						select#location.custom-select.mb-4(name="location", onchange=`skip()`)
+							option(value="melbourne") Melbourne
+							option(value="chicago") Chicago
+		.row.mx-5
+			.col-md-12
+				each tweet, index in data
+					.card.mb-3
+						.card-body
+							.grid-container
+								img#tweetdp.mx-2(src=`${tweet.user_profile_image_url}`)
+								p#tweetheader(class="card-title")
+									span
+										strong#tweetusername #{tweet.user_name} 
+									span#tweetmetadata #{tweet.created_at} - #{tweet.geo}
+								p#tweetbody #{tweet.full_text}
+							.row
+								.col-md-4.mx-auto
+									label(for="crime-type") Select Category
+									select#crime-type.custom-select.mb-4(name="crime-type")
+										option(value="assault") Assault
+										option(value="murder") Murder
+										option(value="kidnapping") Kidnapping
+										option(value="extortion") Extortion
+										option(value="rape") Rape
+										option(value="theft") Theft
+										option(value="burglary") Burglary
+										option(value="vandalism") Vandalism
+										option(value="drugs") Drugs
+							.row
+								.col-md-4.mx-auto
+									label(for="pac-input") Location (approximate)
+									input.form-control.mb-4(id="pac-input" name="pac-input", type="text", placeholder="Enter a location")
+							.row
+								.col-md-4.mx-auto.text-center
+									button.btn.btn-success#tweetTrue(onclick=`sendData('true',${tweet.id})`) True
+									button.btn.btn-danger#tweetFalse(onclick=`sendData('false',${tweet.id})`) False
+	script(src="./scripts/checkScript.js")
+	script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-PIPhjfg5Cm1f8eTaJ9jPsACSuZ7gViU&libraries=places&callback=initAutocomplete" async defer)
