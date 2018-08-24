@@ -1,5 +1,5 @@
-html {
-	/* background-color: #2AA3EF; */
+html,body {
+	height: 100%;
 }
 
 body:not(#map body) {
@@ -9,9 +9,9 @@ body:not(#map body) {
 	font-weight: 300;
 }
 
-a {
-	/* color: #00B7FF; */
-}
+/* a {
+	color: #00B7FF;
+} */
 
 /* div:not(#map div) {
 	padding: 10px;
@@ -57,7 +57,14 @@ img:not(#map img) {
     'tweetdp tweetbody'
 }
 
+#filterform {
+  position: absolute;
+  z-index: 1;
+}
+
 #map {
-	height: 400px;
+  position: absolute;
+  z-index: 0;
+	height: 90%;
 	width: 100%;
 }

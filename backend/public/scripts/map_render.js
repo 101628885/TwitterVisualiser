@@ -76,6 +76,8 @@ function initHistoricMap()
 				infoWin.setContent(val.text);
 				infoWin.open(dataMap, marker);
 			})
+
+			console.log("marker found and loaded");
 			
 			return {marker: marker, text: val.text};
 		}

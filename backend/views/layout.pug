@@ -5,6 +5,7 @@ html
     meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
     meta(http-equiv='x-ua-compatible' content='ie=edge')
     title= title
+    //- style links
     //- font awesome
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
     //- bootstrap core
@@ -13,6 +14,17 @@ html
     link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
     //- other styles
     link(rel='stylesheet' href='/stylesheets/css/style.css')
+    //- scripts
+    //- jquery
+    script(type='text/javascript' src="/stylesheets/js/jquery-3.3.1.min.js")
+    //- bootstrap tooltips
+    script(type='text/javascript' src="/stylesheets/js/popper.min.js")
+    //- bootstrap core js
+    script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
+    //- material core js
+    script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
+    //- google maps rendering
+    script(src="./scripts/map_render.js")
   body
     header
       nav.navbar.navbar-expand-lg.navbar-dark.elegant-color
@@ -57,15 +69,3 @@ html
     //-             i.fa.fa-github.fa-lg.white-text.mr-md-5.mr-3.fa-2x
     //-   .footer-copyright.text-center.py-3
     //-     | Created for the Software Engineering Project at Swinburne University of Technology
-
-    //- scripts
-    //- jquery
-    script(type='text/javascript' src="/stylesheets/js/jquery-3.3.1.min.js")
-    //- bootstrap tooltips
-    script(type='text/javascript' src="/stylesheets/js/popper.min.js")
-    //- bootstrap core js
-    script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
-    //- material core js
-    script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
-    //- google maps rendering
-    script(src="./scripts/map_render.js")
