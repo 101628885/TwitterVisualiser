@@ -72,6 +72,18 @@ img:not(#map img) {
 
 #hometext {
   margin-top: 8em;
+  animation: fadein 2s;
+}
+
+@keyframes fadein {
+  from { 
+    opacity: 0;
+    padding-top: 2em;
+   }
+  to { 
+    opacity: 1;
+    padding-top: 0em;
+  }
 }
 
 #jumbotext {
