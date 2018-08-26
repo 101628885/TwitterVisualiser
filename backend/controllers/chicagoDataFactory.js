@@ -170,6 +170,14 @@ TODO: Move this to the docs...
 */
 
 
+exports.testEndpoint = async(req, res) =>
+{
+	let result = await exports.getDummyData({
+		"2007": 50,
+		"2008": 50
+	});
+	res.send(result);
+};
 
 exports.getDummyData = async(query) =>
 {
@@ -200,6 +208,7 @@ exports.getDummyData = async(query) =>
 					await chicagoCrime.find({Year: query["crimes"][term].year, Primary_Type: query["crimes"][term].crime})
 						.lean()
 						.limit(parseInt(query["crimes"][term].count))
+						.sort({Date: 1})
 						.exec()
 						.then((res) => {result = result.concat(res)})
 						.catch((err) => {console.log(err)});
@@ -209,6 +218,7 @@ exports.getDummyData = async(query) =>
 					await chicagoCrime.find({Primary_Type: query["crimes"][term].crime})
 						.lean()
 						.limit(parseInt(query["crimes"][term].count))
+						.sort({Date: 1})
 						.exec()
 						.then((res) => {result = result.concat(res)})
 						.catch((err) => {console.log(err)});
@@ -244,6 +254,7 @@ exports.getDummyData = async(query) =>
 					await chicagoCrime.find({Year: year})
 						.lean()
 						.limit(parseInt(query[year]))
+						.sort({Date: 1})
 						.exec()
 						.then((res) => {result = result.concat(res);})
 						.catch((err) => {console.log(err)});

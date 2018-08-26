@@ -67,6 +67,6 @@ router.get('/baltimore', historicCrimeController.baltimoreHandler);
 
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 
-
+router.get('/testTraj', chicagoDataFactory.testEndpoint);
 
 module.exports = router;
