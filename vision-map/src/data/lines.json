@@ -1,0 +1,14 @@
+{
+  "type": "FeatureCollection",
+  "features": [{
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [[[-87.645135483,41.746522904], [-87.677386363,41.907556016]]
+        ]},
+      "properties": {
+        "id": "a1398a11-d1ce-421c-bf66-a456ff525de9",
+        "lineWidth": 0.1
+       }
+  }]
+}
