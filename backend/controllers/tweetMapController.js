@@ -11,12 +11,17 @@ exports.getTweetMap = function (req, res) {
 
 exports.getChicagoTweetsPOC = async (req, res) => {
     let sortedTrajectoryData = await
-        chicagoDataFactory.getDummyData({ "2012": 500, "2016": 300, "2017": 100, "2018": 100 }).catch((e) => console.log(e));
+        chicagoDataFactory.getDummyData({ "2012": 9000 }).catch((e) => console.log(e));
     // console.log(sortedTrajectoryData);
 
     let crimeCategories = new Map();
     let crimeTrajectories = new Array();
-    let finalGeoJSON = [];
+    let finalGeoJSON = [
+        {
+            "type": "FeatureCollection",
+            "features": []
+        }
+    ];
 
     // let defaultRegion = new google.maps.LatLng( 41.881832, -87.623177);
     // let n = 48;
@@ -37,12 +42,12 @@ exports.getChicagoTweetsPOC = async (req, res) => {
     for (const i of crimeCategories.keys()) {
         var prevData = {};
         var firstTime = true;
-        finalGeoJSON.push(
-            {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        );
+        // finalGeoJSON.push(
+        //     {
+        //         "type": "FeatureCollection",
+        //         "features": []
+        //     }
+        // );
         for (const c of crimeCategories.get(i)) {
             if (firstTime) {
                 prevData = c;
@@ -54,7 +59,7 @@ exports.getChicagoTweetsPOC = async (req, res) => {
                 if ((timeDiff >= tTimeThreshold ? false : distDiff >= tDistThreshold ? false : true)) {
                     crimeTrajectories.push([prevData, c]);
                     // console.log(prevData.Latitude, prevData.Latitude);
-                    finalGeoJSON[finalGeoJSON.length - 1].features.push({
+                    finalGeoJSON[0].features.push({
                         "type": "Feature",
                         "geometry": {
                             "type": "MultiLineString",
@@ -65,12 +70,17 @@ exports.getChicagoTweetsPOC = async (req, res) => {
                             "lineWidth": 0.1,
                             "primary_type": c.Primary_Type,
                             "Longitude": c.Longitude,
-                            "Latitude": c.Latitude
+							"Latitude": c.Latitude,
+							"date": c.Date,
+							"description": c.Description,
+							"year": c.Year,
+							"location_description": c.Location_Description
+							
                         }
                     });
                 } else {
                     crimeTrajectories.push([c]);
-                    finalGeoJSON[finalGeoJSON.length - 1].features.push({
+                    finalGeoJSON[0].features.push({
                         "type": "Feature",
                         "geometry": {
                             "type": "Point",
@@ -80,7 +90,11 @@ exports.getChicagoTweetsPOC = async (req, res) => {
                             "lineWidth": 0.1,
                             "primary_type": c.Primary_Type,
                             "Longitude": c.Longitude,
-                            "Latitude": c.Latitude
+							"Latitude": c.Latitude,
+							"date": c.Date,
+							"description": c.Description,
+							"year": c.Year,
+							"location_description": c.Location_Description
                         }
                     });
                         
