@@ -66,6 +66,7 @@ router.get('/baltimore', historicCrimeController.baltimoreHandler);
 
 
 router.get('/checkData', chicago_data_factory.checkLocalData); 
+
 router.get('/getChicagoTweetsPOC', tweetMapController.getChicagoTweetsPOC);
 
 //Test dummy data
