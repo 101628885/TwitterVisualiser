@@ -217,7 +217,7 @@ describe('storeTweets()', function(){
 
 	})
 });
-
+/*
 describe('getDummyData()', function(){
 
 	it('should return only chicago crime documents that match the query', async function(){
@@ -253,3 +253,4 @@ describe('getDummyData()', function(){
 
 	})
 });
+*/
