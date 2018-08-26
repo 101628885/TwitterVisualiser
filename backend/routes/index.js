@@ -68,10 +68,5 @@ router.get('/baltimore', historicCrimeController.baltimoreHandler);
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 
 
-//Test dummy data
-router.post('/trajectoryData', chicagoDataFactory.getDummyData);
-
-//Test dummy data saving
-router.get('/saveDummy', chicagoDataFactory.saveCrimeData);
 
 module.exports = router;

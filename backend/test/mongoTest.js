@@ -2,6 +2,7 @@ const expect = require('chai').expect;
 var mongo = require('../controllers/mongoController');
 var tweetMelb = mongo.tweetMelb;
 var tweetChicago = mongo.tweetChicago;
+const chicagoCrime = mongo.chicagoCrime;
 const timeout = ms => new Promise(res => setTimeout(res, ms));
 const should = require('chai').should();
 
@@ -212,6 +213,42 @@ describe('storeTweets()', function(){
 
 		expect(chicagoTweetFromChicagoDB.full_text).to.be.equal(sampleTweetChicago.full_text);
 		should.not.exist(chicagoTweetFromMelbDB);
+
+
+	})
+});
+
+describe('getDummyData()', function(){
+
+	it('should return only chicago crime documents that match the query', async function(){
+
+		//SETUP, create a sample simple and complex query
+		let simpleRes = {};
+		let complexRes = {};
+
+		let simpleQuery = {"2007": 4, "2014": 2};
+		let complexQuery = {
+			"crimes": [{
+				"crime": "BATTERY", //If year is not specified it won't be included in the search
+				"count": 50
+			},
+				{
+					"crime": "BURGLARY",
+					"year": "2014", //specifying year
+					"count": 20
+				}
+			]
+		};
+
+		//ACTION
+		await chicagoCrime.find(simpleQuery).lean().exec().then((res) => {simpleRes = res});
+
+		await chicagoCrime.find(complexQuery).lean().exec()
+
+
+
+
+
 
 
 	})

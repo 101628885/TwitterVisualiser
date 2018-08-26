@@ -5,7 +5,10 @@ const mongoose = require('mongoose');
 var schemas = require('./mongoController');
 var chicagoCrime = schemas.chicagoCrime;
 
-const gCurrentDataDir = `../vision-map/src/data/`
+const gCurrentDataDir = `../vision-map/src/data/`;
+
+
+
 
 exports.checkLocalData = async(req,res, next) =>
 {
@@ -165,9 +168,11 @@ Simplest query, search just by year. (year:count)
 TODO: Move this to the docs...
 
 */
-exports.getDummyData = async(req,res) =>
+
+
+
+exports.getDummyData = async(query) =>
 {
-	let query = req.body;
 	let result = [];
 	let total = 0;
 	let rejected = {"Query Rejected": "Requested result set too large. Please limit size to less than 10000"};
@@ -182,7 +187,7 @@ exports.getDummyData = async(req,res) =>
 
 		if (total > 10000)
 		{
-			res.send(rejected)
+			result = rejected;
 		}
 		else
 		{
@@ -191,6 +196,7 @@ exports.getDummyData = async(req,res) =>
 
 				if (query["crimes"][term].year) //Check if year member exists
 				{
+					console.log("COUNT:", query["crimes"][term].count);
 					await chicagoCrime.find({Year: query["crimes"][term].year, Primary_Type: query["crimes"][term].crime})
 						.lean()
 						.limit(parseInt(query["crimes"][term].count))
@@ -210,7 +216,7 @@ exports.getDummyData = async(req,res) =>
 
 
 			}
-			res.send(result);
+			return result;
 		}
 
 	}
@@ -226,7 +232,7 @@ exports.getDummyData = async(req,res) =>
 
 		if (total > 10000)
 		{
-			res.send(rejected);
+			result = rejected;
 		}
 		else
 		{
@@ -244,7 +250,7 @@ exports.getDummyData = async(req,res) =>
 				}
 
 			}
-			res.send(result);
+			return result;
 		}
 	}
 };
