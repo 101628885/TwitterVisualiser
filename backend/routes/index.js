@@ -51,7 +51,7 @@ router.get('/visualisationData', visualisationController.getVisualisationData);
 router.get('/nlpData', visualisationController.getNLPData);
 
 //TweetMap Controller
-router.get('/tweetMap', tweetMapController.getTweetMap);
+router.get('/tweetMap', tweetMapController.getChicagoTweetsPOC);
 
 
 //List View Controller
