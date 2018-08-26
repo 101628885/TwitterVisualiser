@@ -23,13 +23,13 @@ router.get('/', function (req, res) {
 });
 
 // twitter controller
-// router.get('/', twitterController.tweetindex);
-// router.get('/getTweets', twitterController.tweetindex);
+router.get('/browseTwitter', twitterController.browseTwitter);
+router.get('/getTweets', twitterController.browseTwitter);
+router.post('/getTweets', dbpediaController.getCombination, twitterController.getTweets);
 
 // auto controller
 router.get('/auto', autoController.autoGet);
 router.post('/auto', autoController.autoPost);
-router.post('/getTweets', dbpediaController.getCombination, twitterController.getTweets);
 
 // verify controller
 router.get('/check', verifyController.getUncheckedTweets);
