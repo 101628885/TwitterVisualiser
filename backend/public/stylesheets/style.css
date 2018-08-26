@@ -37,6 +37,6 @@ img:not(#map img){
 }
 
 #map {
-	height: 400px;
+	height: 100vh;
 	width: 100%;
 }

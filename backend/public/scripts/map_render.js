@@ -66,7 +66,7 @@ function initHistoricMap()
 	});
 
 	var infoWin = new google.maps.InfoWindow();
-	var markers = historicCoords.map(function(val) 
+	var markers = `historicCoords`.map(function(val) 
 	{
 		if(val.location != undefined && val.location.coordinates[0] !=null && val.location.coordinates[1] !=null)
 		{
