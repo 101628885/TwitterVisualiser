@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node start",
-    "test": "mocha --timeout 9000 --exit"
+    "test": "mocha --timeout 9000 --exit",
+    "dev": "nodemon start -e js,pug"
   },
   "dependencies": {
     "ajv": "^6.5.2",
@@ -33,5 +34,8 @@
     "sparql": "^0.1.3",
     "threads": "^0.12.0",
     "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
   }
 }

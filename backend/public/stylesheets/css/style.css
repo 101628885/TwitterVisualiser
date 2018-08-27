@@ -1,0 +1,91 @@
+html, body, #outer {
+  height: 100%;
+  width: 100%;
+}
+
+body:not(#map body) {
+	/* padding: 50px; */
+	/* background-color: #2AA3EF; */
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 300;
+}
+
+/* a {
+	color: #00B7FF;
+} */
+
+/* div:not(#map div) {
+	padding: 10px;
+} */
+
+h1:not(#map h1) {
+	color: white;
+}
+
+.card {
+	background-color: white;
+	/* border-color: #0084b4; */
+	border-width: 0.2em;
+}
+
+img:not(#map img) {
+	border-radius: 100%;
+}
+
+.card-body {
+	padding: 10px;
+}
+
+#tweetdp {
+  grid-area: tweetdp;
+  display: inline-block;
+  width: 48px;
+}
+
+#tweetheader {
+  grid-area: tweetheader
+}
+
+#tweetbody {
+  grid-area: tweetbody
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'tweetdp tweetheader'
+    'tweetdp tweetbody'
+}
+
+#filterform {
+  position: absolute;
+  z-index: 1;
+}
+
+#map {
+  position: absolute;
+  z-index: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#hometext {
+  margin-top: 8em;
+  animation: fadein 2s;
+}
+
+@keyframes fadein {
+  from { 
+    opacity: 0;
+    padding-top: 2em;
+   }
+  to { 
+    opacity: 1;
+    padding-top: 0em;
+  }
+}
+
+#jumbotext {
+  font-size: 7em;
+}

@@ -1,30 +1,23 @@
 extends layout
 
 block content
-
-	div(class="row")
-		div(class="col-sm-1")
-			img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
-		div(class="col-sm-11")
-			h1 VISION: Tracking Tweet Data
-	.row
-		.col-sm-3
-			select#crime-type
-				option(value="All" selected) All Crime
-				for type in primary_types
-					option(value=`${type}`) #{type}
-			script.
-				$('#crime-type').on('change', function() {
-				    hideMarkers($(this).find(":selected").val());
-				});
-		.col-sm-3
-			select
-				for date in dates
-					option(value=`${date}`) #{date}
-	
-	div(class="card")
-		div(id="map")
-
+	.container-fluid#outer
+		.row#filterform.my-5
+			.col-md-6.mt-5
+				select#crime-type.custom-select(name="crime-type")
+					option(value="All" selected) All Crime
+					for type in primary_types
+						option(value=`${type}`) #{type}
+				script.
+					$('#crime-type').on('change', function() {
+						hideMarkers($(this).find(":selected").val());
+					});
+			.col-md-6.mt-5
+				select.custom-select
+					for date in dates
+						option(value=`${date}`) #{date}
+		.row
+			#map
 	//- Define default position values and render map to the screen
 	script.
 		//Best way to pass vairables to a script in pug
