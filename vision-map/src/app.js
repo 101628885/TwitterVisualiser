@@ -18,19 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import window from 'global/window';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as fs from 'fs';
 import axios from 'axios';
 
 import Banner from './components/banner';
 import Announcement from './components/announcement';
 // Kepler.gl Data processing APIs
-import {loadSampleConfigurations} from './actions';
-import {replaceLoadDataModal} from './factories/load-data-modal';
+import { loadSampleConfigurations } from './actions';
+import { replaceLoadDataModal } from './factories/load-data-modal';
 
 const KeplerGl = require('kepler.gl/components').injectComponents([
   replaceLoadDataModal()
@@ -38,17 +38,16 @@ const KeplerGl = require('kepler.gl/components').injectComponents([
 
 
 
-function requireAll( requireContext ) 
-{
-  return requireContext.keys().map( requireContext );
+function requireAll(requireContext) {
+  return requireContext.keys().map(requireContext);
 }
-var jsonTypes = requireAll( require.context("./data", false, /.json$/) );
+var jsonTypes = requireAll(require.context("./data", false, /.json$/));
 
 const MAPBOX_TOKEN = process.env.MapboxAccessToken; // eslint-disable-line
 
 // Sample data
 /* eslint-disable no-unused-vars */
-import {updateVisData, addDataToMap} from 'kepler.gl/actions';
+import { updateVisData, addDataToMap } from 'kepler.gl/actions';
 import Processors from 'kepler.gl/processors';
 /* eslint-enable no-unused-vars */
 
@@ -80,44 +79,68 @@ class App extends Component {
     // if we pass an id as part of the url
     // we ry to fetch along map configurations
     //data_fetcher.checkLocalData();
-    const {params: {id: sampleMapId} = {}} = this.props;
+    const { params: { id: sampleMapId } = {} } = this.props;
     this.props.dispatch(loadSampleConfigurations(sampleMapId));
     window.addEventListener('resize', this._onResize);
     this._onResize();
   }
 
   componentDidMount() {
-    
+
     // if no json files make a get request to node server which will then get the data.
-    if(jsonTypes.length == 0)
-    {
-      axios.get("http://localhost:3000/checkData")
-      .then( (response) => {
-        console.log("response", response);
-        window.location.reload();
-      })
-      .catch( (error) => {
-        console.log(error);
-      });  
-    }
-    else
-    {
-      //jsonTypes is an array of all the files in data/'todays-date-file'
-      //we loop through each one process the file, then add the data to the map
-      jsonTypes.forEach((type) => {
-        let label = type.features[0].properties.primary_type
-        let data = Processors.processGeojson(type);
-        const dataset = {
-        data,
-        info: {
-          label: `${label}`,
-          id: `${label}`
-        }
-      };
-      this.props.dispatch(addDataToMap({datasets: dataset}));
-    })
-    }
-    
+    // if(jsonTypes.length == 0)
+    // {
+    //   axios.get("http://localhost:3000/checkData")
+    //   .then( (response) => {
+    //     console.log("response", response);
+    //     window.location.reload();
+    //   })
+    //   .catch( (error) => {
+    //     console.log(error);
+    //   });  
+    // }
+    // else
+    // {
+    //   //jsonTypes is an array of all the files in data/'todays-date-file'
+    //   //we loop through each one process the file, then add the data to the map
+    //   jsonTypes.forEach((type) => {
+    //     let label = type.features[0].properties.primary_type
+    //     let data = Processors.processGeojson(type);
+    //     const dataset = {
+    //     data,
+    //     info: {
+    //       label: `${label}`,
+    //       id: `${label}`
+    //     }
+    //   };
+    //   console.log(dataset);
+    //   // this.props.dispatch(addDataToMap({datasets : dataset}));
+    // })
+    // console.log("start");
+    // axios.get('http://localhost:3000/tweetMap')
+    //   .then((res) => {
+    //     res.data.forEach(item => { 
+    //       let dataset = Processors.processGeojson(item);
+    //       console.log(dataset);          
+    //       this.props.dispatch(addDataToMap({datasets : dataset }));
+    //     });
+    //   });
+    axios.get('http://localhost:3000/tweetMap')
+      .then((res) => {
+          res.data.forEach(item => {            
+            let label = item.features[0].properties.primary_type
+            const data  = Processors.processGeojson(item);
+            const dataset = { 
+              data,
+              info: 
+              {
+                label: label
+              }
+            };
+            // console.log("DUCK ME", dataset);
+            this.props.dispatch(addDataToMap({ datasets: dataset }));
+          });
+      });
   }
 
   _onResize = () => {
@@ -128,11 +151,11 @@ class App extends Component {
   };
 
   _showBanner = () => {
-    this.setState({showBanner: true});
+    this.setState({ showBanner: true });
   };
 
   _hideBanner = () => {
-    this.setState({showBanner: false});
+    this.setState({ showBanner: false });
   };
 
   _disableBanner = () => {
@@ -141,7 +164,7 @@ class App extends Component {
   };
 
   render() {
-    const {showBanner, width, height} = this.state;
+    const { showBanner, width, height } = this.state;
     return (
       <GlobalStyleDiv>
         <Banner
@@ -149,7 +172,7 @@ class App extends Component {
           height={bannerHeight}
           onClose={this._hideBanner}
         >
-          <Announcement onDisable={this._disableBanner}/>
+          <Announcement onDisable={this._disableBanner} />
         </Banner>
         <div
           style={{
@@ -179,7 +202,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => state;
-const dispatchToProps = dispatch => ({dispatch});
+const dispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   mapStateToProps,

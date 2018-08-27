@@ -13,9 +13,9 @@ const cacheController = require("../controllers/cacheController");
 const tweetMapController = require("../controllers/tweetMapController");
 const historicCrimeController = require("../controllers/historicCrimeController");
 const listviewController = require("../controllers/listViewController");
-const chicagoDataFactory = require("../controllers/chicago-data-factory");
+const chicagoDataFactory = require("../controllers/chicagoDataFactory");
 
-const chicago_data_factory = require("../controllers/chicago-data-factory");
+const chicago_data_factory = require("../controllers/chicagoDataFactory");
 
 // get homepage
 router.get('/', function (req, res) {
@@ -53,8 +53,9 @@ router.get('/visualisation', visualisationController.getVisualisation);
 router.get('/visualisationData', visualisationController.getVisualisationData);
 router.get('/nlpData', visualisationController.getNLPData);
 
-// tweetmap controller
-router.get('/tweetMap', tweetMapController.getTweetMap);
+
+//TweetMap Controller
+router.get('/tweetMap', tweetMapController.getChicagoTweetsPOC);
 
 // listview Controller
 router.get('/list', listviewController.listTweets);
@@ -67,7 +68,12 @@ router.get('/baltimore', historicCrimeController.baltimoreHandler);
 
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 
-// test dummy data
+router.get('/getChicagoTweetsPOC', tweetMapController.getChicagoTweetsPOC);
+
+//Test dummy data
 router.post('/trajectoryData', chicagoDataFactory.getDummyData);
+
+//Test dummy data saving
+router.get('/saveDummy', chicagoDataFactory.saveCrimeData);
 
 module.exports = router;
