@@ -77,7 +77,7 @@ class App extends Component {
     super(props);
     this.state = {
       showGrid: false,
-      width: window.innerWidth,
+      width: window.innerWidth ,
       showTools: true,
       height: window.innerHeight * 0.75,
       loading: true
@@ -120,7 +120,7 @@ class App extends Component {
 
   _onResize = () => {
     this.setState({
-      width: window.innerWidth,
+      width: window.innerWidth - 16,
       height: window.innerHeight * 0.75
     });
   };
@@ -157,8 +157,11 @@ class App extends Component {
           style={{
             transition: 'margin 1s, height 1s',
             position: 'absolute',
-            width: '100%',
+            width: '95%',
             height: '100%',
+            paddingLeft: '16px',
+            paddingTop: '16px',
+            paddingRight: '16px',
             minHeight: `calc(100% - ${bannerHeight}px)`,
             visibility: this.state.showTools ? 'visible' : 'hidden'
           }}
@@ -171,7 +174,7 @@ class App extends Component {
              */
             
             getState={state => state.demo.keplerGl}
-            width={width}
+            width={width - 16}
             height={height}
           />
 
