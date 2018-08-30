@@ -21,21 +21,18 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import { css } from 'react-emotion';
 import window from 'global/window';
 import { connect } from 'react-redux';
 import * as fs from 'fs';
 import axios from 'axios';
+import { CircleLoader } from 'react-spinners';
 
-import Banner from './components/banner';
-import Announcement from './components/announcement';
 // Kepler.gl Data processing APIs
 import { loadSampleConfigurations } from './actions';
 import { replaceLoadDataModal } from './factories/load-data-modal';
 
-const KeplerGl = require('kepler.gl/components').injectComponents([
-  replaceLoadDataModal()
-]);
-
+const KeplerGl = require('kepler.gl/components').injectComponents();
 
 
 function requireAll(requireContext) {
@@ -68,63 +65,73 @@ const GlobalStyleDiv = styled.div`
   }
 `;
 
+const override = css`
+    position: absolute;
+    margin: 0 auto;
+    border-color: red;
+`;
 class App extends Component {
-  state = {
-    showBanner: false,
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
+  
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showGrid: false,
+      width: window.innerWidth,
+      showTools: true,
+      height: window.innerHeight * 0.75,
+      loading: true
+    };
+
+    // This binding is necessary to make `this` work in the callback
+    this._getDataForMap = this._getDataForMap.bind(this);
+    this._toggleTools = this._toggleTools.bind(this);
+  }
+
 
   componentWillMount() {
     // if we pass an id as part of the url
     // we ry to fetch along map configurations
     //data_fetcher.checkLocalData();
-    const { params: { id: sampleMapId } = {} } = this.props;
-    this.props.dispatch(loadSampleConfigurations(sampleMapId));
+    //const { params: { id: sampleMapId } = {} } = this.props;
+    //this.props.dispatch(loadSampleConfigurations(sampleMapId));
     window.addEventListener('resize', this._onResize);
     this._onResize();
   }
 
-  componentDidMount() {
+  componentDidMount() 
+  {
+    axios.get('http://localhost:3000/tweetMap')
+      .then((res) => {
+          res.data.forEach(item => {            
+            let label = "Chicago Crime Data"
+            const data  = Processors.processGeojson(item);
+            const dataset = { 
+              data,
+              info: 
+              {
+                label: label
+              }
+            };
+            this.props.dispatch(addDataToMap({ datasets: dataset }));
+          });
+      });
+  }
 
-    // if no json files make a get request to node server which will then get the data.
-    // if(jsonTypes.length == 0)
-    // {
-    //   axios.get("http://localhost:3000/checkData")
-    //   .then( (response) => {
-    //     console.log("response", response);
-    //     window.location.reload();
-    //   })
-    //   .catch( (error) => {
-    //     console.log(error);
-    //   });  
-    // }
-    // else
-    // {
-    //   //jsonTypes is an array of all the files in data/'todays-date-file'
-    //   //we loop through each one process the file, then add the data to the map
-    //   jsonTypes.forEach((type) => {
-    //     let label = type.features[0].properties.primary_type
-    //     let data = Processors.processGeojson(type);
-    //     const dataset = {
-    //     data,
-    //     info: {
-    //       label: `${label}`,
-    //       id: `${label}`
-    //     }
-    //   };
-    //   console.log(dataset);
-    //   // this.props.dispatch(addDataToMap({datasets : dataset}));
-    // })
-    // console.log("start");
-    // axios.get('http://localhost:3000/tweetMap')
-    //   .then((res) => {
-    //     res.data.forEach(item => { 
-    //       let dataset = Processors.processGeojson(item);
-    //       console.log(dataset);          
-    //       this.props.dispatch(addDataToMap({datasets : dataset }));
-    //     });
-    //   });
+  _onResize = () => {
+    this.setState({
+      width: window.innerWidth,
+      height: window.innerHeight * 0.75
+    });
+  };
+  
+  _toggleTools = () =>
+  {
+     this.state.showTools = this.state.showTools ? false : true;
+     console.log(this.state.showTools)
+  }
+  _getDataForMap = () => {
+
     axios.get('http://localhost:3000/tweetMap')
       .then((res) => {
           res.data.forEach(item => {            
@@ -137,51 +144,23 @@ class App extends Component {
                 label: label
               }
             };
-            // console.log("DUCK ME", dataset);
             this.props.dispatch(addDataToMap({ datasets: dataset }));
           });
       });
   }
 
-  _onResize = () => {
-    this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
-  };
-
-  _showBanner = () => {
-    this.setState({ showBanner: true });
-  };
-
-  _hideBanner = () => {
-    this.setState({ showBanner: false });
-  };
-
-  _disableBanner = () => {
-    this._hideBanner();
-    window.localStorage.setItem('kgHideBanner', 'true');
-  };
-
   render() {
     const { showBanner, width, height } = this.state;
     return (
       <GlobalStyleDiv>
-        <Banner
-          show={this.state.showBanner}
-          height={bannerHeight}
-          onClose={this._hideBanner}
-        >
-          <Announcement onDisable={this._disableBanner} />
-        </Banner>
         <div
           style={{
             transition: 'margin 1s, height 1s',
             position: 'absolute',
             width: '100%',
-            height: showBanner ? `calc(100% - ${bannerHeight}px)` : '100%',
+            height: '100%',
             minHeight: `calc(100% - ${bannerHeight}px)`,
-            marginTop: showBanner ? `${bannerHeight}px` : 0
+            visibility: this.state.showTools ? 'visible' : 'hidden'
           }}
         >
           <KeplerGl
@@ -190,10 +169,21 @@ class App extends Component {
             /*
              * Specify path to keplerGl state, because it is not mount at the root
              */
+            
             getState={state => state.demo.keplerGl}
             width={width}
-            height={height - (showBanner ? bannerHeight : 0)}
+            height={height}
           />
+
+        </div>
+        <div
+          style={{
+            position: 'absolute',
+            marginTop: window.innerHeight * 0.8
+          }}
+        >
+          <button onClick={this._getDataForMap}>Set Data</button>
+          <button onClick={this._toggleTools}>Toggle Tools</button>
 
         </div>
       </GlobalStyleDiv>
