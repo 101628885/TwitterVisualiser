@@ -27,6 +27,8 @@ import { connect } from 'react-redux';
 import * as fs from 'fs';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
+import QueryForm from './components/queryForm.js'
+
 // Kepler.gl Data processing APIs
 import { loadSampleConfigurations } from './actions';
 import { replaceLoadDataModal } from './factories/load-data-modal';
@@ -79,10 +81,8 @@ class App extends Component {
 	};
 
 	// This binding is necessary to make `this` work in the callback
-	this._getDataForMap = this._getDataForMap.bind(this);
+	this.getDataForMap = this.getDataForMap.bind(this);
 	this._toggleTools = this._toggleTools.bind(this);
-	this.formHandler = this.formHandler.bind(this);
-
   }
 
   componentWillMount() {
@@ -124,7 +124,8 @@ class App extends Component {
 		this.state.showTools = this.state.showTools ? false : true;
 	 	console.log(this.state.showTools)
 	}
-	_getDataForMap = () => {
+	getDataForMap = (query) => {
+		console.log(query)
 		axios.get('http://localhost:3000/tweetMap')
 		.then((res) => {
 			res.data.forEach(item => {            
@@ -139,68 +140,34 @@ class App extends Component {
 			});
 		});
 	}
-
-	formHandler (evt) {
-		console.log(evt);
-	    this.setState({ [evt.target.name]: evt.target.value });
-  	}
-
 	render() {
 		const { showBanner, width, height } = this.state;
 		return (
-			<GlobalStyleDiv>
-				<div
-					style={{
-					transition: 'margin 1s, height 1s',
-					position: 'absolute',
-					width: '95%',
-					height: '100%',
-					paddingLeft: '16px',
-					paddingTop: '16px',
-					paddingRight: '16px',
-					minHeight: `calc(100% - ${bannerHeight}px)`,
-					visibility: this.state.showTools ? 'visible' : 'hidden'
-					}}>
-					<KeplerGl
-						mapboxApiAccessToken="pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ"
-						id="map"
-						getState={state => state.demo.keplerGl}
-						width={width - 16}
-						height={height}
-					/>
-				</div>
-				<div
-					style={{
-					position: 'absolute',
-					marginTop: window.innerHeight * 0.8
-					}}>
-					<form>
-						<select 
-					        value={this.state.type} 
-					        onChange={this.formHandler}>
-					       	<option value="All">All</option>
-					        <option value="Battery">Battery</option>
-					        <option value="Battery">Battery</option>
-					    </select>
-					    <select 
-					        value={this.state.year} 
-					        onChange={this.formHandler}>
-					       	<option value="2018">2018</option>
-					        <option value="2017">2017</option>
-					        <option value="2016">2016</option>
-					        <option value="2015">2015</option>
-					        <option value="2014">2014</option>
-					        <option value="2013">2013</option>
-					        <option value="2012">2012</option>
-					    </select>
-					    <DatePicker
-						    selected={this.state.startDate}
-						    onChange={this.handleChange}
+			<div>
+				<GlobalStyleDiv>
+					<div
+						style={{
+						transition: 'margin 1s, height 1s',
+						position: 'absolute',
+						width: '95%',
+						height: '100%',
+						paddingLeft: '16px',
+						paddingTop: '16px',
+						paddingRight: '16px',
+						minHeight: `calc(100% - ${bannerHeight}px)`,
+						visibility: this.state.showTools ? 'visible' : 'hidden'
+						}}>
+						<KeplerGl
+							mapboxApiAccessToken="pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ"
+							id="map"
+							getState={state => state.demo.keplerGl}
+							width={width - 16}
+							height={height}
 						/>
-					</form>
-					<button onClick={this._getDataForMap}>Set Data</button>
-				</div>
-			</GlobalStyleDiv>
+					</div>
+				</GlobalStyleDiv>
+				<QueryForm getDataForMap={this.getDataForMap}/>
+			</div>
 		);
 	}
 }
