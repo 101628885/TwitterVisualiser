@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker'; 
+import style from 'react-datepicker/dist/react-datepicker.css';
 
 class QueryForm extends Component {
 
     createPayload = (event) =>
 	{
 		event.preventDefault();
-		const query = {
-			type: this.type.value,
-			year: this.year.value,
-			date: this.date.value,
-		}
+		const query = {}
+		if(this.type.value.toUpperCase() != "ALL")
+			query.Primary_Type = this.type.value.toUpperCase();
+		query.Year = parseInt(this.year.value)
+		
 		console.log(query)
 		this.props.getDataForMap(query);
 	}
@@ -35,7 +36,10 @@ class QueryForm extends Component {
 				        >
 				       	<option value="All">All</option>
 				        <option value="Battery">Battery</option>
-				        <option value="Battery">Battery</option>
+				        <option value="Theft">Theft</option>
+				        <option value="Criminal Damage">Criminal Damage</option>
+				        <option value="Burglary">Burglary</option>
+				        <option value="Narcotics">Narcotics</option>
 				    </select>
 				    <select ref={(input) => this.year = input}>
 				       	<option value="2018">2018</option>
@@ -46,7 +50,7 @@ class QueryForm extends Component {
 				        <option value="2013">2013</option>
 				        <option value="2012">2012</option>
 				    </select>
-				    <DatePicker ref={(input) => this.date = input} />
+				    <DatePicker onSelect={(input) => console.log(input)}/>
 				    <button type="submit">Submit</button>
 				</form>
 			</div>

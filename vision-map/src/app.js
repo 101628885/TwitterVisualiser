@@ -126,10 +126,10 @@ class App extends Component {
 	}
 	getDataForMap = (query) => {
 		console.log(query)
-		axios.get('http://localhost:3000/tweetMap')
+		axios.post('http://localhost:3000/tweetMap', query)
 		.then((res) => {
 			res.data.forEach(item => {            
-				let label = item.features[0].properties.primary_type
+				let label = `${query.Primary_Type ? query.Primary_Type : "All Crime"} - ${query.Year}`
 				const data  = Processors.processGeojson(item);
 				const dataset = 
 				{ 
