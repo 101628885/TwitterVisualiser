@@ -179,6 +179,19 @@ exports.testEndpoint = async(req, res) =>
 	res.send(result);
 };
 
+exports.getMapData = async(query) =>
+{
+	result = [];
+	await chicagoCrime.find(query)
+	.lean()
+	.limit(parseInt(1000))
+	.sort({Date: -1})
+	.exec()
+	.then((res) => {result = result.concat(res);})
+	.catch((err) => {console.log(err)});
+	return result;
+}
+
 exports.getDummyData = async(query) =>
 {
 	let result = [];
@@ -208,7 +221,7 @@ exports.getDummyData = async(query) =>
 					await chicagoCrime.find({Year: query["crimes"][term].year, Primary_Type: query["crimes"][term].crime})
 						.lean()
 						.limit(parseInt(query["crimes"][term].count))
-						.sort({Date: 1})
+						.sort({Date: 0})
 						.exec()
 						.then((res) => {result = result.concat(res)})
 						.catch((err) => {console.log(err)});
