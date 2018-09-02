@@ -30,6 +30,7 @@ const CONFIG = {
   // bundle app.js and everything it imports, recursively.
   entry: {
     app: resolve('./src/main.js')
+
   },
 
   devtool: 'source-map',
@@ -52,9 +53,15 @@ const CONFIG = {
         test: /\.json$/,
         loader: 'json-loader',
         exclude: [/node_modules/]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" }
+        ]
       }
     ],
-    
   },
 
   node: {
