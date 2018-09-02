@@ -68,6 +68,7 @@ router.get('/seattle', historicCrimeController.seattleHandler);
 router.get('/baltimore', historicCrimeController.baltimoreHandler); 
 
 router.get('/checkData', chicago_data_factory.checkLocalData); 
+router.get('/fixMapData', chicago_data_factory.fixMapData); 
 
 router.get('/getChicagoTweetsPOC', tweetMapController.getChicagoTweetsPOC);
 

@@ -189,8 +189,38 @@ exports.getMapData = async(query) =>
 	.exec()
 	.then((res) => {result = result.concat(res);})
 	.catch((err) => {console.log(err)});
+
+
 	return result;
 }
+
+exports.fixMapData  = async(req, res) =>
+{
+	for(let i = 1; i < 7000; i++)
+	{
+		result = [];
+		await chicagoCrime.find({})
+		.lean()
+		.limit(parseInt(1000))
+		.sort({Date: 1})
+		.exec()
+		.then((res) => 
+		{
+			result = result.concat(res);
+			result.forEach((val) =>
+			{
+				val.Date =  moment(val.Date).utcOffset(-360).utc().format();
+				let doc = new chicagoCrime(val);
+				//console.log(doc)
+				doc.isNew = false;
+		    	doc.save();
+			})
+			console.log(`Finished Date update ${i}`)
+		})
+		.catch((err) => {console.log(err)});
+	}
+}
+
 
 exports.getDummyData = async(query) =>
 {

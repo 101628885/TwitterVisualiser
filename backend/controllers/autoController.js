@@ -35,7 +35,7 @@ setInterval(function(){
     if (shouldRun)
     {
 
-        console.log("Checking word: ", query[querySelect], " in location ", geo);
+        //console.log("Checking word: ", query[querySelect], " in location ", geo);
         collect(query[querySelect], geo);
 
         if (querySelect < query.length - 1)
@@ -48,12 +48,12 @@ setInterval(function(){
 
 	        if (geo === "melbourne")
 	        {
-	            console.log("Finished run, setting location to Chicago");
+	            //console.log("Finished run, setting location to Chicago");
 		        geo = "chicago";
 	        }
 	        else if(geo === "chicago")
 	        {
-	            console.log("Finished run, setting location to Melbourne");
+	            //console.log("Finished run, setting location to Melbourne");
 		        geo = "melbourne";
 	        }
         }
@@ -170,7 +170,7 @@ exports.autoPost = function(req, res)
 		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
 			if (err)
 			{
-				console.log(err);
+				//console.log(err);
 			}
 		})
 	}
@@ -183,7 +183,7 @@ exports.autoPost = function(req, res)
 		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
 			if (err)
 			{
-				console.log(err);
+				//console.log(err);
 			}
 		})
 	}

@@ -69,7 +69,6 @@ exports.getChicagoTweetsPOC = async (req, res) => {
                 let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
                 if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold)
                 {
-                    console.log(timeDiff)
                     coords[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                 }
             }
