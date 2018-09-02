@@ -92,7 +92,7 @@ class App extends Component {
 
 	componentDidMount() 
 	{
-		axios.get('http://localhost:3000/tweetMap')
+		axios.get('http://144.6.226.34/tweetMap')
 		.then((res) => 
 		{
 			res.data.forEach(item => 
@@ -126,7 +126,7 @@ class App extends Component {
 	}
 	getDataForMap = (query) => {
 		console.log(query)
-		axios.post('http://localhost:3000/tweetMap', query)
+		axios.post('http://144.6.226.34/tweetMap', query)
 		.then((res) => {
 			res.data.forEach(item => {            
 				let label = `${query.Primary_Type ? query.Primary_Type : "All Crime"} - ${query.Year}`
