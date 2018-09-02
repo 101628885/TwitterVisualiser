@@ -14,6 +14,9 @@ const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChi
 const databaseChicagoCrime = { url : "mongodb://team:swinburne@144.6.226.34/chicagoCrime", type: "Production"};
 
 
+
+
+
 init();
 
 //Create DB connection handles and export them
@@ -56,6 +59,7 @@ function init()
 	module.exports.tweetMelb = tweetMelb;
 	module.exports.tweetChicago = tweetChicago;
 	module.exports.chicagoCrime = chicagoCrime;
+
 
 }
 
@@ -158,47 +162,47 @@ exports.storeTweets = function(tweetsToStore, geo)
 	}
 };
 
-
-
-exports.removeDuplicates = async function() //deprecated
+exports.removeDuplicates = async function(db) //deprecated
 {
-    let tweets = {};
-    let dupsRemoved = 0;
-    process.stdout.write("Retrieving DB... ");
-    await tweet.find().lean().exec().then(function(result){tweets = result});
+	let tweets = {};
+	let dupsRemoved = 0;
+	process.stdout.write("Retrieving DB... ");
+	await db.find().lean().exec().then(function(result){tweets = result});
 
-    process.stdout.write("Done!\n");
-    process.stdout.write("Checking DB for duplicates... ");
+	process.stdout.write("Done!\n");
+	process.stdout.write("Checking DB for duplicates... ");
 
-    let count_outer = 0;
-    for (let i in tweets)
-    {
-        let count_inner = 0;
-        let first_instance = true;
-        for (let j in tweets)
-        {
-            if (tweets[count_outer].full_text === tweets[count_inner].full_text)
-            {
-                if (!first_instance)
-                {
-                    dupsRemoved += 1;
-                    tweet.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
-                }
-                else
-                {
-                    first_instance = false;
-                }
+	let count_outer = 0;
+	for (let i in tweets)
+	{
+		let count_inner = 0;
+		let first_instance = true;
+		for (let j in tweets)
+		{
+			if (tweets[count_outer].full_text === tweets[count_inner].full_text)
+			{
+				if (!first_instance)
+				{
+					dupsRemoved += 1;
+					db.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
+				}
+				else
+				{
+					first_instance = false;
+				}
 
-            }
-            count_inner += 1;
-        }
+			}
+			count_inner += 1;
+		}
 
-        count_outer += 1;
-    }
+		count_outer += 1;
+	}
 
-	  process.stdout.write("Done!\n")
+	process.stdout.write("Done!\n")
 
 
-    console.log("Removed " + dupsRemoved + " duplicates.");
+	console.log("Removed " + dupsRemoved + " duplicates.");
 
 };
+
+
