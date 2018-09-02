@@ -56,6 +56,7 @@ router.get('/nlpData', visualisationController.getNLPData);
 
 //TweetMap Controller
 router.get('/tweetMap', tweetMapController.getChicagoTweetsPOC);
+router.post('/tweetMap', tweetMapController.getChicagoTweetsPOC);
 
 // listview Controller
 router.get('/list', listviewController.listTweets);
