@@ -179,13 +179,21 @@ exports.testEndpoint = async(req, res) =>
 	res.send(result);
 };
 
+//Get map data based on query if no query then just gets 2018
 exports.getMapData = async(query) =>
 {
 	result = [];
+	console.log(query) 
+
+	var limit = query.limit || 1000
+	delete query.limit;
+
+	//Checking if empty, if empty set query {Year: 2018}
+	query = Object.keys(query).length === 0 && query.constructor === Object ? {Year: 2018} : query;
 	await chicagoCrime.find(query)
 	.lean()
-	.limit(parseInt(1000))
-	.sort({Date: -1})
+	.limit(parseInt(limit))
+	.sort({Date: 1})
 	.exec()
 	.then((res) => {result = result.concat(res);})
 	.catch((err) => {console.log(err)});

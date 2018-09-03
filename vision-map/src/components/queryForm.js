@@ -10,8 +10,10 @@ class QueryForm extends Component {
 		const query = {}
 		if(this.type.value.toUpperCase() != "ALL")
 			query.Primary_Type = this.type.value.toUpperCase();
+		if(this.limit.value != "" && typeof parseInt(this.limit.value) == 'number')
+			query.limit = this.limit.value;
+
 		query.Year = parseInt(this.year.value)
-		
 		console.log(query)
 		this.props.getDataForMap(query);
 	}
@@ -50,6 +52,8 @@ class QueryForm extends Component {
 				        <option value="2013">2013</option>
 				        <option value="2012">2012</option>
 				    </select>
+				    <label for="limit">Limit:</label>
+        			<input ref={(input) => this.limit = input} type="text"/>
 				    <DatePicker onSelect={(input) => console.log(input)}/>
 				    <button type="submit">Submit</button>
 				</form>
