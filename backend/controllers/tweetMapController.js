@@ -10,19 +10,10 @@ exports.getTweetMap = function (req, res) {
 };
 
 exports.getChicagoTweetsPOC = async (req, res) => {
+    
+    let sortedTrajectoryData = await chicagoDataFactory.getMapData(req.body);    
 
-    let sortedTrajectoryData;
-    if(req.body)
-    {
-        sortedTrajectoryData = await chicagoDataFactory.getMapData(req.body);
-    }
-    else 
-    {
-        sortedTrajectoryData = await chicagoDataFactory.getDummyData({ "2012": 9000 }).catch((e) => console.log(e));
-    }
-        //chicagoDataFactory.getDummyData({ "2012": 9000 }).catch((e) => console.log(e));
-
-    // console.log(sortedTrajectoryData);
+    console.log(sortedTrajectoryData);
 
     // let crimeCategories = new Map();
     // let crimeTrajectories = new Array();
@@ -32,6 +23,32 @@ exports.getChicagoTweetsPOC = async (req, res) => {
             "features": []
         }
     ];
+
+    let tweetfinalGeoJSON = [
+        {
+            "type": "FeatureCollection",
+            "features": []
+        }
+    ];
+    let tweetData = await chicagoDataFactory.getChicagoTweetsWithLocation();
+
+    tweetData.forEach((tweet)=>
+    {
+        let coords = [[[tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]]]];
+        tweetfinalGeoJSON[0].features.push({
+            "type": "Feature",
+            "geometry": {
+                "type": "MultiLineString",
+                "coordinates": coords,
+            },
+            "properties": {
+                "Longitude": tweet.coordinates[0].coordinates[0],
+                "Latitude": tweet.coordinates[0].coordinates[1],
+                "Date": new Date(tweet.created_at)
+            }
+        });
+    });
+
 
     // let defaultRegion = new google.maps.LatLng( 41.881832, -87.623177);
     // let n = 48;
@@ -165,7 +182,8 @@ exports.getChicagoTweetsPOC = async (req, res) => {
 
     // console.log(finalGeoJSON.map((i) => i.features[0].geometry));
     // console.log("sent", finalGeoJSON);
-    res.send(finalGeoJSON);
+
+    res.send({trajectory: finalGeoJSON, tweets: tweetfinalGeoJSON});
 }
 
 getDistanceBetweenPoints = (point1, point2) => {

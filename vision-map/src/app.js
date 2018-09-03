@@ -94,10 +94,25 @@ class App extends Component {
 	{
 		
 		//axios.get('http://localhost:3000/tweetMap')
-		axios.get('http://144.6.226.34/tweetMap')
+		axios.get('http://localhost:3000/tweetMap')
 		.then((res) => 
 		{
-			res.data.forEach(item => 
+			res.data.tweets.forEach(item => 
+			{            
+				let label = "Tweets"
+				const data  = Processors.processGeojson(item);
+				const dataset = 
+				{ 
+					data,
+					info: 
+					{
+						label: label
+					}
+				};
+				this.props.dispatch(addDataToMap({ datasets: dataset }));
+			});
+			
+			res.data.trajectory.forEach(item => 
 			{            
 				let label = "Chicago Crime Data"
 				const data  = Processors.processGeojson(item);
@@ -111,6 +126,7 @@ class App extends Component {
 				};
 				this.props.dispatch(addDataToMap({ datasets: dataset }));
 			});
+			console.log(res);
 		});
 	}
 
@@ -128,18 +144,19 @@ class App extends Component {
 	}
 	getDataForMap = (query) => {
 		console.log(query)
-		axios.post('http://144.6.226.34/tweetMap')
+		axios.post('http://localhost:3000/tweetMap')
 		.then((res) => {
-			res.data.forEach(item => {            
+			console.log('')
+			//res.data.forEach(item => {            
 				let label = `${query.Primary_Type ? query.Primary_Type : "All Crime"} - ${query.Year}`
-				const data  = Processors.processGeojson(item);
+				const data  = Processors.processGeojson(res.data);
 				const dataset = 
 				{ 
 					data,
 					info: {label: label}
 				};
 				this.props.dispatch(addDataToMap({ datasets: dataset }));
-			});
+			//});
 		});
 	}
 	render() {

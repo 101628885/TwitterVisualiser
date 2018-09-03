@@ -199,7 +199,6 @@ exports.getMapData = async(query) =>
 	.then((res) => {result = result.concat(res);})
 	.catch((err) => {console.log(err)});
 
-
 	return result;
 }
 
@@ -226,6 +225,7 @@ exports.fixMapData  = async(req, res) =>
 			})
 			console.log(`Finished Date update ${i}`)
 		})
+
 		.catch((err) => {console.log(err)});
 	}
 }
@@ -318,18 +318,10 @@ exports.getDummyData = async(query) =>
 	}
 };
 
-exports.getChicagoTweetsWithLocation = async (req, res) =>
+exports.getChicagoTweetsWithLocation = async () =>
 {
 	let result = [];
-
-	await tweetChicago.where("coordinates").ne(null).sort({Date: 0}).lean().exec().then((res) => {result = res; });
-
-	result.sort(function(a,b)
-	{
-		return new Date(b.date) - new Date(a.date);
-	});
-	
+	await tweetChicago.where("coordinates").ne(null).sort({created_at: 1}).lean().exec().then((res) => {result = res; });
 	return result;
-
 };
 
