@@ -322,9 +322,14 @@ exports.getChicagoTweetsWithLocation = async (req, res) =>
 {
 	let result = [];
 
-	await tweetChicago.where("coordinates").ne(null).lean().exec().then((res) => {result = res});
+	await tweetChicago.where("coordinates").ne(null).sort({Date: 0}).lean().exec().then((res) => {result = res; });
 
-	res.send(result);
+	result.sort(function(a,b)
+	{
+		return new Date(b.date) - new Date(a.date);
+	});
+	
+	return result;
 
 };
 
