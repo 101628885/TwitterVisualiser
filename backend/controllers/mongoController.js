@@ -150,14 +150,16 @@ exports.storeTweets = function(tweetsToStore, geo)
 	if (geo === "melbourne")
 	{
 		thread.send({tweetsToStore: tweetsToStore, database: databaseMelb})
-			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
+			.on('progress', function(progress){//console.log("Processing storage request ID ", id, ": ", progress, "% complete.")
+		})
 			.on('message', function(){thread.kill()});
 
 	}
 	else if (geo === "chicago")
 	{
 		thread.send({tweetsToStore: tweetsToStore, database: databaseChicago})
-			.on('progress', function(progress){console.log("Processing storage request ID ", id, ": ", progress, "% complete.")})
+			.on('progress', function(progress){//console.log("Processing storage request ID ", id, ": ", progress, "% complete.")
+		})
 			.on('message', function(){thread.kill()});
 	}
 };

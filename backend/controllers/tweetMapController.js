@@ -1,6 +1,6 @@
 const fs = require('fs');
 const chicagoDataFactory = require('./chicagoDataFactory');
-
+const moment = require('moment')
 exports.getTweetMap = function (req, res) {
     let chicagoTestData = JSON.parse(fs.readFileSync('poc_chicago.json'));
 
@@ -63,13 +63,15 @@ exports.getChicagoTweetsPOC = async (req, res) => {
         let coords = [[[trajectory.Longitude, trajectory.Latitude]]];
         sortedTrajectoryData.forEach((othertrajectory)=>
         {
-            if(othertrajectory.Primary_Type == trajectory.Primary_Type && trajectory != othertrajectory)
+            if(othertrajectory.Primary_Type == trajectory.Primary_Type 
+                && trajectory != othertrajectory
+                && !othertrajectory.trajectoryCheck)
             {
                 let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                 let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
                 if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold)
                 {
-                    console.log(timeDiff)
+                    trajectory.trajectoryCheck = true;
                     coords[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                 }
             }
@@ -81,13 +83,14 @@ exports.getChicagoTweetsPOC = async (req, res) => {
                 "coordinates": coords,
             },
             "properties": {
-                "date": trajectory.Date,       
+                "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),   
                 "primary_type": trajectory.Primary_Type,
                 "description": trajectory.Description,
+                "year": trajectory.Year,
                 "lineWidth": 0.1,
                 "Longitude": trajectory.Longitude,
                 "Latitude": trajectory.Latitude,
-                "year": trajectory.Year,
+                "date": trajectory.Date,
                 "location_description": trajectory.Location_Description  
             }
         });
