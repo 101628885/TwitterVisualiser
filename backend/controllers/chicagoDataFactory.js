@@ -4,6 +4,7 @@ var moment = require('moment');
 const mongoose = require('mongoose');
 var schemas = require('./mongoController');
 var chicagoCrime = schemas.chicagoCrime;
+var tweetChicago = schemas.tweetChicago;
 
 const gCurrentDataDir = `../vision-map/src/data/`;
 
@@ -277,5 +278,15 @@ exports.getDummyData = async(query) =>
 			return result;
 		}
 	}
+};
+
+exports.getChicagoTweetsWithLocation = async (req, res) =>
+{
+	let result = [];
+
+	await tweetChicago.where("coordinates").ne(null).lean().exec().then((res) => {result = res});
+
+	res.send(result);
+
 };
 

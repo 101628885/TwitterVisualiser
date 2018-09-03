@@ -73,6 +73,7 @@ router.get('/getChicagoTweetsPOC', tweetMapController.getChicagoTweetsPOC);
 
 //Test dummy data
 router.post('/trajectoryData', chicagoDataFactory.getDummyData);
+router.get('/tweetsChicagoWithLocation', chicagoDataFactory.getChicagoTweetsWithLocation);
 
 //Test dummy data saving
 router.get('/saveDummy', chicagoDataFactory.saveCrimeData);

@@ -5,8 +5,9 @@ var tweetChicago = mongo.tweetChicago;
 const chicagoCrime = mongo.chicagoCrime;
 const timeout = ms => new Promise(res => setTimeout(res, ms));
 const should = require('chai').should();
+const chicagoCrimeFactory = require('../controllers/chicagoDataFactory');
 
-
+/*
 describe('storeTweets()', function(){
 	it('both tweet objects in the JSON array should be stored and retrieved correctly from the DB.', async() => {
 		//SETUP, Create sample JSON object
@@ -217,7 +218,8 @@ describe('storeTweets()', function(){
 
 	})
 });
-/*
+*/
+
 describe('getDummyData()', function(){
 
 	it('should return only chicago crime documents that match the query', async function(){
@@ -241,9 +243,16 @@ describe('getDummyData()', function(){
 		};
 
 		//ACTION
-		await chicagoCrime.find(simpleQuery).lean().exec().then((res) => {simpleRes = res});
+		await chicagoCrimeFactory.getDummyData(simpleQuery).then((res) => {simpleRes = res});
+		await chicagoCrimeFactory.getDummyData(complexQuery).then((res) => {complexRes = res});
 
-		await chicagoCrime.find(complexQuery).lean().exec()
+
+		for(let i in simpleRes)
+		{
+			expect
+		}
+
+
 
 
 
@@ -253,4 +262,4 @@ describe('getDummyData()', function(){
 
 	})
 });
-*/
+
