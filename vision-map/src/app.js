@@ -94,7 +94,7 @@ class App extends Component {
 	{
 		
 		//axios.get('http://localhost:3000/tweetMap')
-		axios.get('http://localhost:3000/tweetMap')
+		axios.get('http://144.6.226.34/tweetMap')
 		.then((res) => 
 		{
 			res.data.tweets.forEach(item => 
@@ -111,7 +111,6 @@ class App extends Component {
 				};
 				this.props.dispatch(addDataToMap({ datasets: dataset }));
 			});
-			
 			res.data.trajectory.forEach(item => 
 			{            
 				let label = "Chicago Crime Data"
@@ -144,7 +143,7 @@ class App extends Component {
 	}
 	getDataForMap = (query) => {
 		console.log(query)
-		axios.post('http://localhost:3000/tweetMap')
+		axios.post('http://144.6.226.34/tweetMap')
 		.then((res) => {
 			console.log('')
 			//res.data.forEach(item => {            
