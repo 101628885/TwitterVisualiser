@@ -55,8 +55,8 @@ router.get('/nlpData', visualisationController.getNLPData);
 
 
 //TweetMap Controller
-router.get('/tweetMap', tweetMapController.getChicagoTweetsPOC);
-router.post('/tweetMap', tweetMapController.getChicagoTweetsPOC);
+router.get('/tweetMap', tweetMapController.initMapData);
+router.post('/tweetMap', tweetMapController.queryMapData);
 
 // listview Controller
 router.get('/list', listviewController.listTweets);
@@ -70,7 +70,6 @@ router.get('/baltimore', historicCrimeController.baltimoreHandler);
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 router.get('/fixMapData', chicago_data_factory.fixMapData); 
 
-router.get('/getChicagoTweetsPOC', tweetMapController.getChicagoTweetsPOC);
 
 //Test dummy data
 router.post('/trajectoryData', chicagoDataFactory.getDummyData);

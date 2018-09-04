@@ -92,7 +92,6 @@ class App extends Component {
 
 	componentDidMount() 
 	{
-		
 		//axios.get('http://localhost:3000/tweetMap')
 		axios.get('http://144.6.226.34/tweetMap')
 		.then((res) => 
@@ -143,19 +142,41 @@ class App extends Component {
 	}
 	getDataForMap = (query) => {
 		console.log(query)
-		axios.post('http://144.6.226.34/tweetMap')
-		.then((res) => {
-			console.log('')
-			//res.data.forEach(item => {            
-				let label = `${query.Primary_Type ? query.Primary_Type : "All Crime"} - ${query.Year}`
-				const data  = Processors.processGeojson(res.data);
+		axios.post('http://144.6.226.34/tweetMap', query)
+		.then((res) => 
+		{
+			// res.data.tweets.forEach(item => 
+			// {            
+			// 	let label = "Tweets"
+			// 	const data  = Processors.processGeojson(item);
+			// 	const dataset = 
+			// 	{ 
+			// 		data,
+			// 		info: 
+			// 		{
+			// 			label: label
+			// 		}
+			// 	};
+			// 	this.props.dispatch(addDataToMap({ datasets: dataset }));
+			// });
+			res.data.trajectory.forEach(item => 
+			{            
+				let label = `${query.Primary_Type || "ALL"} - ${query.Year || 
+					(moment(query.Date.$gte).diff(query.Date.$lt, 'days') > 2 
+						? moment(query.Date.$gte).format("DD/MM/YYYY") 
+						: moment(query.Date.$gte).format("DD/MM/YYYY") + " - " + moment(query.Date.$lt).format("DD/MM/YYYY") )}` 
+				const data  = Processors.processGeojson(item);
 				const dataset = 
 				{ 
 					data,
-					info: {label: label}
+					info: 
+					{
+						label: label
+					}
 				};
 				this.props.dispatch(addDataToMap({ datasets: dataset }));
-			//});
+			});
+			console.log(res);
 		});
 	}
 	render() {

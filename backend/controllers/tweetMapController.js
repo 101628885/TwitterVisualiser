@@ -9,14 +9,14 @@ exports.getTweetMap = function (req, res) {
     })
 };
 
-exports.getChicagoTweetsPOC = async (req, res) => {
+
+calculateTrajectoryGEOJSON = (data) =>
+{
+    let timeStart = new Date();
+    let tTimeThreshold = 180;
+    let tDistThreshold = 1000;
+    let otherData = data.slice(0, data.length);
     
-    let sortedTrajectoryData = await chicagoDataFactory.getMapData(req.body);    
-
-    console.log(sortedTrajectoryData);
-
-    // let crimeCategories = new Map();
-    // let crimeTrajectories = new Array();
     let finalGeoJSON = [
         {
             "type": "FeatureCollection",
@@ -24,71 +24,19 @@ exports.getChicagoTweetsPOC = async (req, res) => {
         }
     ];
 
-    let tweetfinalGeoJSON = [
-        {
-            "type": "FeatureCollection",
-            "features": []
-        }
-    ];
-    let tweetData = await chicagoDataFactory.getChicagoTweetsWithLocation();
-
-    tweetData.forEach((tweet)=>
-    {
-        let coords = [[[tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]]]];
-        tweetfinalGeoJSON[0].features.push({
-            "type": "Feature",
-            "geometry": {
-                "type": "MultiLineString",
-                "coordinates": coords,
-            },
-            "properties": {
-                "Longitude": tweet.coordinates[0].coordinates[0],
-                "Latitude": tweet.coordinates[0].coordinates[1],
-                "Date": new Date(tweet.created_at)
-            }
-        });
-    });
-
-
-    // let defaultRegion = new google.maps.LatLng( 41.881832, -87.623177);
-    // let n = 48;
-    let tTimeThreshold = 180;
-    let tDistThreshold = 1000;
-
-    // for (const i in sortedTrajectoryData) {
-    //     if (!(crimeCategories.get(sortedTrajectoryData[i].Primary_Type))) {
-    //         crimeCategories.set(sortedTrajectoryData[i].Primary_Type, [sortedTrajectoryData[i]]);
-    //     } else {
-    //         crimeCategories.set(sortedTrajectoryData[i].Primary_Type,
-    //             Array.from(crimeCategories.get(sortedTrajectoryData[i].Primary_Type)).concat(sortedTrajectoryData[i]));
-    //     }
-    // }
-
-    // sortedTrajectoryData.forEach((trajectory)=>
-    // {
-    //     if (!(crimeCategories.get(trajectory.Primary_Type))) {
-    //         crimeCategories.set(trajectory.Primary_Type, [trajectory]);
-    //     } else {
-    //         crimeCategories.set(trajectory.Primary_Type,
-    //             Array.from(crimeCategories.get(trajectory.Primary_Type)).concat(trajectory));
-    //     }
-    // })
-    // console.log(crimeCategories)
-
-    sortedTrajectoryData.forEach((trajectory)=>
+    data.forEach((trajectory)=>
     {
         let coords = [[[trajectory.Longitude, trajectory.Latitude]]];
-        sortedTrajectoryData.forEach((othertrajectory)=>
+        otherData.forEach((othertrajectory)=>
         {
+
             if(othertrajectory.Primary_Type == trajectory.Primary_Type 
-                && trajectory != othertrajectory
-                && !othertrajectory.trajectoryCheck)
+                && trajectory != othertrajectory)
             {
                 let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                 let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
                 if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold)
                 {
-                    trajectory.trajectoryCheck = true;
                     coords[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                 }
             }
@@ -111,79 +59,52 @@ exports.getChicagoTweetsPOC = async (req, res) => {
                 "location_description": trajectory.Location_Description  
             }
         });
+        //Delete checked value
+        otherData.pop(trajectory);
     });
+    console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
+    return finalGeoJSON;
+}
 
-    // var count = 0;
-    // var noCount = 0;
-    // for (const i of crimeCategories.keys()) {
-    //     var prevData = {};
-    //     var firstTime = true;
-    //     // finalGeoJSON.push(
-    //     //     {
-    //     //         "type": "FeatureCollection",
-    //     //         "features": []
-    //     //     }
-    //     // );
-    //     for (const c of crimeCategories.get(i)) {
-    //         if (firstTime) {
-    //             prevData = c;
-    //             firstTime = false;
-    //         } else {
-    //             let timeDiff = getTimeDifferenceBetweenPoints(prevData, c);
-    //             let distDiff = getDistanceBetweenPoints(prevData, c);
+generateTwitterGEOJSON = (data) =>
+{
+    let tweetfinalGeoJSON = [
+        {
+            "type": "FeatureCollection",
+            "features": []
+        }
+    ];
 
-    //             if ((timeDiff >= tTimeThreshold ? false : distDiff >= tDistThreshold ? false : true)) {
-    //                 crimeTrajectories.push([prevData, c]);
-    //                 // console.log(prevData.Latitude, prevData.Latitude);
-    //                 finalGeoJSON[0].features.push({
-    //                     "type": "Feature",
-    //                     "geometry": {
-    //                         "type": "MultiLineString",
-    //                         "coordinates": [[[prevData.Longitude, prevData.Latitude], [c.Longitude, c.Latitude]]]
-                            
-    //                     },
-    //                     "properties": {
-    //                         "lineWidth": 0.1,
-    //                         "primary_type": c.Primary_Type,
-    //                         "Longitude": c.Longitude,
-				// 			"Latitude": c.Latitude,
-				// 			"date": c.Date,
-				// 			"description": c.Description,
-				// 			"year": c.Year,
-				// 			"location_description": c.Location_Description
-							
-    //                     }
-    //                 });
-    //             } else {
-    //                 crimeTrajectories.push([c]);
-    //                 finalGeoJSON[0].features.push({
-    //                     "type": "Feature",
-    //                     "geometry": {
-    //                         "type": "Point",
-    //                         "coordinates": [c.Longitude, c.Latitude],
-    //                     },
-    //                     "properties": {
-    //                         "lineWidth": 0.1,
-    //                         "primary_type": c.Primary_Type,
-    //                         "Longitude": c.Longitude,
-				// 			"Latitude": c.Latitude,
-				// 			"date": c.Date,
-				// 			"description": c.Description,
-				// 			"year": c.Year,
-				// 			"location_description": c.Location_Description
-    //                     }
-    //                 });
-                        
-    //                 prevData = c;
-    //             }
-    //         }
-    //     }
-    // }
+    data.forEach((tweet)=>
+    {
+        let coords = [[[tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]]]];
+        tweetfinalGeoJSON[0].features.push({
+            "type": "Feature",
+            "geometry": {
+                "type": "MultiLineString",
+                "coordinates": coords,
+            },
+            "properties": {
+                "Longitude": tweet.coordinates[0].coordinates[0],
+                "Latitude": tweet.coordinates[0].coordinates[1],
+                "Date": new Date(tweet.created_at)
+            }
+        });
+    });
+    return tweetfinalGeoJSON;
+}
 
-    // console.log(finalGeoJSON.map((i) => i.features[0].geometry));
-    // console.log("sent", finalGeoJSON);
+exports.initMapData = async (req, res) => {
+    
+    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));    
+    let tweetGeoJSON = generateTwitterGEOJSON(await chicagoDataFactory.getChicagoTweetsWithLocation());
+    res.send({trajectory: trajectoryGeoJSON, tweets: tweetGeoJSON});
+}
 
-    res.send({trajectory: finalGeoJSON, tweets: tweetfinalGeoJSON});
+exports.queryMapData = async (req, res) => {
+    
+    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));    
+    res.send({trajectory: trajectoryGeoJSON});
 }
 
 getDistanceBetweenPoints = (point1, point2) => {

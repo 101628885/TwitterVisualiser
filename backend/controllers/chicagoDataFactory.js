@@ -70,7 +70,7 @@ exports.saveCrimeData = async () =>
 	options =
 		{
 			method: "GET",
-			url: `https://data.cityofchicago.org/resource/6zsd-86xi.geojson?%24limit=` + 50,
+			url: `https://data.cityofchicago.org/resource/6zsd-86xi.geojson`,
 			headers: {
 				'X-App-Token': process.env.CHICAGO_TOKEN
 			},
@@ -87,17 +87,17 @@ exports.saveCrimeData = async () =>
 
 			if (!(result.features[feature].properties.latitude == null)) //Don't bother saving if there is no location data
 			{
-				//console.log("Valid entry, storing ID", result.features[feature].properties.id);
+				console.log("Valid entry, storing ID", result.features[feature].properties.id);
 				chicagoCrime.findOne({ID: result.features[feature].properties.id}).lean().exec().then(async function (res) {
 
 					if (!res)
 					{
-						//console.log("Saving...");
+						console.log("Saving...");
 						let doc = new chicagoCrime();
 
 						doc.ID = result.features[feature].properties.id;
 						doc.Case_Number = result.features[feature].properties.case_number;
-						doc.Date = result.features[feature].properties.date;
+						doc.Date = moment(result.features[feature].properties.date).utcOffset(-360).utc().format(); 
 						doc.Block = result.features[feature].properties.block;
 						doc.IUCR = result.features[feature].properties.iucr;
 						doc.Primary_Type = result.features[feature].properties.primary_type;
@@ -183,12 +183,12 @@ exports.testEndpoint = async(req, res) =>
 //Get map data based on query if no query then just gets 2018
 exports.getMapData = async(query) =>
 {
+	let timeStart = new Date()
 	result = [];
 	console.log(query) 
 
 	var limit = query.limit || 1000
 	delete query.limit;
-
 	//Checking if empty, if empty set query {Year: 2018}
 	query = Object.keys(query).length === 0 && query.constructor === Object ? {Year: 2018} : query;
 	await chicagoCrime.find(query)
@@ -199,6 +199,7 @@ exports.getMapData = async(query) =>
 	.then((res) => {result = result.concat(res);})
 	.catch((err) => {console.log(err)});
 
+	console.log(`Query time: ${new Date() - timeStart}ms`)
 	return result;
 }
 

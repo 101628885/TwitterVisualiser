@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker'; 
 import style from 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment'
 
 class QueryForm extends Component {
 
+	constructor (props) {
+		super(props)
+		this.state = {
+			startDate: "",
+			endDate: ""
+		};
+		this.setEndDate = this.setEndDate.bind(this);
+		this.setStartDate = this.setStartDate.bind(this);
+	}
     createPayload = (event) =>
 	{
 		event.preventDefault();
@@ -12,10 +22,30 @@ class QueryForm extends Component {
 			query.Primary_Type = this.type.value.toUpperCase();
 		if(this.limit.value != "" && typeof parseInt(this.limit.value) == 'number')
 			query.limit = this.limit.value;
-
-		query.Year = parseInt(this.year.value)
+		if(this.state.startDate != "")
+		{
+			let endDate = this.state.endDate != "" && this.state.endDate != null ? moment(this.state.endDate) : moment(this.state.startDate).add(1, 'days')
+			query.Date = {
+							$gte: this.state.startDate, 
+							$lt: endDate
+						};
+		}
+		if(this.state.startDate == "")
+			query.Year = parseInt(this.year.value)
 		console.log(query)
 		this.props.getDataForMap(query);
+	}
+
+	setStartDate(date) {
+		this.setState({
+			startDate: date
+		});
+	}
+
+	setEndDate(date) {
+		this.setState({
+			endDate: date
+		});
 	}
 
     render() {
@@ -31,7 +61,8 @@ class QueryForm extends Component {
 				style={{
 				position: 'relative',
 				display: 'inline-block',
-				left: '-50%'
+				left: '-50%',
+				color: '#FFF'
 				}}>
 				<form onSubmit={this.createPayload.bind(this)}>
 					<select ref={(input) => this.type = input}>
@@ -52,10 +83,13 @@ class QueryForm extends Component {
 				        <option value="2013">2013</option>
 				        <option value="2012">2012</option>
 				    </select>
-				    <label for="limit">Limit:</label>
+				   	<button type="submit">Get Crime Data</button>
+        			<p>Start Date</p>
+				    <DatePicker selected={this.state.startDate} onChange={this.setStartDate} placeHolder="Start"/>
+				    <p>End Date</p>
+				    <DatePicker selected={this.state.endDate} onChange={this.setEndDate} placeHolder="End"/>
+				    <p>Limit</p>
         			<input ref={(input) => this.limit = input} type="text"/>
-				    <DatePicker onSelect={(input) => console.log(input)}/>
-				    <button type="submit">Submit</button>
 				</form>
 			</div>
 		</div>
