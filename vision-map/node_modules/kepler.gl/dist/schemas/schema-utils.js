@@ -1,0 +1,66 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+exports.savePropertiesOrApplySchema = savePropertiesOrApplySchema;
+exports.loadPropertiesOrApplySchema = loadPropertiesOrApplySchema;
+exports.getPropertyValueFromSchema = getPropertyValueFromSchema;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Copyright (c) 2018 Uber Technologies, Inc.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+/**
+ * Recursively save / load value for state based on property keys,
+ * if property[key] is another schema
+ * Use is to get value to save
+ * @param {Object} opertation - 'save' or 'load'
+ * @param {Object} state - state to save
+ * @param {Object} properties - properties schema
+ * @returns {Object} - saved state
+ */
+function savePropertiesOrApplySchema(state, properties) {
+  return getPropertyValueFromSchema('save', state, properties);
+}
+
+function loadPropertiesOrApplySchema(state, properties) {
+  return getPropertyValueFromSchema('load', state, properties);
+}
+
+function getPropertyValueFromSchema(operation, state, properties) {
+  return Object.keys(properties).reduce(function (accu, key) {
+    return (0, _extends3.default)({}, accu, key in state ? properties[key] ? // if it's another schema
+    properties[key][operation] ? // call save or load
+    properties[key][operation](state[key], state) : // if it's another property object
+    getPropertyValueFromSchema(operation, state[key], properties[key]) : (0, _defineProperty3.default)({}, key, state[key]) : {});
+  }, {});
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9zY2hlbWFzL3NjaGVtYS11dGlscy5qcyJdLCJuYW1lcyI6WyJzYXZlUHJvcGVydGllc09yQXBwbHlTY2hlbWEiLCJsb2FkUHJvcGVydGllc09yQXBwbHlTY2hlbWEiLCJnZXRQcm9wZXJ0eVZhbHVlRnJvbVNjaGVtYSIsInN0YXRlIiwicHJvcGVydGllcyIsIm9wZXJhdGlvbiIsIk9iamVjdCIsImtleXMiLCJyZWR1Y2UiLCJhY2N1Iiwia2V5Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7OztRQTZCZ0JBLDJCLEdBQUFBLDJCO1FBSUFDLDJCLEdBQUFBLDJCO1FBSUFDLDBCLEdBQUFBLDBCOzs7O0FBckNoQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTs7Ozs7Ozs7O0FBU08sU0FBU0YsMkJBQVQsQ0FBcUNHLEtBQXJDLEVBQTRDQyxVQUE1QyxFQUF3RDtBQUM3RCxTQUFPRiwyQkFBMkIsTUFBM0IsRUFBbUNDLEtBQW5DLEVBQTBDQyxVQUExQyxDQUFQO0FBQ0Q7O0FBRU0sU0FBU0gsMkJBQVQsQ0FBcUNFLEtBQXJDLEVBQTRDQyxVQUE1QyxFQUF3RDtBQUM3RCxTQUFPRiwyQkFBMkIsTUFBM0IsRUFBbUNDLEtBQW5DLEVBQTBDQyxVQUExQyxDQUFQO0FBQ0Q7O0FBRU0sU0FBU0YsMEJBQVQsQ0FBb0NHLFNBQXBDLEVBQStDRixLQUEvQyxFQUFzREMsVUFBdEQsRUFBa0U7QUFDdkUsU0FBT0UsT0FBT0MsSUFBUCxDQUFZSCxVQUFaLEVBQXdCSSxNQUF4QixDQUNMLFVBQUNDLElBQUQsRUFBT0MsR0FBUDtBQUFBLHNDQUNLRCxJQURMLEVBRU1DLE9BQU9QLEtBQVAsR0FDQUMsV0FBV00sR0FBWCxJQUNFO0FBQ0FOLGVBQVdNLEdBQVgsRUFBZ0JMLFNBQWhCLElBQ0U7QUFDQUQsZUFBV00sR0FBWCxFQUFnQkwsU0FBaEIsRUFBMkJGLE1BQU1PLEdBQU4sQ0FBM0IsRUFBdUNQLEtBQXZDLENBRkYsR0FHRTtBQUNBRCwrQkFBMkJHLFNBQTNCLEVBQXNDRixNQUFNTyxHQUFOLENBQXRDLEVBQWtETixXQUFXTSxHQUFYLENBQWxELENBTkoscUNBT0lBLEdBUEosRUFPVVAsTUFBTU8sR0FBTixDQVBWLENBREEsR0FTQSxFQVhOO0FBQUEsR0FESyxFQWNMLEVBZEssQ0FBUDtBQWdCRCIsImZpbGUiOiJzY2hlbWEtdXRpbHMuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBDb3B5cmlnaHQgKGMpIDIwMTggVWJlciBUZWNobm9sb2dpZXMsIEluYy5cbi8vXG4vLyBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBmcmVlIG9mIGNoYXJnZSwgdG8gYW55IHBlcnNvbiBvYnRhaW5pbmcgYSBjb3B5XG4vLyBvZiB0aGlzIHNvZnR3YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24gZmlsZXMgKHRoZSBcIlNvZnR3YXJlXCIpLCB0byBkZWFsXG4vLyBpbiB0aGUgU29mdHdhcmUgd2l0aG91dCByZXN0cmljdGlvbiwgaW5jbHVkaW5nIHdpdGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzXG4vLyB0byB1c2UsIGNvcHksIG1vZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1YmxpY2Vuc2UsIGFuZC9vciBzZWxsXG4vLyBjb3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUgU29mdHdhcmUgaXNcbi8vIGZ1cm5pc2hlZCB0byBkbyBzbywgc3ViamVjdCB0byB0aGUgZm9sbG93aW5nIGNvbmRpdGlvbnM6XG4vL1xuLy8gVGhlIGFib3ZlIGNvcHlyaWdodCBub3RpY2UgYW5kIHRoaXMgcGVybWlzc2lvbiBub3RpY2Ugc2hhbGwgYmUgaW5jbHVkZWQgaW5cbi8vIGFsbCBjb3BpZXMgb3Igc3Vic3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLlxuLy9cbi8vIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCBcIkFTIElTXCIsIFdJVEhPVVQgV0FSUkFOVFkgT0YgQU5ZIEtJTkQsIEVYUFJFU1MgT1Jcbi8vIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9UIExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMgT0YgTUVSQ0hBTlRBQklMSVRZLFxuLy8gRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UgQU5EIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFXG4vLyBBVVRIT1JTIE9SIENPUFlSSUdIVCBIT0xERVJTIEJFIExJQUJMRSBGT1IgQU5ZIENMQUlNLCBEQU1BR0VTIE9SIE9USEVSXG4vLyBMSUFCSUxJVFksIFdIRVRIRVIgSU4gQU4gQUNUSU9OIE9GIENPTlRSQUNULCBUT1JUIE9SIE9USEVSV0lTRSwgQVJJU0lORyBGUk9NLFxuLy8gT1VUIE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1IgVEhFIFVTRSBPUiBPVEhFUiBERUFMSU5HUyBJTlxuLy8gVEhFIFNPRlRXQVJFLlxuXG4vKipcbiAqIFJlY3Vyc2l2ZWx5IHNhdmUgLyBsb2FkIHZhbHVlIGZvciBzdGF0ZSBiYXNlZCBvbiBwcm9wZXJ0eSBrZXlzLFxuICogaWYgcHJvcGVydHlba2V5XSBpcyBhbm90aGVyIHNjaGVtYVxuICogVXNlIGlzIHRvIGdldCB2YWx1ZSB0byBzYXZlXG4gKiBAcGFyYW0ge09iamVjdH0gb3BlcnRhdGlvbiAtICdzYXZlJyBvciAnbG9hZCdcbiAqIEBwYXJhbSB7T2JqZWN0fSBzdGF0ZSAtIHN0YXRlIHRvIHNhdmVcbiAqIEBwYXJhbSB7T2JqZWN0fSBwcm9wZXJ0aWVzIC0gcHJvcGVydGllcyBzY2hlbWFcbiAqIEByZXR1cm5zIHtPYmplY3R9IC0gc2F2ZWQgc3RhdGVcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIHNhdmVQcm9wZXJ0aWVzT3JBcHBseVNjaGVtYShzdGF0ZSwgcHJvcGVydGllcykge1xuICByZXR1cm4gZ2V0UHJvcGVydHlWYWx1ZUZyb21TY2hlbWEoJ3NhdmUnLCBzdGF0ZSwgcHJvcGVydGllcyk7XG59XG5cbmV4cG9ydCBmdW5jdGlvbiBsb2FkUHJvcGVydGllc09yQXBwbHlTY2hlbWEoc3RhdGUsIHByb3BlcnRpZXMpIHtcbiAgcmV0dXJuIGdldFByb3BlcnR5VmFsdWVGcm9tU2NoZW1hKCdsb2FkJywgc3RhdGUsIHByb3BlcnRpZXMpO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gZ2V0UHJvcGVydHlWYWx1ZUZyb21TY2hlbWEob3BlcmF0aW9uLCBzdGF0ZSwgcHJvcGVydGllcykge1xuICByZXR1cm4gT2JqZWN0LmtleXMocHJvcGVydGllcykucmVkdWNlKFxuICAgIChhY2N1LCBrZXkpID0+ICh7XG4gICAgICAuLi5hY2N1LFxuICAgICAgLi4uKGtleSBpbiBzdGF0ZVxuICAgICAgICA/IHByb3BlcnRpZXNba2V5XVxuICAgICAgICAgID8gLy8gaWYgaXQncyBhbm90aGVyIHNjaGVtYVxuICAgICAgICAgICAgcHJvcGVydGllc1trZXldW29wZXJhdGlvbl1cbiAgICAgICAgICAgID8gLy8gY2FsbCBzYXZlIG9yIGxvYWRcbiAgICAgICAgICAgICAgcHJvcGVydGllc1trZXldW29wZXJhdGlvbl0oc3RhdGVba2V5XSwgc3RhdGUpXG4gICAgICAgICAgICA6IC8vIGlmIGl0J3MgYW5vdGhlciBwcm9wZXJ0eSBvYmplY3RcbiAgICAgICAgICAgICAgZ2V0UHJvcGVydHlWYWx1ZUZyb21TY2hlbWEob3BlcmF0aW9uLCBzdGF0ZVtrZXldLCBwcm9wZXJ0aWVzW2tleV0pXG4gICAgICAgICAgOiB7W2tleV06IHN0YXRlW2tleV19XG4gICAgICAgIDoge30pXG4gICAgfSksXG4gICAge31cbiAgKTtcbn1cbiJdfQ==

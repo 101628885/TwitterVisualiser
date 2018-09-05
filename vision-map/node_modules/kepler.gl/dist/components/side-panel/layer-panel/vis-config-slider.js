@@ -1,0 +1,96 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.VisConfigSlider = undefined;
+
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _styledComponents = require('../../common/styled-components');
+
+var _utils = require('../../../utils/utils');
+
+var _rangeSlider = require('../../common/range-slider');
+
+var _rangeSlider2 = _interopRequireDefault(_rangeSlider);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var propTypes = {
+  layer: _propTypes2.default.object.isRequired,
+  property: _propTypes2.default.string.isRequired,
+  onChange: _propTypes2.default.func.isRequired,
+  label: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.bool, _propTypes2.default.func]),
+  range: _propTypes2.default.arrayOf(_propTypes2.default.number).isRequired,
+  step: _propTypes2.default.number,
+  isRanged: _propTypes2.default.bool,
+  disabled: _propTypes2.default.bool,
+  inputTheme: _propTypes2.default.bool
+}; // Copyright (c) 2018 Uber Technologies, Inc.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+var VisConfigSlider = exports.VisConfigSlider = function VisConfigSlider(_ref) {
+  var config = _ref.layer.config,
+      property = _ref.property,
+      label = _ref.label,
+      range = _ref.range,
+      step = _ref.step,
+      isRanged = _ref.isRanged,
+      disabled = _ref.disabled,
+      _onChange2 = _ref.onChange,
+      inputTheme = _ref.inputTheme;
+  return _react2.default.createElement(
+    _styledComponents.SidePanelSection,
+    { disabled: Boolean(disabled) },
+    label ? _react2.default.createElement(
+      _styledComponents.PanelLabel,
+      null,
+      typeof label === 'string' ? label : typeof label === 'function' ? label(config) : (0, _utils.capitalizeFirstLetter)(property)
+    ) : null,
+    _react2.default.createElement(_rangeSlider2.default, {
+      range: range,
+      value0: isRanged ? config.visConfig[property][0] : range[0],
+      value1: isRanged ? config.visConfig[property][1] : config.visConfig[property],
+      step: step,
+      isRanged: Boolean(isRanged),
+      onChange: function onChange(value) {
+        return _onChange2((0, _defineProperty3.default)({}, property, isRanged ? value : value[1]));
+      },
+      inputTheme: inputTheme,
+      showInput: true
+    })
+  );
+};
+
+VisConfigSlider.propTypes = propTypes;
+
+exports.default = VisConfigSlider;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NyYy9jb21wb25lbnRzL3NpZGUtcGFuZWwvbGF5ZXItcGFuZWwvdmlzLWNvbmZpZy1zbGlkZXIuanMiXSwibmFtZXMiOlsicHJvcFR5cGVzIiwibGF5ZXIiLCJQcm9wVHlwZXMiLCJvYmplY3QiLCJpc1JlcXVpcmVkIiwicHJvcGVydHkiLCJzdHJpbmciLCJvbkNoYW5nZSIsImZ1bmMiLCJsYWJlbCIsIm9uZU9mVHlwZSIsImJvb2wiLCJyYW5nZSIsImFycmF5T2YiLCJudW1iZXIiLCJzdGVwIiwiaXNSYW5nZWQiLCJkaXNhYmxlZCIsImlucHV0VGhlbWUiLCJWaXNDb25maWdTbGlkZXIiLCJjb25maWciLCJCb29sZWFuIiwidmlzQ29uZmlnIiwidmFsdWUiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O0FBb0JBOzs7O0FBQ0E7Ozs7QUFDQTs7QUFJQTs7QUFFQTs7Ozs7O0FBRUEsSUFBTUEsWUFBWTtBQUNoQkMsU0FBT0Msb0JBQVVDLE1BQVYsQ0FBaUJDLFVBRFI7QUFFaEJDLFlBQVVILG9CQUFVSSxNQUFWLENBQWlCRixVQUZYO0FBR2hCRyxZQUFVTCxvQkFBVU0sSUFBVixDQUFlSixVQUhUO0FBSWhCSyxTQUFPUCxvQkFBVVEsU0FBVixDQUFvQixDQUN6QlIsb0JBQVVJLE1BRGUsRUFFekJKLG9CQUFVUyxJQUZlLEVBR3pCVCxvQkFBVU0sSUFIZSxDQUFwQixDQUpTO0FBU2hCSSxTQUFPVixvQkFBVVcsT0FBVixDQUFrQlgsb0JBQVVZLE1BQTVCLEVBQW9DVixVQVQzQjtBQVVoQlcsUUFBTWIsb0JBQVVZLE1BVkE7QUFXaEJFLFlBQVVkLG9CQUFVUyxJQVhKO0FBWWhCTSxZQUFVZixvQkFBVVMsSUFaSjtBQWFoQk8sY0FBWWhCLG9CQUFVUztBQWJOLENBQWxCLEMsQ0E5QkE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBNEJPLElBQU1RLDRDQUFrQixTQUFsQkEsZUFBa0I7QUFBQSxNQUNyQkMsTUFEcUIsUUFDN0JuQixLQUQ2QixDQUNyQm1CLE1BRHFCO0FBQUEsTUFFN0JmLFFBRjZCLFFBRTdCQSxRQUY2QjtBQUFBLE1BRzdCSSxLQUg2QixRQUc3QkEsS0FINkI7QUFBQSxNQUk3QkcsS0FKNkIsUUFJN0JBLEtBSjZCO0FBQUEsTUFLN0JHLElBTDZCLFFBSzdCQSxJQUw2QjtBQUFBLE1BTTdCQyxRQU42QixRQU03QkEsUUFONkI7QUFBQSxNQU83QkMsUUFQNkIsUUFPN0JBLFFBUDZCO0FBQUEsTUFRN0JWLFVBUjZCLFFBUTdCQSxRQVI2QjtBQUFBLE1BUzdCVyxVQVQ2QixRQVM3QkEsVUFUNkI7QUFBQSxTQVc3QjtBQUFDLHNDQUFEO0FBQUEsTUFBa0IsVUFBVUcsUUFBUUosUUFBUixDQUE1QjtBQUNHUixZQUNDO0FBQUMsa0NBQUQ7QUFBQTtBQUNHLGFBQU9BLEtBQVAsS0FBaUIsUUFBakIsR0FDR0EsS0FESCxHQUVHLE9BQU9BLEtBQVAsS0FBaUIsVUFBakIsR0FDRUEsTUFBTVcsTUFBTixDQURGLEdBRUUsa0NBQXNCZixRQUF0QjtBQUxSLEtBREQsR0FRRyxJQVROO0FBVUUsa0NBQUMscUJBQUQ7QUFDRSxhQUFPTyxLQURUO0FBRUUsY0FBUUksV0FBV0ksT0FBT0UsU0FBUCxDQUFpQmpCLFFBQWpCLEVBQTJCLENBQTNCLENBQVgsR0FBMkNPLE1BQU0sQ0FBTixDQUZyRDtBQUdFLGNBQ0VJLFdBQVdJLE9BQU9FLFNBQVAsQ0FBaUJqQixRQUFqQixFQUEyQixDQUEzQixDQUFYLEdBQTJDZSxPQUFPRSxTQUFQLENBQWlCakIsUUFBakIsQ0FKL0M7QUFNRSxZQUFNVSxJQU5SO0FBT0UsZ0JBQVVNLFFBQVFMLFFBQVIsQ0FQWjtBQVFFLGdCQUFVO0FBQUEsZUFBU1QsNkNBQVdGLFFBQVgsRUFBc0JXLFdBQVdPLEtBQVgsR0FBbUJBLE1BQU0sQ0FBTixDQUF6QyxFQUFUO0FBQUEsT0FSWjtBQVNFLGtCQUFZTCxVQVRkO0FBVUU7QUFWRjtBQVZGLEdBWDZCO0FBQUEsQ0FBeEI7O0FBb0NQQyxnQkFBZ0JuQixTQUFoQixHQUE0QkEsU0FBNUI7O2tCQUVlbUIsZSIsImZpbGUiOiJ2aXMtY29uZmlnLXNsaWRlci5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8vIENvcHlyaWdodCAoYykgMjAxOCBVYmVyIFRlY2hub2xvZ2llcywgSW5jLlxuLy9cbi8vIFBlcm1pc3Npb24gaXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdlLCB0byBhbnkgcGVyc29uIG9idGFpbmluZyBhIGNvcHlcbi8vIG9mIHRoaXMgc29mdHdhcmUgYW5kIGFzc29jaWF0ZWQgZG9jdW1lbnRhdGlvbiBmaWxlcyAodGhlIFwiU29mdHdhcmVcIiksIHRvIGRlYWxcbi8vIGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0IHJlc3RyaWN0aW9uLCBpbmNsdWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHNcbi8vIHRvIHVzZSwgY29weSwgbW9kaWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwgYW5kL29yIHNlbGxcbi8vIGNvcGllcyBvZiB0aGUgU29mdHdhcmUsIGFuZCB0byBwZXJtaXQgcGVyc29ucyB0byB3aG9tIHRoZSBTb2Z0d2FyZSBpc1xuLy8gZnVybmlzaGVkIHRvIGRvIHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xsb3dpbmcgY29uZGl0aW9uczpcbi8vXG4vLyBUaGUgYWJvdmUgY29weXJpZ2h0IG5vdGljZSBhbmQgdGhpcyBwZXJtaXNzaW9uIG5vdGljZSBzaGFsbCBiZSBpbmNsdWRlZCBpblxuLy8gYWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9ucyBvZiB0aGUgU29mdHdhcmUuXG4vL1xuLy8gVEhFIFNPRlRXQVJFIElTIFBST1ZJREVEIFwiQVMgSVNcIiwgV0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwgRVhQUkVTUyBPUlxuLy8gSU1QTElFRCwgSU5DTFVESU5HIEJVVCBOT1QgTElNSVRFRCBUTyBUSEUgV0FSUkFOVElFUyBPRiBNRVJDSEFOVEFCSUxJVFksXG4vLyBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRSBBTkQgTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEVcbi8vIEFVVEhPUlMgT1IgQ09QWVJJR0hUIEhPTERFUlMgQkUgTElBQkxFIEZPUiBBTlkgQ0xBSU0sIERBTUFHRVMgT1IgT1RIRVJcbi8vIExJQUJJTElUWSwgV0hFVEhFUiBJTiBBTiBBQ1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HIEZST00sXG4vLyBPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SIE9USEVSIERFQUxJTkdTIElOXG4vLyBUSEUgU09GVFdBUkUuXG5cbmltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgUHJvcFR5cGVzIGZyb20gJ3Byb3AtdHlwZXMnO1xuaW1wb3J0IHtcbiAgU2lkZVBhbmVsU2VjdGlvbixcbiAgUGFuZWxMYWJlbFxufSBmcm9tICdjb21wb25lbnRzL2NvbW1vbi9zdHlsZWQtY29tcG9uZW50cyc7XG5pbXBvcnQge2NhcGl0YWxpemVGaXJzdExldHRlcn0gZnJvbSAndXRpbHMvdXRpbHMnO1xuXG5pbXBvcnQgUmFuZ2VTbGlkZXIgZnJvbSAnY29tcG9uZW50cy9jb21tb24vcmFuZ2Utc2xpZGVyJztcblxuY29uc3QgcHJvcFR5cGVzID0ge1xuICBsYXllcjogUHJvcFR5cGVzLm9iamVjdC5pc1JlcXVpcmVkLFxuICBwcm9wZXJ0eTogUHJvcFR5cGVzLnN0cmluZy5pc1JlcXVpcmVkLFxuICBvbkNoYW5nZTogUHJvcFR5cGVzLmZ1bmMuaXNSZXF1aXJlZCxcbiAgbGFiZWw6IFByb3BUeXBlcy5vbmVPZlR5cGUoW1xuICAgIFByb3BUeXBlcy5zdHJpbmcsXG4gICAgUHJvcFR5cGVzLmJvb2wsXG4gICAgUHJvcFR5cGVzLmZ1bmNcbiAgXSksXG4gIHJhbmdlOiBQcm9wVHlwZXMuYXJyYXlPZihQcm9wVHlwZXMubnVtYmVyKS5pc1JlcXVpcmVkLFxuICBzdGVwOiBQcm9wVHlwZXMubnVtYmVyLFxuICBpc1JhbmdlZDogUHJvcFR5cGVzLmJvb2wsXG4gIGRpc2FibGVkOiBQcm9wVHlwZXMuYm9vbCxcbiAgaW5wdXRUaGVtZTogUHJvcFR5cGVzLmJvb2xcbn07XG5cbmV4cG9ydCBjb25zdCBWaXNDb25maWdTbGlkZXIgPSAoe1xuICBsYXllcjoge2NvbmZpZ30sXG4gIHByb3BlcnR5LFxuICBsYWJlbCxcbiAgcmFuZ2UsXG4gIHN0ZXAsXG4gIGlzUmFuZ2VkLFxuICBkaXNhYmxlZCxcbiAgb25DaGFuZ2UsXG4gIGlucHV0VGhlbWVcbn0pID0+IChcbiAgPFNpZGVQYW5lbFNlY3Rpb24gZGlzYWJsZWQ9e0Jvb2xlYW4oZGlzYWJsZWQpfT5cbiAgICB7bGFiZWwgPyAoXG4gICAgICA8UGFuZWxMYWJlbD5cbiAgICAgICAge3R5cGVvZiBsYWJlbCA9PT0gJ3N0cmluZydcbiAgICAgICAgICA/IGxhYmVsXG4gICAgICAgICAgOiB0eXBlb2YgbGFiZWwgPT09ICdmdW5jdGlvbidcbiAgICAgICAgICAgID8gbGFiZWwoY29uZmlnKVxuICAgICAgICAgICAgOiBjYXBpdGFsaXplRmlyc3RMZXR0ZXIocHJvcGVydHkpfVxuICAgICAgPC9QYW5lbExhYmVsPlxuICAgICkgOiBudWxsfVxuICAgIDxSYW5nZVNsaWRlclxuICAgICAgcmFuZ2U9e3JhbmdlfVxuICAgICAgdmFsdWUwPXtpc1JhbmdlZCA/IGNvbmZpZy52aXNDb25maWdbcHJvcGVydHldWzBdIDogcmFuZ2VbMF19XG4gICAgICB2YWx1ZTE9e1xuICAgICAgICBpc1JhbmdlZCA/IGNvbmZpZy52aXNDb25maWdbcHJvcGVydHldWzFdIDogY29uZmlnLnZpc0NvbmZpZ1twcm9wZXJ0eV1cbiAgICAgIH1cbiAgICAgIHN0ZXA9e3N0ZXB9XG4gICAgICBpc1JhbmdlZD17Qm9vbGVhbihpc1JhbmdlZCl9XG4gICAgICBvbkNoYW5nZT17dmFsdWUgPT4gb25DaGFuZ2Uoe1twcm9wZXJ0eV06IGlzUmFuZ2VkID8gdmFsdWUgOiB2YWx1ZVsxXX0pfVxuICAgICAgaW5wdXRUaGVtZT17aW5wdXRUaGVtZX1cbiAgICAgIHNob3dJbnB1dFxuICAgIC8+XG4gIDwvU2lkZVBhbmVsU2VjdGlvbj5cbik7XG5cblZpc0NvbmZpZ1NsaWRlci5wcm9wVHlwZXMgPSBwcm9wVHlwZXM7XG5cbmV4cG9ydCBkZWZhdWx0IFZpc0NvbmZpZ1NsaWRlcjtcbiJdfQ==

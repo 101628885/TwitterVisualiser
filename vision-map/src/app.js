@@ -96,6 +96,7 @@ class App extends Component {
 		axios.get('http://144.6.226.34/tweetMap')
 		.then((res) => 
 		{
+			console.log(res);
 			res.data.tweets.forEach(item => 
 			{            
 				let label = "Tweets"
