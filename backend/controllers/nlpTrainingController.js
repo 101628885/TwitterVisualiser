@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const tweet = require('../models/tweet_schema');
+var schemas = require('./mongoController');
+var tweetMelb = schemas.tweetMelb;
+var tweetChicago = schemas.tweetChicago;
 const pythonShell = require('python-shell');
 const db = mongoose.connection;
 

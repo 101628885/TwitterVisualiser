@@ -93,7 +93,7 @@ class App extends Component {
 	componentDidMount() 
 	{
 		//axios.get('http://localhost:3000/tweetMap')
-		axios.get('http://144.6.226.34/tweetMap')
+		axios.get('http://43.240.97.166:3000/tweetMap')
 		.then((res) => 
 		{
 			console.log(res);
@@ -143,7 +143,7 @@ class App extends Component {
 	}
 	getDataForMap = (query) => {
 		console.log(query)
-		axios.post('http://144.6.226.34/tweetMap', query)
+		axios.post('http://43.240.97.166:3000/tweetMap', query)
 		.then((res) => 
 		{
 			// res.data.tweets.forEach(item => 

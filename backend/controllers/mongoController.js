@@ -5,13 +5,13 @@ const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
 
 
-const databaseMelb = { url : "mongodb://team:swinburne@144.6.226.34/tweets", type: "Production"};
+const databaseMelb = { url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
 //const databaseMelb = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
 
-const databaseChicago = { url : "mongodb://team:swinburne@144.6.226.34/tweetsChicago", type: "Production"};
+const databaseChicago = { url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
 //const databaseChicago = { url : "mongodb://localhost:27017/tweetsChicago", type: "Testing"};
 
-const databaseChicagoCrime = { url : "mongodb://team:swinburne@144.6.226.34/chicagoCrime", type: "Production"};
+const databaseChicagoCrime = { url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
 
 
 
