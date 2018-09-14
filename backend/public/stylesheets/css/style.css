@@ -4,19 +4,9 @@ html, body, #outer {
 }
 
 body:not(#map body) {
-	/* padding: 50px; */
-	/* background-color: #2AA3EF; */
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 	font-weight: 300;
 }
-
-/* a {
-	color: #00B7FF;
-} */
-
-/* div:not(#map div) {
-	padding: 10px;
-} */
 
 h1:not(#map h1) {
 	color: white;
@@ -24,7 +14,6 @@ h1:not(#map h1) {
 
 .card {
 	background-color: white;
-	/* border-color: #0084b4; */
 	border-width: 0.2em;
 }
 
@@ -88,4 +77,23 @@ img:not(#map img) {
 
 #jumbotext {
   font-size: 7em;
+}
+
+#container {
+  width: 100vw; 
+  height: 100vh;
+  position: absolute;
+}
+
+#deckmap {
+  width: 100%;
+  height: 100%;
+  position: absolute
+}
+
+#control-panel {
+  position: absolute;
+  margin: 2em;
+  padding: 1em 1em 0 1em;
+  background-color: white;
 }

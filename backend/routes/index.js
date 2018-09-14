@@ -18,8 +18,13 @@ const chicagoDataFactory = require("../controllers/chicagoDataFactory");
 const chicago_data_factory = require("../controllers/chicagoDataFactory");
 
 // get homepage
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
   res.render('home');
+});
+
+// get deckgl map
+router.get('/deckmap', function(req, res) {
+  res.render('deckmap');
 });
 
 // twitter controller

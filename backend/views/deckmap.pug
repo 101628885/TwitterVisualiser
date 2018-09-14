@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	#container
+		#deckmap
+		#control-panel
+			#radius-control.form-group(style="display: flex;")
+				span(for="radius") Radius
+				input#radius.custom-range(type="range" min="100" max="800" step="100" value="200" style="margin: 0 1em 0 1em;")
+				span#radius-value 200
+				span m
+	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
+	script(src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
+	script(src="./scripts/deckgl_render.js")
+	link(rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css")
