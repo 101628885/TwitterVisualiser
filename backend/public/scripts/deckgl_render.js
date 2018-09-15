@@ -1,3 +1,9 @@
+/**
+ * TODO:
+ * 1. code cleanup, there's some code repetition in a few places
+ * 2. add some loading animation while data is being loaded
+ */
+
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoidHJpcHBhbG9za2kiLCJhIjoiY2psMGFyZ3A1MTMxMTNxbG1qb3V6YWV0YyJ9.qF4x-o4Z7E6iwYedWjGo6Q';
 
 const INITIAL_VIEW_STATE = {
@@ -19,16 +25,18 @@ const deckgl = new deck.DeckGL({
 });
 
 let chicago_tweet_data = null;
-let chicago_trajectories_data = null;
-let highway_data = null;
+let chicago_trajectory_data = null;
 
 // Array of options available to the user
 // radius in metres
-const OPTIONS = ['radius'];
+const OPTIONS = {
+	TWEET: ['radius', 'visible', 'extruded'],
+	TRAJECTORY: ['visible']
+};
 
 const DATA_URL = {
-	chicago_hist: 'https://data.cityofchicago.org/resource/6zsd-86xi.json',
-	chicago_trajectories: 'http://api.myjson.com/bins/1b6z54',  // temp trajectories api
+	CHICAGO_TWEET: 'https://data.cityofchicago.org/resource/6zsd-86xi.json',
+	CHICAGO_TRAJECTORY: 'http://api.myjson.com/bins/1b6z54',  // temp trajectories api
 }
 
 // for hex layers
@@ -53,63 +61,98 @@ const LIGHT_SETTINGS = {
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
  */
 const renderLayer = () => {
-	const options = {};
+	const optionsTweet = {};
+	const optionsTrajectory = {};
 
-	OPTIONS.forEach(key => {
-		const value = document.getElementById(key).value;
-		document.getElementById(key + '-value').innerHTML = value;
-		options[key] = value;
-	});
+	// TODO: make this pretty, do like a forEach or something
+	const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
+	document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
+	optionsTweet.radius = radiusTweetValue;
+	const visibleTweetValue = document.getElementById('visible-tweet-handle').checked;
+	optionsTweet.visible = visibleTweetValue;
+	const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
+	optionsTweet.extruded = extrudedTweetValue;
+	const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
+	optionsTrajectory.visible = visibleTrajectoryValue;
 
 	const chicagoTweetLayer = new deck.HexagonLayer({
 		id: 'chicago-tweet-layer',
 		colorRange: COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
 		data: chicago_tweet_data,
-		elevationRange: [0, 1000],
-		elevationScale: 4,
-		extruded: true,
+		elevationRange: [0, 800],
+		elevationScale: 1,
 		getPosition: d => d,
-		opacity: 1,
-		...options
+		opacity: 0.4,
+		...optionsTweet
 	});
 
-	const chicagoTrajectoriesLayer = new deck.GeoJsonLayer({
-		id: 'chicago-trajectories-layer',
-		data: chicago_trajectories_data,
+	const chicagoTrajectoryLayer = new deck.GeoJsonLayer({
+		id: 'chicago-trajectory-layer',
+		data: chicago_trajectory_data,
 		stroked: true,
 		lineWidthMinPixels: 3,
 		lineJointRounded: true,
-		getFillColor: d => [160, 160, 180, 200],
-		getLineColor: d => [255, 255, 255, 255],
-		getRadius: d => 20,
-		radiusMinPixels: 20,
+		getFillColor: d => [0, 255, 255, 200],
+		getLineColor: d => [0, 153, 153, 255],
+		getRadius: d => 60,
+		radiusMinPixels: 60,
+		...optionsTrajectory
 	});
 
 	deckgl.setProps({
-		layers: [chicagoTrajectoriesLayer]
+		layers: [chicagoTweetLayer, chicagoTrajectoryLayer]
 	});
-}
+};
 
 /**
  * initialiseData() initialises the global data variables by fetching data from the endpoints
  * specified in DATA_URL. Called once only.
  */
 const initialiseData = async() => {
-	// const response = await fetch(DATA_URL.chicago_tweets);
-	// const json = await response.json();
-	// chicago_tweet_data = json.map(datum => (datum.coordinates[0].coordinates));
+	const response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY);
+	chicago_trajectory_data = await response_chicago_trajectory.json();
 
-	const response = await fetch(DATA_URL.chicago_trajectories);
-	json = await response.json();
-	chicago_trajectories_data = json;
+	let tweet_array = [];
+	const response_chicago_tweet = await fetch(DATA_URL.CHICAGO_TWEET);
+	json = await response_chicago_tweet.json();
+	json.forEach(datum => {
+		if ('location' in datum) 
+			tweet_array.push(datum.location.coordinates);
+	});
+	chicago_tweet_data = tweet_array;
 
 	renderLayer();
 };
 
-// Assign the renderLayer() function as event handler to each input control
-OPTIONS.forEach(key => {
-	document.getElementById(key).oninput = renderLayer;
-});
+// Assign the renderLayer() function as an event handler to each input control
+const registerEventHandlers = (options) => {
+	// there's probably a better way to do this
+	options.forEach(key => {
+		console.log("Registering event handlers...");
+		let idSuffix = "";
+		switch(options) {
+			case OPTIONS.TRAJECTORY: 
+				idSuffix = "-trajectory-handle";
+				break;
+			case OPTIONS.TWEET: 
+				idSuffix = "-tweet-handle";
+				break;
+			default: 
+				break;
+		}
+		let inputType = document.getElementById(key + idSuffix).getAttribute("type");
+		
+		if (inputType === "checkbox") {
+			console.log("Registering " + key + idSuffix);
+			document.getElementById(key + idSuffix).onclick = renderLayer; }
+		else
+			document.getElementById(key + idSuffix).oninput = renderLayer;
+	});
+};
+
+for (var key in OPTIONS) {
+	registerEventHandlers(OPTIONS[key]);
+}
 
 initialiseData();

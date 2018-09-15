@@ -4,16 +4,30 @@ block content
 	#container
 		#deckmap
 		#control-panel
-			#radius-control.form-group(style="display: flex;")
-				span(for="radius") Radius
-				input#radius.custom-range(type="range" min="100" max="800" step="100" value="200" style="margin: 0 1em 0 1em;")
-				span#radius-value 200
-				span m
-			- var categories = ["assault", "murder", "kidnapping", "extortion", "rape", "theft", "burglary", "vandalism", "drugs"]
-			each category in categories
-				.custom-control.custom-checkbox.mb-2
-					input.custom-control-input(id=category name=category, type="checkbox")
-					label.custom-control-label(for=category, hidden = isHidden) #{category}
+			.container-fluid
+				.row.my-1
+					.col-md-12
+						p.h2 30.0K
+							span(style="font-size: 12px; margin-left: 0.5em") tweets aggregated
+						hr
+						p.h6 Tweet Layer
+						#radius-control.form-group(style="display: flex;")
+							span(for="radius-tweet-handle") Radius
+							input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="100" value="200" style="margin: 0 1em 0 1em;")
+							span#radius-tweet-value 200
+							span m
+						.custom-control.custom-checkbox.mb-2
+							input#visible-tweet-handle.custom-control-input(checked name="visible-tweet-handle", type="checkbox")
+							label.custom-control-label(for="visible-tweet-handle", hidden = isHidden) Visible
+						.custom-control.custom-checkbox.mb-2
+							input#extruded-tweet-handle.custom-control-input(checked name="extruded-tweet-handle", type="checkbox")
+							label.custom-control-label(for="extruded-tweet-handle", hidden = isHidden) Extruded
+				.row.my-3
+					.col-md-12
+						p.h6 Trajectory Layer
+						.custom-control.custom-checkbox.mb-2
+							input#visible-trajectory-handle.custom-control-input(checked name="visible-trajectory-handle", type="checkbox")
+							label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Visible
 		#footnote
 			span Hold down shift to rotate
 	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
