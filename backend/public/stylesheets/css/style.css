@@ -88,7 +88,7 @@ img:not(#map img) {
 #deckmap {
   width: 100%;
   height: 100%;
-  position: absolute
+  position: absolute;
 }
 
 #control-panel {
@@ -96,4 +96,11 @@ img:not(#map img) {
   margin: 2em;
   padding: 1em 1em 0 1em;
   background-color: white;
+}
+
+#footnote {
+  position: absolute;
+  margin: 2em;
+  color: lightslategray;
+  right: 0;
 }

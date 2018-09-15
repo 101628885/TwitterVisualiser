@@ -9,6 +9,13 @@ block content
 				input#radius.custom-range(type="range" min="100" max="800" step="100" value="200" style="margin: 0 1em 0 1em;")
 				span#radius-value 200
 				span m
+			- var categories = ["assault", "murder", "kidnapping", "extortion", "rape", "theft", "burglary", "vandalism", "drugs"]
+			each category in categories
+				.custom-control.custom-checkbox.mb-2
+					input.custom-control-input(id=category name=category, type="checkbox")
+					label.custom-control-label(for=category, hidden = isHidden) #{category}
+		#footnote
+			span Hold down shift to rotate
 	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
 	script(src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
 	script(src="./scripts/deckgl_render.js")
