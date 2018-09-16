@@ -2,6 +2,7 @@
  * TODO:
  * 1. code cleanup, there's some code repetition in a few places
  * 2. add some loading animation while data is being loaded
+ * 3. filtering - time, crime type
  */
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoidHJpcHBhbG9za2kiLCJhIjoiY2psMGFyZ3A1MTMxMTNxbG1qb3V6YWV0YyJ9.qF4x-o4Z7E6iwYedWjGo6Q';
@@ -35,7 +36,7 @@ const OPTIONS = {
 };
 
 const DATA_URL = {
-	CHICAGO_TWEET: 'https://data.cityofchicago.org/resource/6zsd-86xi.json',
+	CHICAGO_TWEET: 'http://api.myjson.com/bins/unbgw',  // temp tweets api
 	CHICAGO_TRAJECTORY: 'http://api.myjson.com/bins/1b6z54',  // temp trajectories api
 }
 
@@ -64,7 +65,6 @@ const renderLayer = () => {
 	const optionsTweet = {};
 	const optionsTrajectory = {};
 
-	// TODO: make this pretty, do like a forEach or something
 	const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
 	document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
 	optionsTweet.radius = radiusTweetValue;
@@ -81,7 +81,7 @@ const renderLayer = () => {
 		lightSettings: LIGHT_SETTINGS,
 		data: chicago_tweet_data,
 		elevationRange: [0, 800],
-		elevationScale: 1,
+		elevationScale: 4,
 		getPosition: d => d,
 		opacity: 0.4,
 		...optionsTweet
@@ -113,14 +113,10 @@ const initialiseData = async() => {
 	const response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY);
 	chicago_trajectory_data = await response_chicago_trajectory.json();
 
-	let tweet_array = [];
+	// let tweet_array = [];
 	const response_chicago_tweet = await fetch(DATA_URL.CHICAGO_TWEET);
 	json = await response_chicago_tweet.json();
-	json.forEach(datum => {
-		if ('location' in datum) 
-			tweet_array.push(datum.location.coordinates);
-	});
-	chicago_tweet_data = tweet_array;
+	chicago_tweet_data = json.map(datum => datum.coordinates[0].coordinates);
 
 	renderLayer();
 };
@@ -129,7 +125,6 @@ const initialiseData = async() => {
 const registerEventHandlers = (options) => {
 	// there's probably a better way to do this
 	options.forEach(key => {
-		console.log("Registering event handlers...");
 		let idSuffix = "";
 		switch(options) {
 			case OPTIONS.TRAJECTORY: 
