@@ -96,7 +96,7 @@ calculateTrajectoryGEOJSON = (data) =>
                 "primary_type": trajectory.Primary_Type,
                 "description": trajectory.Description,
                 "year": trajectory.Year,
-                "lineWidth": 0.1,
+                "lineWidth": 0.3,
                 "Longitude": trajectory.Longitude,
                 "Latitude": trajectory.Latitude,
                 "date": trajectory.Date,
