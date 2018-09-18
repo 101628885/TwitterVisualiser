@@ -58,6 +58,26 @@ const LIGHT_SETTINGS = {
 	specularRatio: 0.2,
 };
 
+
+function filterMap()
+{
+	$('.loader').show()
+	let query = {}
+	if($('#type').val().toUpperCase() != "ALL")
+		query.Primary_Type = $('#type').val().toUpperCase();
+	if($('#limit').val() != "" && typeof parseInt($('#limit').val()) == 'number')
+		query.limit = $('#limit').val();
+	query.Year = $('#year').val();
+	console.log(query)
+	axios.post('/tweetMap', query)
+	.then((res) => 
+	{
+		chicago_trajectory_data = res.data.trajectory[0]
+		renderLayer();
+	});
+	
+}
+
 /**
  * renderLayer() updates the data layer(s) according to changes in the options and updates
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
@@ -120,6 +140,7 @@ const renderLayer = () => {
 		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeo]
 		layers: [chicagoTrajectoryLayer, chicagoTweetGeo]
 	});
+	$('.loader').hide()
 };
 
 /**

@@ -1,9 +1,13 @@
 extends layout
 
+include ./mixins/queryFilter
+
 block content
 	#container
 		#deckmap
+		.loader
 		#control-panel
+
 			.container-fluid
 				.row.my-1
 					.col-md-12
@@ -28,6 +32,11 @@ block content
 						.custom-control.custom-checkbox.mb-2
 							input#visible-trajectory-handle.custom-control-input(checked name="visible-trajectory-handle", type="checkbox")
 							label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Visible
+				.row
+					.col-md-12
+						+queryFilter
+					br
+					br
 		#footnote
 			span Hold down shift to rotate
 	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
