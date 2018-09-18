@@ -26,41 +26,49 @@ calculateTrajectoryGEOJSON = (data) =>
 
     data.forEach((trajectory)=>
     {
-        let coords = [[[trajectory.Longitude, trajectory.Latitude]]];
-        otherData.forEach((othertrajectory)=>
+        if (trajectory.Longitude != "" && trajectory.Latitude != "") 
         {
-
-            if(othertrajectory.Primary_Type == trajectory.Primary_Type 
-                && trajectory != othertrajectory)
+            let coords = [[[trajectory.Longitude, trajectory.Latitude]]];
+            otherData.forEach((othertrajectory)=>
             {
-                let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
-                let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold)
+
+                if(othertrajectory.Primary_Type == trajectory.Primary_Type 
+                    && trajectory != othertrajectory)
                 {
-                    coords[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+                    let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
+                    let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
+                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold)
+                    {
+                        coords[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+                    }
                 }
+            })
+            let coords_final = coords
+            if(coords[0].length < 2)
+            {
+                coords_final = coords[0][0]
             }
-        })
-        finalGeoJSON[0].features.push({
-            "type": "Feature",
-            "geometry": {
-                "type": "MultiLineString",
-                "coordinates": coords,
-            },
-            "properties": {
-                "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),   
-                "primary_type": trajectory.Primary_Type,
-                "description": trajectory.Description,
-                "year": trajectory.Year,
-                "lineWidth": 0.1,
-                "Longitude": trajectory.Longitude,
-                "Latitude": trajectory.Latitude,
-                "date": trajectory.Date,
-                "location_description": trajectory.Location_Description  
-            }
-        });
-        //Delete checked value
-        otherData.pop(trajectory);
+            finalGeoJSON[0].features.push({
+                "type": "Feature",
+                "geometry": {
+                    "type": `${coords[0].length > 1 ? "MultiLineString" : "Point"}`,
+                    "coordinates": coords_final,
+                },
+                "properties": {
+                    "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),   
+                    "primary_type": trajectory.Primary_Type,
+                    "description": trajectory.Description,
+                    "year": trajectory.Year,
+                    "lineWidth": 0.1,
+                    "Longitude": trajectory.Longitude,
+                    "Latitude": trajectory.Latitude,
+                    "date": trajectory.Date,
+                    "location_description": trajectory.Location_Description  
+                }
+            });
+            //Delete checked value
+            otherData.pop(trajectory);
+        }
     });
     console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
     return finalGeoJSON;
@@ -77,11 +85,11 @@ generateTwitterGEOJSON = (data) =>
 
     data.forEach((tweet)=>
     {
-        let coords = [[[tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]]]];
+        let coords = [tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]];
         tweetfinalGeoJSON[0].features.push({
             "type": "Feature",
             "geometry": {
-                "type": "MultiLineString",
+                "type": "Point",
                 "coordinates": coords,
             },
             "properties": {

@@ -36,8 +36,9 @@ const OPTIONS = {
 };
 
 const DATA_URL = {
-	CHICAGO_TWEET: 'http://api.myjson.com/bins/unbgw',  // temp tweets api
-	CHICAGO_TRAJECTORY: 'http://api.myjson.com/bins/1b6z54',  // temp trajectories api
+	CHICAGO_TWEET: '/tweetmap',  // temp tweets api
+	CHICAGO_TRAJECTORY: '/tweetmap',  // temp trajectories api
+	//CHICAGO_TRAJECTORY: 'http://api.myjson.com/bins/1b6z54'
 }
 
 // for hex layers
@@ -75,17 +76,17 @@ const renderLayer = () => {
 	const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
 	optionsTrajectory.visible = visibleTrajectoryValue;
 
-	const chicagoTweetLayer = new deck.HexagonLayer({
-		id: 'chicago-tweet-layer',
-		colorRange: COLOR_RANGE,
-		lightSettings: LIGHT_SETTINGS,
-		data: chicago_tweet_data,
-		elevationRange: [0, 800],
-		elevationScale: 4,
-		getPosition: d => d,
-		opacity: 0.4,
-		...optionsTweet
-	});
+	// const chicagoTweetLayer = new deck.HexagonLayer({
+	// 	id: 'chicago-tweet-layer',
+	// 	colorRange: COLOR_RANGE,
+	// 	lightSettings: LIGHT_SETTINGS,
+	// 	data: chicago_tweet_data,
+	// 	elevationRange: [0, 800],
+	// 	elevationScale: 4,
+	// 	getPosition: d => d,
+	// 	opacity: 0.4,
+	// 	...optionsTweet
+	// });
 
 	const chicagoTrajectoryLayer = new deck.GeoJsonLayer({
 		id: 'chicago-trajectory-layer',
@@ -93,15 +94,31 @@ const renderLayer = () => {
 		stroked: true,
 		lineWidthMinPixels: 3,
 		lineJointRounded: true,
+		getFillColor: d => [204, 0, 0, 200],
+		getLineColor: d => [204, 0, 0, 200],
+		onHover: i => console.log('Hovered:', ""),
+		getRadius: d => 60,
+		radiusMinPixels: 60,
+		...optionsTrajectory
+	});
+
+	const chicagoTweetGeo= new deck.GeoJsonLayer({
+		id: 'chicago-tweet-geo-layer',
+		data: chicago_tweet_data,
+		stroked: true,
+		lineWidthMinPixels: 3,
+		lineJointRounded: true,
 		getFillColor: d => [0, 255, 255, 200],
 		getLineColor: d => [0, 153, 153, 255],
+		onHover: info => console.log('Hovered:', info),
 		getRadius: d => 60,
 		radiusMinPixels: 60,
 		...optionsTrajectory
 	});
 
 	deckgl.setProps({
-		layers: [chicagoTweetLayer, chicagoTrajectoryLayer]
+		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeo]
+		layers: [chicagoTrajectoryLayer, chicagoTweetGeo]
 	});
 };
 
@@ -110,14 +127,14 @@ const renderLayer = () => {
  * specified in DATA_URL. Called once only.
  */
 const initialiseData = async() => {
-	const response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY);
-	chicago_trajectory_data = await response_chicago_trajectory.json();
+	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY);
+	response_chicago_trajectory = await response_chicago_trajectory.json();
+	
+	chicago_trajectory_data = response_chicago_trajectory.trajectory[0]
+	chicago_tweet_data = response_chicago_trajectory.tweets[0]
 
-	// let tweet_array = [];
-	const response_chicago_tweet = await fetch(DATA_URL.CHICAGO_TWEET);
-	json = await response_chicago_tweet.json();
-	chicago_tweet_data = json.map(datum => datum.coordinates[0].coordinates);
-
+	console.log(chicago_trajectory_data)
+	console.log(chicago_tweet_data)
 	renderLayer();
 };
 
