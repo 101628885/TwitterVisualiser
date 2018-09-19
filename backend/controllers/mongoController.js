@@ -3,7 +3,7 @@ const tweet = require('../models/tweet_schema');
 const crime = require('../models/crime_schema');
 const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
-
+const connectionTimeout = 1000;
 
 const databaseMelb = { url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
 //const databaseMelb = { url : "mongodb://localhost:27017/tweets", type: "Testing"};
@@ -18,34 +18,40 @@ init();
 //Create DB connection handles and export them
 function init()
 {
-
-	let dbMelb = mongoose.createConnection(databaseMelb.url);
+	let dbMelb = mongoose.createConnection(databaseMelb.url, {connectTimeoutMS: connectionTimeout});
 	let tweetMelb = dbMelb.model('tweets');
-
+	
 	dbMelb.on('error', ()=>{
-		console.log("Failed to connect to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url)
+		console.log("Failed to connect to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url);
+		console.log("This will terminate the NodeJS process.");
+		process.exit(1);
 	});
 
 	dbMelb.on('open', ()=>{
 		console.log("Connected to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url)
 	});
+	
 
-	let dbChicago = mongoose.createConnection(databaseChicago.url);
+	let dbChicago = mongoose.createConnection(databaseChicago.url, {connectTimeoutMS: connectionTimeout});
 	let tweetChicago = dbChicago.model('tweets');
 
 	dbChicago.on('error', ()=>{
 		console.log("Failed to connect to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
+		console.log("This will terminate the NodeJS process.");
+		process.exit(1);
 	});
 
 	dbChicago.on('open', ()=>{
 		console.log("Connected to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
 	});
 
-	let dbChicagoCrime = mongoose.createConnection(databaseChicagoCrime.url);
+	let dbChicagoCrime = mongoose.createConnection(databaseChicagoCrime.url, {connectTimeoutMS: connectionTimeout});
 	let chicagoCrime = dbChicagoCrime.model('crime');
 
 	dbChicagoCrime.on('error', ()=>{
 		console.log("Failed to connect to the Chicago Crime DB at", databaseChicagoCrime.url)
+		console.log("This will terminate the NodeJS process.");
+		process.exit(1);
 	});
 
 	dbChicagoCrime.on('open', ()=>{
@@ -55,6 +61,7 @@ function init()
 	module.exports.tweetMelb = tweetMelb;
 	module.exports.tweetChicago = tweetChicago;
 	module.exports.chicagoCrime = chicagoCrime;
+
 
 
 }

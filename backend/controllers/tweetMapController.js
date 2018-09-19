@@ -48,6 +48,27 @@ calculateTrajectoryGEOJSON = (data) =>
             {
                 coords_final = coords[0][0]
             }
+
+            // Uncomment if required, fixing merge conflict
+            // finalGeoJSON[0].features.push({
+            //     "type": "Feature",
+            //     "geometry": {
+            //         "type": "MultiLineString",
+            //         "coordinates": coords,
+            //     },
+            //     "properties": {
+            //         "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),   
+            //         "primary_type": trajectory.Primary_Type,
+            //         "description": trajectory.Description,
+            //         "year": trajectory.Year,
+            //         "lineWidth": 0.3,
+            //         "Longitude": trajectory.Longitude,
+            //         "Latitude": trajectory.Latitude,
+            //         "date": trajectory.Date,
+            //         "location_description": trajectory.Location_Description  
+            //     }
+            // });
+
             finalGeoJSON[0].features.push({
                 "type": "Feature",
                 "geometry": {
@@ -66,10 +87,58 @@ calculateTrajectoryGEOJSON = (data) =>
                     "location_description": trajectory.Location_Description  
                 }
             });
+
             //Delete checked value
             otherData.pop(trajectory);
         }
+
+        switch(trajectory.Primary_Type) 
+        {
+            case "BATTERY":
+                trajectory.Primary_Type = "ASSAULT";
+                break;
+            case "BURGLARY":
+                trajectory.Primary_Type = "THEFT";
+                break;
+            case "CRIM SEXUAL ASSAULT":
+                trajectory.Primary_Type = "SEX OFFENSE";
+                break;
+            case "CRIMINAL TRESPASS":
+                trajectory.Primary_Type = "OTHER OFFENSE";
+                break;
+            case "DECEPTIVE PRACTICE":
+                trajectory.Primary_Type = "OTHER OFFENSE";
+                break;
+            case "INTERFERENCE WITH PUBLIC OFFICER":
+                trajectory.Primary_Type = "OTHER OFFENSE";
+                break;
+            case "INTIMIDATION":
+                trajectory.Primary_Type = "ASSAULT";
+                break;
+            case "LIQUOR LAW VIOLATION":
+                trajectory.Primary_Type = "OTHER OFFENSE";
+                break;
+            case "MOTOR VEHICLE THEFT":
+                trajectory.Primary_Type = "THEFT";
+                break;
+            case "PUBLIC PEACE VIOLATION":
+                trajectory.Primary_Type = "OTHER OFFENSE";
+                break;
+            case "ROBBERY":
+                trajectory.Primary_Type = "THEFT";
+                break;
+            case "STALKING":
+                trajectory.Primary_Type = "SEX OFFENSE";
+                break;
+            case "WEAPONS VIOLATION":
+                trajectory.Primary_Type = "ASSAULT";
+                break;
+        }
+
+        //Delete checked value
+        otherData.pop(trajectory);
     });
+    
     console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
     return finalGeoJSON;
 }
