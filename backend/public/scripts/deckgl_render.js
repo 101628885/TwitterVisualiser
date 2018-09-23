@@ -13,6 +13,7 @@ const INITIAL_VIEW_STATE = {
 // initial data variables
 let chicago_tweet_data = null;
 let chicago_trajectory_data = null;
+let centroid_data = null;
 
 // array of options available to the user
 const OPTIONS = {
@@ -60,11 +61,11 @@ function filterMap() {
 	if($('#limit').val() != "" && typeof parseInt($('#limit').val()) == 'number')
 		query.limit = $('#limit').val();
 	query.Year = $('#year').val();
-	console.log(query)
+	// console.log(query)
 	axios.post('/tweetMap', query)
 	.then((res) => 
 	{
-		chicago_trajectory_data = res.data.trajectory[0]
+		chicago_trajectory_data = res.data[0].trajectory[0]
 		renderLayers();
 	});
 }
@@ -153,6 +154,21 @@ const renderLayers = () => {
 		...optionsTrajectory
 	});
 
+	const centroidLayer =	new deck.GeoJsonLayer({
+		id: 'centroid-layer',
+		data: centroid_data,
+		stroked: true,
+		lineWidthMinPixels: 3,
+		lineJointRounded: true,
+		getFillColor: d => [241, 206, 74, 100],
+		getLineColor: d => [241, 206, 74, 100],
+		getRadius: d => 60,
+		radiusMinPixels: 60,
+		pickable: true,
+		onHover: updateTrajectoryLayerTooltip,
+	});
+
+
 	const chicagoTweetGeoLayer = new deck.GeoJsonLayer({
 		id: 'chicago-tweet-geo-layer',
 		data: chicago_tweet_data,
@@ -169,7 +185,7 @@ const renderLayers = () => {
 
 	deckgl.setProps({
 		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeoLayer]
-		layers: [chicagoTrajectoryLayer, chicagoTweetLayer]
+		layers: [chicagoTrajectoryLayer, chicagoTweetLayer, centroidLayer]
 	});
 	$('.loader').hide()
 };
@@ -178,18 +194,21 @@ const renderLayers = () => {
  * initialiseData() initialises the global data variables by fetching data from the endpoints
  * specified in DATA_URL. Called once only.
  */
-const initialiseData = async() => {
-	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY);
-	response_chicago_trajectory = await response_chicago_trajectory.json();
-	
-	chicago_trajectory_data = response_chicago_trajectory.trajectory[0];
+const initialiseData = async () => {
+	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY).then(res => res.json());
+	// response_chicago_trajectory = await response_chicago_trajectory.json();
+	console.log(response_chicago_trajectory);
+	chicago_trajectory_data = response_chicago_trajectory.trajectory.finalGeoJSON[0];
 	chicago_tweet_data = response_chicago_trajectory
 	.tweets[0]
 	.features
 	.map(tweet => (tweet.geometry.coordinates));
 
-	console.log(chicago_trajectory_data)
-	console.log(chicago_tweet_data)
+	centroid_data = response_chicago_trajectory.trajectory.centroids;
+	console.log(centroid_data);
+
+	// console.log(chicago_trajectory_data)
+	// console.log(chicago_tweet_data)
 	renderLayers();
 };
 
