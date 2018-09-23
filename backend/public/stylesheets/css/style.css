@@ -107,6 +107,18 @@ img:not(#map img) {
   right: 0;
 }
 
+#tooltip {
+  font-size: 11px;
+  position: absolute;
+  padding: 4px;
+  margin: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  max-width: 300px;
+  z-index: 9;
+  pointer-events: none;
+}
+
 .loader {
   position: absolute;
   top: 50%;

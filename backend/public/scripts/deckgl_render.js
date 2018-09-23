@@ -5,7 +5,7 @@ const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoidHJpcHBhbG9za2kiLCJhIjoiY2psMGFyZ3A1MTMx
 const INITIAL_VIEW_STATE = {
 	latitude: 41.88,
 	longitude: -87.62,
-	zoom: 11,
+	zoom: 12,
 	pitch: 40.5,
 	bearing: 0,
 };
@@ -69,6 +69,42 @@ function filterMap() {
 	});
 }
 
+const updateTrajectoryLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.getElementById('tooltip');
+		if (object) {
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `
+				<div>${object.geometry.coordinates[0]}</div>
+			`;
+		} else {
+			tooltip.innerHTML = '';
+		}
+	} catch(e) {
+		// kaksoispite dededede
+	}
+};
+
+const updateTweetLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.getElementById('tooltip');
+		if (object) {
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `
+				<div>latitude: ${object.centroid[0]}</div>
+				<div>longitude: ${object.centroid[0]}</div>
+				<div>${object.points.length} tweet${(object.points.length === 1) ? '' : 's'}</div>
+			`;
+		} else {
+			tooltip.innerHTML = '';
+		}
+	} catch(e) {
+		// kaksoispite dededede
+	}
+};
+
 /**
  * renderLayers() updates the data layer(s) according to changes in the options and updates
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
@@ -97,6 +133,8 @@ const renderLayers = () => {
 		getPosition: d => d,
 		opacity: 0.4,
 		coverage: 0.8,
+		pickable: true,
+		onHover: updateTweetLayerTooltip,
 		...optionsTweet
 	});
 
@@ -108,9 +146,10 @@ const renderLayers = () => {
 		lineJointRounded: true,
 		getFillColor: d => [204, 0, 0, 200],
 		getLineColor: d => [204, 0, 0, 200],
-		onHover: i => console.log('Hovered:', ""),
 		getRadius: d => 60,
 		radiusMinPixels: 60,
+		pickable: true,
+		onHover: updateTrajectoryLayerTooltip,
 		...optionsTrajectory
 	});
 
