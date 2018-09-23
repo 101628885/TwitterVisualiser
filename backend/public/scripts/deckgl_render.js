@@ -1,20 +1,32 @@
-/**
- * TODO:
- * 1. code cleanup, there's some code repetition in a few places
- * 2. add some loading animation while data is being loaded
- * 3. filtering - time, crime type
- */
-
+// registered mapbox api access token
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoidHJpcHBhbG9za2kiLCJhIjoiY2psMGFyZ3A1MTMxMTNxbG1qb3V6YWV0YyJ9.qF4x-o4Z7E6iwYedWjGo6Q';
 
+// initial settings for the deckgl instance
 const INITIAL_VIEW_STATE = {
 	latitude: 41.88,
 	longitude: -87.62,
 	zoom: 11,
-	pitch: 50,
+	pitch: 40.5,
 	bearing: 0,
 };
 
+// initial data variables
+let chicago_tweet_data = null;
+let chicago_trajectory_data = null;
+
+// array of options available to the user
+const OPTIONS = {
+	TWEET: ['radius', 'visible', 'extruded'],
+	TRAJECTORY: ['visible']
+};
+
+// source data urls
+const DATA_URL = {
+	CHICAGO_TWEET: '/tweetmap',
+	CHICAGO_TRAJECTORY: '/tweetmap',
+}
+
+// main deck.gl object
 const deckgl = new deck.DeckGL({
 	container: 'deckmap',
 	mapStyle: 'mapbox://styles/mapbox/dark-v9',
@@ -22,24 +34,7 @@ const deckgl = new deck.DeckGL({
 	...INITIAL_VIEW_STATE
 });
 
-let chicago_tweet_data = null;
-let chicago_trajectory_data = null;
-
-// Array of options available to the user
-// radius in metres
-const OPTIONS = {
-	TWEET: ['radius', 'visible', 'extruded'],
-	TRAJECTORY: ['visible']
-};
-
-const DATA_URL = {
-	CHICAGO_TWEET: '/tweetmap',  // temp tweets api
-	CHICAGO_TRAJECTORY: '/tweetmap',  // temp trajectories api
-	//CHICAGO_TRAJECTORY: 'http://api.myjson.com/bins/1b6z54'
-	TRIPS: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/trips.json',
-}
-
-// for hex layers
+// hex layer color range
 const COLOR_RANGE = [
 	[1, 152, 189],
 	[73, 227, 206],
@@ -49,6 +44,7 @@ const COLOR_RANGE = [
 	[209, 55, 78]
 ];
 
+// hex layer light range
 const LIGHT_SETTINGS = {
 	numberOfLights: 1,
 	ambientRatio: 0.4,
@@ -56,9 +52,7 @@ const LIGHT_SETTINGS = {
 	specularRatio: 0.2,
 };
 
-
-function filterMap()
-{
+function filterMap() {
 	$('.loader').show()
 	let query = {}
 	if($('#type').val().toUpperCase() != "ALL")
@@ -71,16 +65,15 @@ function filterMap()
 	.then((res) => 
 	{
 		chicago_trajectory_data = res.data.trajectory[0]
-		renderLayer();
+		renderLayers();
 	});
-	
 }
 
 /**
- * renderLayer() updates the data layer(s) according to changes in the options and updates
+ * renderLayers() updates the data layer(s) according to changes in the options and updates
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
  */
-const renderLayer = () => {
+const renderLayers = () => {
 	const optionsTweet = {};
 	const optionsTrajectory = {};
 
@@ -135,16 +128,6 @@ const renderLayer = () => {
 		...optionsTweet
 	});
 
-	// const movingTrajectoryLayer = new deck.TripsLayer({
-	// 	id: 'moving-trajectory-layer',
-	// 	data: DATA_URL.TRIPS,
-	// 	getPath: d => d.segments,
-	// 	getColor: d => (d.vendor === 0 ? [253, 128, 93] : [23, 184, 190]),
-	// 	opacity: 0.3,
-	// 	strokeWidth: 2,
-	// 	trailLength: 180,
-	// });
-
 	deckgl.setProps({
 		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeoLayer]
 		layers: [chicagoTrajectoryLayer, chicagoTweetLayer]
@@ -168,10 +151,10 @@ const initialiseData = async() => {
 
 	console.log(chicago_trajectory_data)
 	console.log(chicago_tweet_data)
-	renderLayer();
+	renderLayers();
 };
 
-// Assign the renderLayer() function as an event handler to each input control
+// Assign the renderLayers() function as an event handler to each input control
 const registerEventHandlers = (options) => {
 	// there's probably a better way to do this
 	options.forEach(key => {
@@ -190,14 +173,17 @@ const registerEventHandlers = (options) => {
 		
 		if (inputType === "checkbox") {
 			console.log("Registering " + key + idSuffix);
-			document.getElementById(key + idSuffix).onclick = renderLayer; }
+			document.getElementById(key + idSuffix).onclick = renderLayers; }
 		else
-			document.getElementById(key + idSuffix).oninput = renderLayer;
+			document.getElementById(key + idSuffix).oninput = renderLayers;
 	});
 };
 
-for (var key in OPTIONS) {
-	registerEventHandlers(OPTIONS[key]);
+const _init = () => {
+	initialiseData();
+	for (var key in OPTIONS) {
+		registerEventHandlers(OPTIONS[key]);
+	}	
 }
 
-initialiseData();
+_init();
