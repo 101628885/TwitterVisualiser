@@ -33,6 +33,7 @@
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "serve-favicon": "~2.4.5",
+    "skmeans": "^0.9.8",
     "sleep": "^5.2.3",
     "sparql": "^0.1.3",
     "threads": "^0.12.0",
