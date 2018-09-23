@@ -19,10 +19,7 @@ const deckgl = new deck.DeckGL({
 	container: 'deckmap',
 	mapStyle: 'mapbox://styles/mapbox/dark-v9',
 	mapboxApiAccessToken: MAPBOX_ACCESS_TOKEN,
-	longitude: INITIAL_VIEW_STATE.longitude,
-	latitude: INITIAL_VIEW_STATE.latitude,
-	zoom: INITIAL_VIEW_STATE.zoom,
-	pitch: INITIAL_VIEW_STATE.pitch,
+	...INITIAL_VIEW_STATE
 });
 
 let chicago_tweet_data = null;
@@ -39,6 +36,7 @@ const DATA_URL = {
 	CHICAGO_TWEET: '/tweetmap',  // temp tweets api
 	CHICAGO_TRAJECTORY: '/tweetmap',  // temp trajectories api
 	//CHICAGO_TRAJECTORY: 'http://api.myjson.com/bins/1b6z54'
+	TRIPS: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/trips.json',
 }
 
 // for hex layers
@@ -96,17 +94,18 @@ const renderLayer = () => {
 	const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
 	optionsTrajectory.visible = visibleTrajectoryValue;
 
-	// const chicagoTweetLayer = new deck.HexagonLayer({
-	// 	id: 'chicago-tweet-layer',
-	// 	colorRange: COLOR_RANGE,
-	// 	lightSettings: LIGHT_SETTINGS,
-	// 	data: chicago_tweet_data,
-	// 	elevationRange: [0, 800],
-	// 	elevationScale: 4,
-	// 	getPosition: d => d,
-	// 	opacity: 0.4,
-	// 	...optionsTweet
-	// });
+	const chicagoTweetLayer = new deck.HexagonLayer({
+		id: 'chicago-tweet-layer',
+		colorRange: COLOR_RANGE,
+		lightSettings: LIGHT_SETTINGS,
+		data: chicago_tweet_data,
+		elevationRange: [0, 800],
+		elevationScale: 4,
+		getPosition: d => d,
+		opacity: 0.4,
+		coverage: 0.8,
+		...optionsTweet
+	});
 
 	const chicagoTrajectoryLayer = new deck.GeoJsonLayer({
 		id: 'chicago-trajectory-layer',
@@ -122,7 +121,7 @@ const renderLayer = () => {
 		...optionsTrajectory
 	});
 
-	const chicagoTweetGeo= new deck.GeoJsonLayer({
+	const chicagoTweetGeoLayer = new deck.GeoJsonLayer({
 		id: 'chicago-tweet-geo-layer',
 		data: chicago_tweet_data,
 		stroked: true,
@@ -133,12 +132,22 @@ const renderLayer = () => {
 		onHover: info => console.log('Hovered:', info),
 		getRadius: d => 60,
 		radiusMinPixels: 60,
-		...optionsTrajectory
+		...optionsTweet
 	});
 
+	// const movingTrajectoryLayer = new deck.TripsLayer({
+	// 	id: 'moving-trajectory-layer',
+	// 	data: DATA_URL.TRIPS,
+	// 	getPath: d => d.segments,
+	// 	getColor: d => (d.vendor === 0 ? [253, 128, 93] : [23, 184, 190]),
+	// 	opacity: 0.3,
+	// 	strokeWidth: 2,
+	// 	trailLength: 180,
+	// });
+
 	deckgl.setProps({
-		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeo]
-		layers: [chicagoTrajectoryLayer, chicagoTweetGeo]
+		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeoLayer]
+		layers: [chicagoTrajectoryLayer, chicagoTweetLayer]
 	});
 	$('.loader').hide()
 };
@@ -151,8 +160,11 @@ const initialiseData = async() => {
 	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY);
 	response_chicago_trajectory = await response_chicago_trajectory.json();
 	
-	chicago_trajectory_data = response_chicago_trajectory.trajectory[0]
-	chicago_tweet_data = response_chicago_trajectory.tweets[0]
+	chicago_trajectory_data = response_chicago_trajectory.trajectory[0];
+	chicago_tweet_data = response_chicago_trajectory
+	.tweets[0]
+	.features
+	.map(tweet => (tweet.geometry.coordinates));
 
 	console.log(chicago_trajectory_data)
 	console.log(chicago_tweet_data)
