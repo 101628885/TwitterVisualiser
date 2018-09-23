@@ -1,4 +1,5 @@
 const fs = require('fs');
+const skmeans = require("skmeans");
 const chicagoDataFactory = require('./chicagoDataFactory');
 const moment = require('moment')
 exports.getTweetMap = function (req, res) {
@@ -23,6 +24,7 @@ calculateTrajectoryGEOJSON = (data) =>
             "features": []
         }
     ];
+    let trajectoryOnlyGeoJSON = [];
 
     data.forEach((trajectory)=>
     {
@@ -88,6 +90,9 @@ calculateTrajectoryGEOJSON = (data) =>
                 }
             });
 
+            if (coords[0].length > 1)
+                coords.map((i) => trajectoryOnlyGeoJSON.push(i));
+
             //Delete checked value
             otherData.pop(trajectory);
         }
@@ -139,8 +144,29 @@ calculateTrajectoryGEOJSON = (data) =>
         otherData.pop(trajectory);
     });
     
+
+    let centroids = calculateCentroid(trajectoryOnlyGeoJSON);
+    
     console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
-    return finalGeoJSON;
+    return {finalGeoJSON, centroids};
+} 
+
+calculateCentroid = (trajectories) => {
+    return {
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "MultiLineString",
+                        "coordinates": [trajectories.map((i) => skmeans(i, 1).centroids[0])],
+                    },
+                    "properties": {
+                        "primary_type": "Centroid",
+                        "description": "a given centroid calculation",
+                        "lineWidth": 0.6,
+                    }
+                }]
+            };
 }
 
 generateTwitterGEOJSON = (data) =>
