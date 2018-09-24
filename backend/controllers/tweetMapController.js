@@ -71,6 +71,49 @@ calculateTrajectoryGEOJSON = (data) =>
             //     }
             // });
 
+            switch(trajectory.Primary_Type) 
+            {
+                case "BATTERY":
+                    trajectory.Primary_Type = "ASSAULT";
+                    break;
+                case "BURGLARY":
+                    trajectory.Primary_Type = "THEFT";
+                    break;
+                case "CRIM SEXUAL ASSAULT":
+                    trajectory.Primary_Type = "SEX OFFENSE";
+                    break;
+                case "CRIMINAL TRESPASS":
+                    trajectory.Primary_Type = "OTHER OFFENSE";
+                    break;
+                case "DECEPTIVE PRACTICE":
+                    trajectory.Primary_Type = "OTHER OFFENSE";
+                    break;
+                case "INTERFERENCE WITH PUBLIC OFFICER":
+                    trajectory.Primary_Type = "OTHER OFFENSE";
+                    break;
+                case "INTIMIDATION":
+                    trajectory.Primary_Type = "ASSAULT";
+                    break;
+                case "LIQUOR LAW VIOLATION":
+                    trajectory.Primary_Type = "OTHER OFFENSE";
+                    break;
+                case "MOTOR VEHICLE THEFT":
+                    trajectory.Primary_Type = "THEFT";
+                    break;
+                case "PUBLIC PEACE VIOLATION":
+                    trajectory.Primary_Type = "OTHER OFFENSE";
+                    break;
+                case "ROBBERY":
+                    trajectory.Primary_Type = "THEFT";
+                    break;
+                case "STALKING":
+                    trajectory.Primary_Type = "SEX OFFENSE";
+                    break;
+                case "WEAPONS VIOLATION":
+                    trajectory.Primary_Type = "ASSAULT";
+                    break;
+            }
+
             finalGeoJSON[0].features.push({
                 "type": "Feature",
                 "geometry": {
@@ -95,49 +138,6 @@ calculateTrajectoryGEOJSON = (data) =>
 
             //Delete checked value
             otherData.pop(trajectory);
-        }
-
-        switch(trajectory.Primary_Type) 
-        {
-            case "BATTERY":
-                trajectory.Primary_Type = "ASSAULT";
-                break;
-            case "BURGLARY":
-                trajectory.Primary_Type = "THEFT";
-                break;
-            case "CRIM SEXUAL ASSAULT":
-                trajectory.Primary_Type = "SEX OFFENSE";
-                break;
-            case "CRIMINAL TRESPASS":
-                trajectory.Primary_Type = "OTHER OFFENSE";
-                break;
-            case "DECEPTIVE PRACTICE":
-                trajectory.Primary_Type = "OTHER OFFENSE";
-                break;
-            case "INTERFERENCE WITH PUBLIC OFFICER":
-                trajectory.Primary_Type = "OTHER OFFENSE";
-                break;
-            case "INTIMIDATION":
-                trajectory.Primary_Type = "ASSAULT";
-                break;
-            case "LIQUOR LAW VIOLATION":
-                trajectory.Primary_Type = "OTHER OFFENSE";
-                break;
-            case "MOTOR VEHICLE THEFT":
-                trajectory.Primary_Type = "THEFT";
-                break;
-            case "PUBLIC PEACE VIOLATION":
-                trajectory.Primary_Type = "OTHER OFFENSE";
-                break;
-            case "ROBBERY":
-                trajectory.Primary_Type = "THEFT";
-                break;
-            case "STALKING":
-                trajectory.Primary_Type = "SEX OFFENSE";
-                break;
-            case "WEAPONS VIOLATION":
-                trajectory.Primary_Type = "ASSAULT";
-                break;
         }
 
         //Delete checked value
