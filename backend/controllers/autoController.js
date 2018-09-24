@@ -29,7 +29,6 @@ if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume f
     shouldResume = data.shouldResume;
 }
 
-
 setInterval(function(){
 
     if (shouldRun)

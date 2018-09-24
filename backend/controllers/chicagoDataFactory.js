@@ -66,72 +66,76 @@ async function getCrimeData()
 
 exports.saveCrimeData = async () =>
 {
-	console.log("Querying Chicago Crime DB...");
-	options =
-		{
-			method: "GET",
-			url: `https://data.cityofchicago.org/resource/6zsd-86xi.geojson`,
-			headers: {
-				'X-App-Token': process.env.CHICAGO_TOKEN
-			},
-		};
-
-	request(options, async function (error, response, body)
+	if (process.env.DISABLE_DEVELOPER_MODE)
 	{
-		let result = JSON.parse(body);
-		//console.log(result.features[0]); //working
+		console.log("Querying Chicago Crime DB...");
+		options =
+			{
+				method: "GET",
+				url: `https://data.cityofchicago.org/resource/6zsd-86xi.geojson`,
+				headers: {
+					'X-App-Token': process.env.CHICAGO_TOKEN
+				},
+			};
 
-		for (let feature in result.features)
+		request(options, async function (error, response, body)
 		{
-			//console.log(result.features[feature]); //all good
+			let result = JSON.parse(body);
+			//console.log(result.features[0]); //working
 
-			if (!(result.features[feature].properties.latitude == null)) //Don't bother saving if there is no location data
+			for (let feature in result.features)
 			{
-				console.log("Valid entry, storing ID", result.features[feature].properties.id);
-				chicagoCrime.findOne({ID: result.features[feature].properties.id}).lean().exec().then(async function (res) {
+				//console.log(result.features[feature]); //all good
 
-					if (!res)
-					{
-						console.log("Saving...");
-						let doc = new chicagoCrime();
+				if (!(result.features[feature].properties.latitude == null)) //Don't bother saving if there is no location data
+				{
+					console.log("Valid entry, storing ID", result.features[feature].properties.id);
+					chicagoCrime.findOne({ID: result.features[feature].properties.id}).lean().exec().then(async function (res) {
 
-						doc.ID = result.features[feature].properties.id;
-						doc.Case_Number = result.features[feature].properties.case_number;
-						doc.Date = moment(result.features[feature].properties.date).utcOffset(-360).utc().format(); 
-						doc.Block = result.features[feature].properties.block;
-						doc.IUCR = result.features[feature].properties.iucr;
-						doc.Primary_Type = result.features[feature].properties.primary_type;
-						doc.Description = result.features[feature].properties.description;
-						doc.Location_Description = result.features[feature].properties.location_description;
-						doc.Arrest = result.features[feature].properties.arrest;
-						doc.Domestic = result.features[feature].properties.domestic;
-						doc.Beat = result.features[feature].properties.beat;
-						doc.District = result.features[feature].properties.district;
-						doc.Ward = result.features[feature].properties.ward;
-						doc.Community_Area = result.features[feature].properties.community_area;
-						doc.FBI_Code = result.features[feature].properties.fbi_code;
-						doc.X_Coordinate = result.features[feature].properties.x_coordinate;
-						doc.Y_Coordinate = result.features[feature].properties.y_coordinate;
-						doc.Year = result.features[feature].properties.year;
-						doc.Updated_On = result.features[feature].properties.updated_on;
-						doc.Latitude = result.features[feature].properties.latitude;
-						doc.Longitude = result.features[feature].properties.longitude;
-						doc.Location = "("+result.features[feature].properties.latitude+", "+result.features[feature].properties.longitude+")";
-						await doc.save()
-					}
-					else
-					{
-						//console.log("Dupe...");
-					}
-				});
+						if (!res)
+						{
+							console.log("Saving...");
+							let doc = new chicagoCrime();
+
+							doc.ID = result.features[feature].properties.id;
+							doc.Case_Number = result.features[feature].properties.case_number;
+							doc.Date = moment(result.features[feature].properties.date).utcOffset(-360).utc().format(); 
+							doc.Block = result.features[feature].properties.block;
+							doc.IUCR = result.features[feature].properties.iucr;
+							doc.Primary_Type = result.features[feature].properties.primary_type;
+							doc.Description = result.features[feature].properties.description;
+							doc.Location_Description = result.features[feature].properties.location_description;
+							doc.Arrest = result.features[feature].properties.arrest;
+							doc.Domestic = result.features[feature].properties.domestic;
+							doc.Beat = result.features[feature].properties.beat;
+							doc.District = result.features[feature].properties.district;
+							doc.Ward = result.features[feature].properties.ward;
+							doc.Community_Area = result.features[feature].properties.community_area;
+							doc.FBI_Code = result.features[feature].properties.fbi_code;
+							doc.X_Coordinate = result.features[feature].properties.x_coordinate;
+							doc.Y_Coordinate = result.features[feature].properties.y_coordinate;
+							doc.Year = result.features[feature].properties.year;
+							doc.Updated_On = result.features[feature].properties.updated_on;
+							doc.Latitude = result.features[feature].properties.latitude;
+							doc.Longitude = result.features[feature].properties.longitude;
+							doc.Location = "("+result.features[feature].properties.latitude+", "+result.features[feature].properties.longitude+")";
+							await doc.save()
+						}
+						else
+						{
+							//console.log("Dupe...");
+						}
+					});
+				}
+				else
+				{
+					//console.log("No location data, skipping...")
+				}
 			}
-			else
-			{
-				//console.log("No location data, skipping...")
-			}
-		}
 
-	});
+		});
+	}
+
 };
 
 
