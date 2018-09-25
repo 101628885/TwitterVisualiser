@@ -12,7 +12,8 @@ const INITIAL_VIEW_STATE = {
 
 // initial data variables
 let chicago_tweet_data = null;
-let chicago_trajectory_data = null;
+let chicago_crime_data = [];
+let chicago_trajectory_data = [];
 let centroid_data = null;
 
 // array of options available to the user
@@ -76,8 +77,35 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 		if (object) {
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = ``;
+			object.geometry.coordinates[0].forEach(item => {
+				tooltip.innerHTML += `
+					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
+				`;
+			});
+			tooltip.innerHTML += `
+				<div>Crime Type: ${object.properties.primary_type}</div>
+			`;
+		} else {
+			tooltip.innerHTML = '';
+		}
+	} catch(e) {
+		// kaksoispite dededede
+	}
+}
+
+const updateCrimeLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.getElementById('tooltip');
+		if (object) {
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
 			tooltip.innerHTML = `
-				<div>${object.geometry.coordinates[0]}</div>
+				<div>Latitude: ${object.geometry.coordinates[1]}</div>
+				<div>Longitude: ${object.geometry.coordinates[0]}</div>
+				<div>Crime Type: ${object.properties.primary_type}</div>
+				<div>Description: ${object.properties.description}</div>
+				<div>Location: ${object.properties.location_description}</div>
 			`;
 		} else {
 			tooltip.innerHTML = '';
@@ -94,9 +122,9 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
 			tooltip.innerHTML = `
-				<div>latitude: ${object.centroid[0]}</div>
-				<div>longitude: ${object.centroid[0]}</div>
-				<div>${object.points.length} tweet${(object.points.length === 1) ? '' : 's'}</div>
+				<div>Latitude: ${object.centroid[1]}</div>
+				<div>Longitude: ${object.centroid[0]}</div>
+				<div>${object.points.length} Tweet${(object.points.length === 1) ? '' : 's'}</div>
 			`;
 		} else {
 			tooltip.innerHTML = '';
@@ -154,6 +182,21 @@ const renderLayers = () => {
 		...optionsTrajectory
 	});
 
+	const chicagoCrimeLayer = new deck.GeoJsonLayer({
+		id: 'chicago-crime-layer',
+		data: chicago_crime_data,
+		stroked: true,
+		lineWidthMinPixels: 3,
+		lineJointRounded: true,
+		getFillColor: d => [204, 0, 0, 200],
+		getLineColor: d => [204, 0, 0, 200],
+		getRadius: d => 60,
+		radiusMinPixels: 60,
+		pickable: true,
+		onHover: updateCrimeLayerTooltip,
+		...optionsTrajectory
+	});
+
 	const centroidLayer =	new deck.GeoJsonLayer({
 		id: 'centroid-layer',
 		data: centroid_data,
@@ -165,7 +208,6 @@ const renderLayers = () => {
 		getRadius: d => 60,
 		radiusMinPixels: 60,
 		pickable: true,
-		onHover: updateTrajectoryLayerTooltip,
 	});
 
 
@@ -185,7 +227,7 @@ const renderLayers = () => {
 
 	deckgl.setProps({
 		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeoLayer]
-		layers: [chicagoTrajectoryLayer, chicagoTweetLayer, centroidLayer]
+		layers: [chicagoCrimeLayer, chicagoTrajectoryLayer, chicagoTweetLayer, centroidLayer]
 	});
 	$('.loader').hide()
 };
@@ -197,15 +239,21 @@ const renderLayers = () => {
 const initialiseData = async () => {
 	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY).then(res => res.json());
 	// response_chicago_trajectory = await response_chicago_trajectory.json();
-	console.log(response_chicago_trajectory);
-	chicago_trajectory_data = response_chicago_trajectory.trajectory.finalGeoJSON[0];
+	//console.log(response_chicago_trajectory);
+	response_chicago_trajectory.trajectory.finalGeoJSON[0].features.forEach(item => {
+		if (item.geometry.type == "MultiLineString") {
+			chicago_trajectory_data.push(item);
+		} else {
+			chicago_crime_data.push(item);
+		}
+	});
 	chicago_tweet_data = response_chicago_trajectory
 	.tweets[0]
 	.features
 	.map(tweet => (tweet.geometry.coordinates));
 
 	centroid_data = response_chicago_trajectory.trajectory.centroids;
-	console.log(centroid_data);
+	//console.log(centroid_data);
 
 	// console.log(chicago_trajectory_data)
 	// console.log(chicago_tweet_data)
