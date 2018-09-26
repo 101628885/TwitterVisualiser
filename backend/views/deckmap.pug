@@ -6,7 +6,7 @@ block content
 	#container
 		#deckmap
 		.loader
-		#tooltip
+		#tooltip(style="visibility: hidden")
 		#control-panel
 			.container-fluid
 				.row.my-1
@@ -32,6 +32,15 @@ block content
 						.custom-control.custom-checkbox.mb-2
 							input#visible-trajectory-handle.custom-control-input(checked name="visible-trajectory-handle", type="checkbox")
 							label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Visible
+
+				.row.my-3
+					.col-md-12
+						p.h6 Centroid Layer
+						.custom-control.custom-checkbox.mb-2
+							input#visible-centroid-handle.custom-control-input(checked name="visible-centroid-handle", type="checkbox")
+							label.custom-control-label(for="visible-centroid-handle", hidden = isHidden) Visible
+
+
 				.row
 					.col-md-12
 						+queryFilter

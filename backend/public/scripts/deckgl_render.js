@@ -18,7 +18,8 @@ let centroid_data = null;
 // array of options available to the user
 const OPTIONS = {
 	TWEET: ['radius', 'visible', 'extruded'],
-	TRAJECTORY: ['visible']
+	TRAJECTORY: ['visible'],
+	CENTROID: ['visible']
 };
 
 // source data urls
@@ -61,26 +62,45 @@ function filterMap() {
 	if($('#limit').val() != "" && typeof parseInt($('#limit').val()) == 'number')
 		query.limit = $('#limit').val();
 	query.Year = $('#year').val();
-	// console.log(query)
+	
 	axios.post('/tweetMap', query)
 	.then((res) => 
 	{
-		chicago_trajectory_data = res.data[0].trajectory[0]
+		console.log(JSON.stringify(res));
+		chicago_trajectory_data = res.data.trajectory.finalGeoJSON;
 		renderLayers();
 	});
+	
 }
 
 const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.getElementById('tooltip');
 		if (object) {
+			tooltip.style.visibility = 'visible';
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
-			tooltip.innerHTML = `
-				<div>${object.geometry.coordinates[0]}</div>
-			`;
+			tooltip.innerHTML = (object.geometry.coordinates[1]) ? `<div>Crime at: ${object.geometry.coordinates[0]}, ${object.geometry.coordinates[1]}</div>` : `<div>Trajectory at: ${object.geometry.coordinates[0]}</div>`;
 		} else {
 			tooltip.innerHTML = '';
+			tooltip.style.visibility = 'hidden';
+		}
+	} catch(e) {
+		// kaksoispite dededede
+	}
+};
+
+const updateCentroidLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.getElementById('tooltip');
+		if (object) {
+			tooltip.style.visibility = 'visible';
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `<div>Centroid at: ${object.geometry.coordinates[0]}, ${object.geometry.coordinates[1]}</div>`;
+		} else {
+			tooltip.innerHTML = '';
+			tooltip.style.visibility = 'hidden';
 		}
 	} catch(e) {
 		// kaksoispite dededede
@@ -91,6 +111,7 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.getElementById('tooltip');
 		if (object) {
+			tooltip.style.visibility = 'visible';
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
 			tooltip.innerHTML = `
@@ -100,6 +121,7 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 			`;
 		} else {
 			tooltip.innerHTML = '';
+			tooltip.style.visibility = 'hidden';
 		}
 	} catch(e) {
 		// kaksoispite dededede
@@ -111,33 +133,29 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
  */
 const renderLayers = () => {
+
+
 	const optionsTweet = {};
 	const optionsTrajectory = {};
+	const optionsCentroid = {};
 
 	const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
 	document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
 	optionsTweet.radius = radiusTweetValue;
+
 	const visibleTweetValue = document.getElementById('visible-tweet-handle').checked;
 	optionsTweet.visible = visibleTweetValue;
+
 	const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
 	optionsTweet.extruded = extrudedTweetValue;
+
 	const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
 	optionsTrajectory.visible = visibleTrajectoryValue;
 
-	const chicagoTweetLayer = new deck.HexagonLayer({
-		id: 'chicago-tweet-layer',
-		colorRange: COLOR_RANGE,
-		lightSettings: LIGHT_SETTINGS,
-		data: chicago_tweet_data,
-		elevationRange: [0, 800],
-		elevationScale: 4,
-		getPosition: d => d,
-		opacity: 0.4,
-		coverage: 0.8,
-		pickable: true,
-		onHover: updateTweetLayerTooltip,
-		...optionsTweet
-	});
+	const centroidValue = document.getElementById('visible-centroid-handle').checked;
+	optionsCentroid.visible = centroidValue;
+
+
 
 	const chicagoTrajectoryLayer = new deck.GeoJsonLayer({
 		id: 'chicago-trajectory-layer',
@@ -151,6 +169,7 @@ const renderLayers = () => {
 		radiusMinPixels: 60,
 		pickable: true,
 		onHover: updateTrajectoryLayerTooltip,
+		fp64: true,
 		...optionsTrajectory
 	});
 
@@ -159,13 +178,32 @@ const renderLayers = () => {
 		data: centroid_data,
 		stroked: true,
 		lineWidthMinPixels: 3,
-		lineJointRounded: true,
+		lineJointRounded: false,
 		getFillColor: d => [241, 206, 74, 100],
 		getLineColor: d => [241, 206, 74, 100],
-		getRadius: d => 60,
-		radiusMinPixels: 60,
+		getRadius: d => 20,
+		radiusMinPixels: 20,
 		pickable: true,
-		onHover: updateTrajectoryLayerTooltip,
+		onHover: updateCentroidLayerTooltip,
+		fp64: true,
+		...optionsCentroid
+	});
+
+	const chicagoTweetLayer = new deck.HexagonLayer({
+		id: 'chicago-tweet-layer',
+		colorRange: COLOR_RANGE,
+		lightSettings: LIGHT_SETTINGS,
+		data: chicago_tweet_data,
+		elevationRange: [0, 800],
+		elevationScale: 4,
+		getPosition: d => d,
+		opacity: 0.4,
+		coverage: 0.8,
+		pickable: true,
+		onHover: updateTweetLayerTooltip,
+		fp64: true,
+		z: 1,
+		...optionsTweet
 	});
 
 
@@ -180,12 +218,12 @@ const renderLayers = () => {
 		onHover: info => console.log('Hovered:', info),
 		getRadius: d => 60,
 		radiusMinPixels: 60,
+		fp64: true,
 		...optionsTweet
 	});
 
 	deckgl.setProps({
-		//layers: [chicagoTweetLayer, chicagoTrajectoryLayer, chicagoTweetGeoLayer]
-		layers: [chicagoTrajectoryLayer, chicagoTweetLayer, centroidLayer]
+		layers: [chicagoTrajectoryLayer, centroidLayer, chicagoTweetLayer]
 	});
 	$('.loader').hide()
 };
@@ -197,7 +235,7 @@ const renderLayers = () => {
 const initialiseData = async () => {
 	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY).then(res => res.json());
 	// response_chicago_trajectory = await response_chicago_trajectory.json();
-	console.log(response_chicago_trajectory);
+	//console.log(response_chicago_trajectory);
 	chicago_trajectory_data = response_chicago_trajectory.trajectory.finalGeoJSON[0];
 	chicago_tweet_data = response_chicago_trajectory
 	.tweets[0]
@@ -205,7 +243,6 @@ const initialiseData = async () => {
 	.map(tweet => (tweet.geometry.coordinates));
 
 	centroid_data = response_chicago_trajectory.trajectory.centroids;
-	console.log(centroid_data);
 
 	// console.log(chicago_trajectory_data)
 	// console.log(chicago_tweet_data)
@@ -223,10 +260,14 @@ const registerEventHandlers = (options) => {
 				break;
 			case OPTIONS.TWEET: 
 				idSuffix = "-tweet-handle";
-				break;
 			default: 
 				break;
 		}
+
+		//Ask Jason about doing this automagically
+		//Bodge for now soz
+		document.getElementById("visible-centroid-handle").onclick = renderLayers;
+
 		let inputType = document.getElementById(key + idSuffix).getAttribute("type");
 		
 		if (inputType === "checkbox") {
@@ -241,6 +282,7 @@ const _init = () => {
 	initialiseData();
 	for (var key in OPTIONS) {
 		registerEventHandlers(OPTIONS[key]);
+		console.log(key);
 	}	
 }
 

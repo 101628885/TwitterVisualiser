@@ -2,7 +2,7 @@ const fs = require('fs');
 const skmeans = require("skmeans");
 const chicagoDataFactory = require('./chicagoDataFactory');
 const moment = require('moment')
-exports.getTweetMap = function (req, res) {
+exports.getTweetMap = function(req, res) {
     let chicagoTestData = JSON.parse(fs.readFileSync('poc_chicago.json'));
 
     res.render('tweetmap', {
@@ -10,44 +10,39 @@ exports.getTweetMap = function (req, res) {
     })
 };
 
-
-calculateTrajectoryGEOJSON = (data) =>
-{
+//Why is this being called twice, fix
+calculateTrajectoryGEOJSON = (data) => {
     let timeStart = new Date();
     let tTimeThreshold = 180;
     let tDistThreshold = 1000;
     let otherData = data.slice(0, data.length);
-    
-    let finalGeoJSON = [
-        {
-            "type": "FeatureCollection",
-            "features": []
-        }
-    ];
+
+    let finalGeoJSON = [{
+        "type": "FeatureCollection",
+        "features": []
+    }];
     let trajectoryOnlyGeoJSON = [];
 
-    data.forEach((trajectory)=>
-    {
-        if (trajectory.Longitude != "" && trajectory.Latitude != "") 
-        {
-            let coords = [[[trajectory.Longitude, trajectory.Latitude]]];
-            otherData.forEach((othertrajectory)=>
-            {
+    data.forEach((trajectory) => {
+        if (trajectory.Longitude != "" && trajectory.Latitude != "") {
+            let coords = [
+                [
+                    [trajectory.Longitude, trajectory.Latitude]
+                ]
+            ];
+            otherData.forEach((othertrajectory) => {
 
-                if(othertrajectory.Primary_Type == trajectory.Primary_Type 
-                    && trajectory != othertrajectory)
-                {
+                if (othertrajectory.Primary_Type == trajectory.Primary_Type &&
+                    trajectory != othertrajectory) {
                     let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                     let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold)
-                    {
+                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
                         coords[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                     }
                 }
             })
             let coords_final = coords
-            if(coords[0].length < 2)
-            {
+            if (coords[0].length < 2) {
                 coords_final = coords[0][0]
             }
 
@@ -71,8 +66,7 @@ calculateTrajectoryGEOJSON = (data) =>
             //     }
             // });
 
-            switch(trajectory.Primary_Type) 
-            {
+            switch (trajectory.Primary_Type) {
                 case "BATTERY":
                     trajectory.Primary_Type = "ASSAULT";
                     break;
@@ -121,7 +115,7 @@ calculateTrajectoryGEOJSON = (data) =>
                     "coordinates": coords_final,
                 },
                 "properties": {
-                    "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),   
+                    "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
                     "primary_type": trajectory.Primary_Type,
                     "description": trajectory.Description,
                     "year": trajectory.Year,
@@ -129,7 +123,7 @@ calculateTrajectoryGEOJSON = (data) =>
                     "Longitude": trajectory.Longitude,
                     "Latitude": trajectory.Latitude,
                     "date": trajectory.Date,
-                    "location_description": trajectory.Location_Description  
+                    "location_description": trajectory.Location_Description
                 }
             });
 
@@ -143,43 +137,55 @@ calculateTrajectoryGEOJSON = (data) =>
         //Delete checked value
         otherData.pop(trajectory);
     });
-    
+
 
     let centroids = calculateCentroid(trajectoryOnlyGeoJSON);
-    
-    console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
-    return {finalGeoJSON, centroids};
-} 
 
-calculateCentroid = (trajectories) => {
-    return {
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "MultiLineString",
-                        "coordinates": [trajectories.map((i) => skmeans(i, 1).centroids[0])],
-                    },
-                    "properties": {
-                        "primary_type": "Centroid",
-                        "description": "a given centroid calculation",
-                        "lineWidth": 0.6,
-                    }
-                }]
-            };
+    console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
+    return { finalGeoJSON, centroids }; //return final GeoJSON with trajectories and centroid data
 }
 
-generateTwitterGEOJSON = (data) =>
-{
-    let tweetfinalGeoJSON = [
-        {
-            "type": "FeatureCollection",
-            "features": []
-        }
-    ];
+calculateCentroid = (trajectories) => {
+    let result = { type: "FeatureCollection", features: [], properties: "Centroid" };
+    trajectories.map((i) => {
+        result.features.push({
+            type: "Feature",
+            geometry: {
+                "type": "Point",
+                "coordinates": skmeans(i, 1).centroids[0]
+            }
+        })
+    });
 
-    data.forEach((tweet)=>
-    {
+    return result;
+
+
+    /*
+    return {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "geometry": {
+                "type": "MultiLineString",
+                "coordinates": [trajectories.map((i) => skmeans(i, 1).centroids[0])],
+            },
+            "properties": {
+                "primary_type": "Centroid",
+                "description": "a given centroid calculation",
+                "lineWidth": 0.6,
+            }
+        }]
+}
+    */
+}
+
+generateTwitterGEOJSON = (data) => {
+    let tweetfinalGeoJSON = [{
+        "type": "FeatureCollection",
+        "features": []
+    }];
+
+    data.forEach((tweet) => {
         let coords = [tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]];
         tweetfinalGeoJSON[0].features.push({
             "type": "Feature",
@@ -197,17 +203,20 @@ generateTwitterGEOJSON = (data) =>
     return tweetfinalGeoJSON;
 }
 
-exports.initMapData = async (req, res) => {
-    
-    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));    
+//Initial rendering
+exports.initMapData = async(req, res) => {
+
+    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
     let tweetGeoJSON = generateTwitterGEOJSON(await chicagoDataFactory.getChicagoTweetsWithLocation());
-    res.send({trajectory: trajectoryGeoJSON, tweets: tweetGeoJSON});
+    res.send({ trajectory: trajectoryGeoJSON, tweets: tweetGeoJSON });
 }
 
-exports.queryMapData = async (req, res) => {
-    
-    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));    
-    res.send({trajectory: trajectoryGeoJSON});
+
+//Update map when using Filter form
+exports.queryMapData = async(req, res) => {
+
+    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
+    res.send({ trajectory: trajectoryGeoJSON });
 }
 
 getDistanceBetweenPoints = (point1, point2) => {

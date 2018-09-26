@@ -3,7 +3,7 @@ const tweet = require('../models/tweet_schema');
 const crime = require('../models/crime_schema');
 const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
-const connectionTimeout = 1000;
+const connectionTimeout = 1500;
 
 const databaseMelb = { url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
 
