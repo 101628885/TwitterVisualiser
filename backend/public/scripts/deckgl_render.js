@@ -80,7 +80,26 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = 'visible';
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
-			tooltip.innerHTML = (object.geometry.coordinates[1]) ? `<div>Crime at: ${object.geometry.coordinates[0]}, ${object.geometry.coordinates[1]}</div>` : `<div>Trajectory at: ${object.geometry.coordinates[0]}</div>`;
+
+			if (object.geometry.coordinates[1])
+			{
+				tooltip.innerHTML = `
+				<div>Crime Details -></div>
+				<div>Latitude: ${object.geometry.coordinates[1]}</div>
+				<div>Longitude: ${object.geometry.coordinates[0]}</div>
+				<div>Crime Type: ${object.properties.primary_type}</div>
+				<div>Description: ${object.properties.description}</div>
+				<div>Location: ${object.properties.location_description}</div>`
+			}
+			else
+			{
+				tooltip.innerHTML = '<div>Trajectory Points -></div>';
+				object.geometry.coordinates[0].forEach(item => {
+				tooltip.innerHTML += `
+					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
+				`;
+				});
+			}
 		} else {
 			tooltip.innerHTML = '';
 			tooltip.style.visibility = 'hidden';
@@ -287,3 +306,4 @@ const _init = () => {
 }
 
 _init();
+
