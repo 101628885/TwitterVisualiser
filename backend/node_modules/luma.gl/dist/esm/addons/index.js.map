@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/addons/index.js"],"names":["addEvents"],"mappings":"AAAA,SAAQA,SAAR,QAAwB,qBAAxB","sourcesContent":["export {addEvents} from './events/add-events';\n"],"file":"index.js"}

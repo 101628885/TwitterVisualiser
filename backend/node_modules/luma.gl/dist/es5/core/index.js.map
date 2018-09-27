@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/core/index.js"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;AAAA;;AACA;;AACA","sourcesContent":["export {default as AnimationLoop} from './animation-loop';\nexport {default as AnimationLoopProxy} from './animation-loop-proxy';\nexport {default as Model} from './model';\n"],"file":"index.js"}
