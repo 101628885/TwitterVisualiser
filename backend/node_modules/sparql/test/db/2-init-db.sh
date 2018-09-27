@@ -1,1 +1,0 @@
-isql localhost:1116 dba dba init.sql
