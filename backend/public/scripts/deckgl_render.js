@@ -67,7 +67,9 @@ function filterMap() {
 	.then((res) => 
 	{
 		console.log(JSON.stringify(res));
-		chicago_trajectory_data = res.data.trajectory.finalGeoJSON;
+		chicago_trajectory_data = res.data.trajectory.finalGeoJSON[0];
+
+		centroid_data = res.data.trajectory.centroids;
 		renderLayers();
 	});
 	
@@ -173,8 +175,6 @@ const renderLayers = () => {
 
 	const centroidValue = document.getElementById('visible-centroid-handle').checked;
 	optionsCentroid.visible = centroidValue;
-
-
 
 	const chicagoTrajectoryLayer = new deck.GeoJsonLayer({
 		id: 'chicago-trajectory-layer',
