@@ -97,6 +97,7 @@ img:not(#map img) {
   padding: 1em 1em 0 1em;
   background-color: white;
   height: 85%;
+  max-width: 350px;
   overflow: scroll;
 }
 

@@ -63,6 +63,14 @@ function filterMap() {
 		query.limit = $('#limit').val();
 	query.Year = $('#year').val();
 	
+	if($('#startDate').val() != "")
+	{
+		query.Date = {
+						$gte: $('#startDate').val(), 
+						$lt: $('#endDate').val()
+					};
+	}
+
 	axios.post('/tweetMap', query)
 	.then((res) => 
 	{
@@ -86,7 +94,8 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 			if (object.geometry.coordinates[1])
 			{
 				tooltip.innerHTML = `
-				<div>Crime Details -></div>
+				<div>Crime Details</div>
+				<div>Date: ${object.properties.date_text}</div>
 				<div>Latitude: ${object.geometry.coordinates[1]}</div>
 				<div>Longitude: ${object.geometry.coordinates[0]}</div>
 				<div>Crime Type: ${object.properties.primary_type}</div>

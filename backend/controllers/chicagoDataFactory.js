@@ -190,6 +190,12 @@ exports.getMapData = async(query) =>
 	let timeStart = new Date()
 	result = [];
 	console.log(query) 
+	if(query.Date != undefined)
+	{
+		query.Date.$gte = moment(query.Date.$gte, "DD/MM/YYYY")
+		query.Date.$lt = query.Date.$lt == "" ?  moment(query.Date.$gte, "DD/MM/YYYY").add(1, "days") : moment(query.Date.$lt, "DD/MM/YYYY")
+	}
+	console.log(query) 
 
 	var limit = query.limit || 1000
 	delete query.limit;
