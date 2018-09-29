@@ -17,19 +17,44 @@ calculateTrajectoryGEOJSON = (data) => {
     let tDistThreshold = 1000;
     let otherData = data.slice(0, data.length);
 
-    let finalGeoJSON = [{
+    let trajectoryGeoJSON = [{
         "type": "FeatureCollection",
         "features": []
     }];
-    let trajectoryOnlyGeoJSON = [];
 
+    let trajectoryOnlyGeoJSON = [];
+    
+    crimeGeoPoints = [{
+        "type": "FeatureCollection",
+        "features": []
+    }];
     data.forEach((trajectory) => {
-        if (trajectory.Longitude != "" && trajectory.Latitude != "") {
+        if (trajectory.Longitude != "" && trajectory.Latitude != "" && trajectory.Longitude != null && trajectory.Latitude != null ) {
             let coords = [
                 [
                     [trajectory.Longitude, trajectory.Latitude]
                 ]
             ];
+            //Creates only the point for each crime
+            crimeGeoPoints[0].features.push({
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": coords[0][0],
+                },
+                "properties": {
+                    "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
+                    "primary_type": trajectory.Primary_Type,
+                    "description": trajectory.Description,
+                    "year": trajectory.Year,
+                    "lineWidth": 0.1,
+                    "Longitude": trajectory.Longitude,
+                    "Latitude": trajectory.Latitude,
+                    "date": trajectory.Date,
+                    "location_description": trajectory.Location_Description
+                }
+            });
+
             otherData.forEach((othertrajectory) => {
 
                 if (othertrajectory.Primary_Type == trajectory.Primary_Type &&
@@ -42,12 +67,10 @@ calculateTrajectoryGEOJSON = (data) => {
                 }
             })
             let coords_final = coords
-            if (coords[0].length < 2) {
-                coords_final = coords[0][0]
-            }
+            
 
             // Uncomment if required, fixing merge conflict
-            // finalGeoJSON[0].features.push({
+            // trajectoryGeoJSON[0].features.push({
             //     "type": "Feature",
             //     "geometry": {
             //         "type": "MultiLineString",
@@ -107,28 +130,28 @@ calculateTrajectoryGEOJSON = (data) => {
                     trajectory.Primary_Type = "ASSAULT";
                     break;
             }
-
-            finalGeoJSON[0].features.push({
-                "type": "Feature",
-                "geometry": {
-                    "type": `${coords[0].length > 1 ? "MultiLineString" : "Point"}`,
-                    "coordinates": coords_final,
-                },
-                "properties": {
-                    "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
-                    "primary_type": trajectory.Primary_Type,
-                    "description": trajectory.Description,
-                    "year": trajectory.Year,
-                    "lineWidth": 0.1,
-                    "Longitude": trajectory.Longitude,
-                    "Latitude": trajectory.Latitude,
-                    "date": trajectory.Date,
-                    "location_description": trajectory.Location_Description
-                }
-            });
-
             if (coords[0].length > 1)
+            {
+                trajectoryGeoJSON[0].features.push({
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "MultiLineString",
+                        "coordinates": coords,
+                    },
+                    "properties": {
+                        "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
+                        "primary_type": trajectory.Primary_Type,
+                        "description": trajectory.Description,
+                        "year": trajectory.Year,
+                        "lineWidth": 0.1,
+                        "Longitude": trajectory.Longitude,
+                        "Latitude": trajectory.Latitude,
+                        "date": trajectory.Date,
+                        "location_description": trajectory.Location_Description
+                    }
+                });
                 coords.map((i) => trajectoryOnlyGeoJSON.push(i));
+            }
 
             //Delete checked value
             otherData.pop(trajectory);
@@ -140,9 +163,9 @@ calculateTrajectoryGEOJSON = (data) => {
 
 
     let centroids = calculateCentroid(trajectoryOnlyGeoJSON);
-
+    //console.log(JSON.stringify(crimeGeoPoints, null, 2))
     console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
-    return { finalGeoJSON, centroids }; //return final GeoJSON with trajectories and centroid data
+    return { trajectoryGeoJSON, centroids, crimeGeoPoints }; //return final GeoJSON with trajectories and centroid data
 }
 
 calculateCentroid = (trajectories) => {
@@ -180,14 +203,14 @@ calculateCentroid = (trajectories) => {
 }
 
 generateTwitterGEOJSON = (data) => {
-    let tweetfinalGeoJSON = [{
+    let tweettrajectoryGeoJSON = [{
         "type": "FeatureCollection",
         "features": []
     }];
 
     data.forEach((tweet) => {
         let coords = [tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]];
-        tweetfinalGeoJSON[0].features.push({
+        tweettrajectoryGeoJSON[0].features.push({
             "type": "Feature",
             "geometry": {
                 "type": "Point",
@@ -200,23 +223,23 @@ generateTwitterGEOJSON = (data) => {
             }
         });
     });
-    return tweetfinalGeoJSON;
+    return tweettrajectoryGeoJSON;
 }
 
 //Initial rendering
 exports.initMapData = async(req, res) => {
 
-    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
+    let crimeGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
     let tweetGeoJSON = generateTwitterGEOJSON(await chicagoDataFactory.getChicagoTweetsWithLocation());
-    res.send({ trajectory: trajectoryGeoJSON, tweets: tweetGeoJSON });
+    res.send({ crime: crimeGeoJSON, tweets: tweetGeoJSON });
 }
 
 
 //Update map when using Filter form
 exports.queryMapData = async(req, res) => {
 
-    let trajectoryGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
-    res.send({ trajectory: trajectoryGeoJSON });
+    let crimeGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
+    res.send({ crime: crimeGeoJSON });
 }
 
 getDistanceBetweenPoints = (point1, point2) => {

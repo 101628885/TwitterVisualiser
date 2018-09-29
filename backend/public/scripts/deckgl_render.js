@@ -13,6 +13,8 @@ const INITIAL_VIEW_STATE = {
 // initial data variables
 let chicago_tweet_data = null;
 let chicago_trajectory_data = null;
+let chicago_crime_data = null;
+
 let centroid_data = null;
 
 // array of options available to the user
@@ -75,9 +77,10 @@ function filterMap() {
 	.then((res) => 
 	{
 		console.log(JSON.stringify(res));
-		chicago_trajectory_data = res.data.trajectory.finalGeoJSON[0];
+		chicago_trajectory_data = res.data.crime.trajectoryGeoJSON[0];
+		chicago_crime_data = res.data.crime.crimeGeoPoints[0];
 
-		centroid_data = res.data.trajectory.centroids;
+		centroid_data = res.data.crime.centroids;
 		renderLayers();
 	});
 	
@@ -191,6 +194,20 @@ const renderLayers = () => {
 		stroked: true,
 		lineWidthMinPixels: 3,
 		lineJointRounded: true,
+		getFillColor: d => [255, 221, 51, 200],
+		getLineColor: d => [255, 221, 51, 200],
+		getRadius: d => 60,
+		radiusMinPixels: 60,
+		pickable: true,
+		onHover: updateTrajectoryLayerTooltip,
+		fp64: true,
+		...optionsTrajectory
+	});
+
+	const chicagoPointLayer = new deck.GeoJsonLayer({
+		id: 'chicago-crime-layer',
+		data: chicago_crime_data,
+		stroked: true,
 		getFillColor: d => [204, 0, 0, 200],
 		getLineColor: d => [204, 0, 0, 200],
 		getRadius: d => 60,
@@ -251,7 +268,7 @@ const renderLayers = () => {
 	});
 
 	deckgl.setProps({
-		layers: [chicagoTrajectoryLayer, centroidLayer, chicagoTweetLayer]
+		layers: [chicagoTrajectoryLayer, centroidLayer, chicagoTweetLayer, chicagoPointLayer]
 	});
 	$('.loader').hide()
 };
@@ -264,15 +281,17 @@ const initialiseData = async () => {
 	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY).then(res => res.json());
 	// response_chicago_trajectory = await response_chicago_trajectory.json();
 	//console.log(response_chicago_trajectory);
-	chicago_trajectory_data = response_chicago_trajectory.trajectory.finalGeoJSON[0];
+	chicago_trajectory_data = response_chicago_trajectory.crime.trajectoryGeoJSON[0];
+	chicago_crime_data = response_chicago_trajectory.crime.crimeGeoPoints[0];
+
 	chicago_tweet_data = response_chicago_trajectory
 	.tweets[0]
 	.features
 	.map(tweet => (tweet.geometry.coordinates));
 
-	centroid_data = response_chicago_trajectory.trajectory.centroids;
+	centroid_data = response_chicago_trajectory.crime.centroids;
 
-	// console.log(chicago_trajectory_data)
+	 console.log(chicago_trajectory_data)
 	// console.log(chicago_tweet_data)
 	renderLayers();
 };
