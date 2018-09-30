@@ -125,7 +125,7 @@ statsBuilder = () =>
     	$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
 	});
 
-	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + chicago_tweet_data.length)
+	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
 
 	$("#stats-panel").show()
 }

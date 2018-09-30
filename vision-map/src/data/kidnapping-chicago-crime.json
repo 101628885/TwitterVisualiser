@@ -1,1 +1,47 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-87.792312197,41.998555014]},"properties":{"location_state":null,"location_zip":null,"x_coordinate":"1131310","domestic":false,"latitude":"41.998555014","description":"CHILD ABDUCTION/STRANGER","location_address":null,":@computed_region_6mkv_f3dw":"22243","arrest":false,":@computed_region_d9mm_jgwp":"12","location_city":null,"year":"2018",":@computed_region_vrxf_vc4k":"36",":@computed_region_d3ds_rm58":"34","longitude":"-87.792312197",":@computed_region_awaf_s7ux":"34","block":"064XX N NATOMA AVE","fbi_code":"20","ward":"41","id":"11412620","date":"2018-08-12T17:30:00.000","beat":"1611","y_coordinate":"1942528","community_area":"10",":@computed_region_rpca_8um6":"17","location_description":"ALLEY","district":"016","iucr":"1792","case_number":"JB391826",":@computed_region_bdys_3d7i":"657",":@computed_region_43wa_7qmu":"29","primary_type":"KIDNAPPING"}}]}
+{
+    "type": "FeatureCollection",
+    "features": [
+    {
+        "type": "Feature",
+        "geometry":
+        {
+            "type": "Point",
+            "coordinates": [-87.792312197, 41.998555014]
+        },
+        "properties":
+        {
+            "location_state": null,
+            "location_zip": null,
+            "x_coordinate": "1131310",
+            "domestic": false,
+            "latitude": "41.998555014",
+            "description": "CHILD ABDUCTION/STRANGER",
+            "location_address": null,
+            ":@computed_region_6mkv_f3dw": "22243",
+            "arrest": false,
+            ":@computed_region_d9mm_jgwp": "12",
+            "location_city": null,
+            "year": "2018",
+            ":@computed_region_vrxf_vc4k": "36",
+            ":@computed_region_d3ds_rm58": "34",
+            "longitude": "-87.792312197",
+            ":@computed_region_awaf_s7ux": "34",
+            "block": "064XX N NATOMA AVE",
+            "fbi_code": "20",
+            "ward": "41",
+            "id": "11412620",
+            "date": "2018-08-12T17:30:00.000",
+            "beat": "1611",
+            "y_coordinate": "1942528",
+            "community_area": "10",
+            ":@computed_region_rpca_8um6": "17",
+            "location_description": "ALLEY",
+            "district": "016",
+            "iucr": "1792",
+            "case_number": "JB391826",
+            ":@computed_region_bdys_3d7i": "657",
+            ":@computed_region_43wa_7qmu": "29",
+            "primary_type": "KIDNAPPING"
+        }
+    }]
+}
