@@ -19,7 +19,11 @@ let chicago_trajectory_all_type_data = null;
 let centroid_same_type_data = null;
 let centroid_all_type_data = null;
 
-let trajectoryLineColour = [255, 221, 51, 200]
+let pointColour = [255, 40, 0, 255]
+let pointHighlightColour = [0, 255, 162, 255]
+
+let trajectoryLineColour = [255, 221, 51, 150]
+let trajectoryHighlightColor = [51, 187, 255, 255]
 // array of options available to the user
 const OPTIONS = {
 	TWEET: ['radius', 'visible', 'extruded'],
@@ -211,10 +215,12 @@ const renderLayers = () => {
 		id: 'chicago-crime-layer',
 		data: chicago_crime_data,
 		stroked: true,
-		getFillColor: d => [204, 0, 0, 200],
-		getLineColor: d => [204, 0, 0, 200],
-		getRadius: d => 60,
-		radiusMinPixels: 60,
+		getFillColor: d => pointColour,
+		getLineColor: d => pointColour,
+		getRadius: d => 30,
+		autoHighlight: true,
+		highlightColor: pointHighlightColour, 
+		radiusMinPixels: 30,
 		pickable: true,
 		onHover: updateTrajectoryLayerTooltip,
 		fp64: true,
@@ -230,6 +236,8 @@ const renderLayers = () => {
 		getFillColor: d => trajectoryLineColour,
 		getLineColor: d => trajectoryLineColour,
 		getRadius: d => 60,
+		autoHighlight: true,
+		highlightColor: trajectoryHighlightColor, 
 		radiusMinPixels: 60,
 		pickable: true,
 		onHover: updateTrajectoryLayerTooltip,
@@ -246,6 +254,8 @@ const renderLayers = () => {
 		getFillColor: d => trajectoryLineColour,
 		getLineColor: d => trajectoryLineColour,
 		getRadius: d => 60,
+		autoHighlight: true,
+		highlightColor: trajectoryHighlightColor, 
 		radiusMinPixels: 60,
 		pickable: true,
 		onHover: updateTrajectoryLayerTooltip,
