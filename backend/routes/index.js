@@ -22,6 +22,11 @@ router.get('/', function(req, res) {
   res.render('home');
 });
 
+// get about page
+router.get('/about', function(req, res) {
+  res.render('about');
+});
+
 // get deckgl map
 router.get('/deckmap', function(req, res) {
   res.render('deckmap');

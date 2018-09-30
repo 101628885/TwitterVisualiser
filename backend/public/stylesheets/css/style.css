@@ -1,28 +1,42 @@
+/* containers */
 html, body, #outer {
   height: 100%;
   width: 100%;
 }
 
+#container {
+  width: 100vw; 
+  height: 92.5vh;
+  position: absolute;
+}
+
 body:not(#map body) {
-	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-family: "Roboto", sans-serif;
 	font-weight: 300;
 }
 
-h1:not(#map h1) {
-	color: white;
+#filterform {
+  position: absolute;
+  z-index: 1;
 }
+
+/* tweet card */
 
 .card {
 	background-color: white;
 	border-width: 0.2em;
 }
 
-img:not(#map img) {
-	border-radius: 100%;
-}
-
 .card-body {
 	padding: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'tweetdp tweetheader'
+    'tweetdp tweetbody'
 }
 
 #tweetdp {
@@ -39,29 +53,19 @@ img:not(#map img) {
   grid-area: tweetbody
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    'tweetdp tweetheader'
-    'tweetdp tweetbody'
-}
+/* typography */
 
-#filterform {
-  position: absolute;
-  z-index: 1;
-}
-
-#map {
-  position: absolute;
-  z-index: 0;
-	height: 100%;
-	width: 100%;
+h1:not(#map h1) {
+	color: white;
 }
 
 #hometext {
   margin-top: 8em;
   animation: fadein 2s;
+}
+
+#jumbotext {
+  font-size: 56px;
 }
 
 @keyframes fadein {
@@ -75,15 +79,16 @@ img:not(#map img) {
   }
 }
 
-#jumbotext {
-  font-size: 7em;
+/* google maps module */
+
+#map {
+  position: absolute;
+  z-index: 0;
+	height: 100%;
+	width: 100%;
 }
 
-#container {
-  width: 100vw; 
-  height: 92.5vh;
-  position: absolute;
-}
+/* deckgl module */
 
 #deckmap {
   width: 100%;
@@ -132,6 +137,6 @@ img:not(#map img) {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
