@@ -83,7 +83,8 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                     if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
                         coordsSameType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                     }
-                } else if(trajectory != othertrajectory)
+                }
+                if(trajectory != othertrajectory)
                 {
                     let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                     let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
