@@ -54,46 +54,6 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                 ]
             ];
 
-            //Creates only the point for each crime
-            crimeGeoPoints[0].features.push({
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": coordsSameType[0][0],
-                },
-                "properties": {
-                    "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
-                    "primary_type": trajectory.Primary_Type,
-                    "description": trajectory.Description,
-                    "year": trajectory.Year,
-                    "lineWidth": 0.1,
-                    "Longitude": trajectory.Longitude,
-                    "Latitude": trajectory.Latitude,
-                    "date": trajectory.Date,
-                    "location_description": trajectory.Location_Description
-                }
-            });
-
-            otherData.forEach((othertrajectory) => {
-
-                if (othertrajectory.Primary_Type == trajectory.Primary_Type &&
-                    trajectory != othertrajectory) {
-                    let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
-                    let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
-                        coordsSameType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
-                    }
-                }
-                if(trajectory != othertrajectory)
-                {
-                    let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
-                    let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
-                        coordsAllType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
-                    }
-                }
-            })    
-
             switch (trajectory.Primary_Type) {
                 case "BATTERY":
                     trajectory.Primary_Type = "ASSAULT";
@@ -135,6 +95,47 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                     trajectory.Primary_Type = "ASSAULT";
                     break;
             }
+
+            //Creates only the point for each crime
+            crimeGeoPoints[0].features.push({
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": coordsSameType[0][0],
+                },
+                "properties": {
+                    "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss A'),
+                    "date_stats_text": moment(trajectory.Date).format('DD/MM/YY, h:mm A'),
+                    "primary_type": trajectory.Primary_Type,
+                    "description": trajectory.Description,
+                    "year": trajectory.Year,
+                    "lineWidth": 0.1,
+                    "Longitude": trajectory.Longitude,
+                    "Latitude": trajectory.Latitude,
+                    "date": trajectory.Date,
+                    "location_description": trajectory.Location_Description
+                }
+            });
+
+            otherData.forEach((othertrajectory) => {
+
+                if (othertrajectory.Primary_Type == trajectory.Primary_Type &&
+                    trajectory != othertrajectory) {
+                    let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
+                    let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
+                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
+                        coordsSameType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+                    }
+                }
+                if(trajectory != othertrajectory)
+                {
+                    let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
+                    let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
+                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
+                        coordsAllType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+                    }
+                }
+            })    
 
             //Add to same type trajectory
             if (coordsSameType[0].length > 1)

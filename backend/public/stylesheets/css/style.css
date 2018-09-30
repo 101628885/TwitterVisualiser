@@ -93,12 +93,25 @@ img:not(#map img) {
 
 #control-panel {
   position: absolute;
-  margin: 2em;
+  margin-top: 2em;
   padding: 1em 1em 0 1em;
   background-color: white;
   height: 85%;
   max-width: 350px;
   overflow: scroll;
+}
+
+#stats-panel {
+  position: absolute;
+  left: 80%;
+  padding: 1rem;
+  margin-top: 4em;
+  background-color: white;
+}
+
+#stats-container {
+  position: relative;
+  padding: 1rem;
 }
 
 #footnote {

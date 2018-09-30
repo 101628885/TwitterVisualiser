@@ -91,10 +91,52 @@ function filterMap() {
 
 		chicago_crime_data = res.data.crime.crimeGeoPoints[0];
 
+		statsBuilder();
 		renderLayers();
 	});
 	
 }
+
+statsBuilder = () =>
+{
+	let crimeCount = chicago_crime_data.features.length;
+	let crimeDateRange = `${chicago_crime_data.features[0].properties.date_stats_text} - ${chicago_crime_data.features[crimeCount - 1].properties.date_stats_text}`
+	let crimeTypeObject = {}
+	chicago_crime_data.features.forEach((crime) => 
+	{
+		if(crimeTypeObject.hasOwnProperty(`${crime.properties.primary_type}`))
+		{
+			crimeTypeObject[`${crime.properties.primary_type}`] += 1  
+		} else
+		{
+			crimeTypeObject[`${crime.properties.primary_type}`] = 1  
+		}
+	})
+	$("#stats-date-range p").empty()
+	$("#stats-total p").empty()
+	$( "#stats-crimes p").empty()
+	$("#stats-panel p").empty()
+
+	$("#stats-date-range").append("<p><strong>" + crimeDateRange + "</strong>")
+	$("#stats-total").append("<p><strong>Total Found:</strong> " + crimeCount)
+	
+	Object.keys(crimeTypeObject).forEach(function(crime)
+	{
+    	$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
+	});
+
+	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + chicago_tweet_data.length)
+
+	$("#stats-panel").show()
+}
+
+toTitleCase = (str) => {
+	str = str.toLowerCase().split(' ');
+	for (var i = 0; i < str.length; i++) {
+		str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+	}
+	return str.join(' ');
+};
 
 const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 	try {
@@ -353,7 +395,7 @@ const initialiseData = async () => {
 
 	centroid_same_type_data = response_chicago_trajectory.crime.centroidsSame;
 	centroid_all_type_data = response_chicago_trajectory.crime.centroidsAll;
-
+	statsBuilder();
 	renderLayers();
 };
 
