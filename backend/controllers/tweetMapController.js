@@ -11,36 +11,55 @@ exports.getTweetMap = function(req, res) {
 };
 
 //Why is this being called twice, fix
-calculateTrajectoryGEOJSON = (data) => {
+calculatetrajectorySameTypeGeoJSON = (data) => {
     let timeStart = new Date();
     let tTimeThreshold = 180;
     let tDistThreshold = 1000;
     let otherData = data.slice(0, data.length);
 
-    let trajectoryGeoJSON = [{
+    let trajectorySameTypeGeoJSON, trajectoryAllTypeGeoJSON, crimeGeoPoints;
+    
+    trajectorySameTypeGeoJSON = [{
         "type": "FeatureCollection",
         "features": []
     }];
 
-    let trajectoryOnlyGeoJSON = [];
-    
+    trajectoryAllTypeGeoJSON = [{
+        "type": "FeatureCollection",
+        "features": []
+    }];
+
     crimeGeoPoints = [{
         "type": "FeatureCollection",
         "features": []
     }];
+
+    let trajectoryOnlySameTypeGeoJSON, trajectoryOnlyAllTypeGeoJSON 
+    trajectoryOnlySameTypeGeoJSON = [];
+    trajectoryOnlyAllTypeGeoJSON  = [];
+    
     data.forEach((trajectory) => {
         if (trajectory.Longitude != "" && trajectory.Latitude != "" && trajectory.Longitude != null && trajectory.Latitude != null ) {
-            let coords = [
+            let coordsSameType, coordsAllType;
+            
+            coordsSameType = [
                 [
                     [trajectory.Longitude, trajectory.Latitude]
                 ]
             ];
+
+            coordsAllType = [
+                [
+                    [trajectory.Longitude, trajectory.Latitude]
+                ]
+            ];
+
             //Creates only the point for each crime
             crimeGeoPoints[0].features.push({
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": coords[0][0],
+                    "coordinates": coordsSameType[0][0],
                 },
                 "properties": {
                     "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
@@ -62,32 +81,17 @@ calculateTrajectoryGEOJSON = (data) => {
                     let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                     let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
                     if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
-                        coords[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+                        coordsSameType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+                    }
+                } else if(trajectory != othertrajectory)
+                {
+                    let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
+                    let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
+                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
+                        coordsAllType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                     }
                 }
-            })
-            let coords_final = coords
-            
-
-            // Uncomment if required, fixing merge conflict
-            // trajectoryGeoJSON[0].features.push({
-            //     "type": "Feature",
-            //     "geometry": {
-            //         "type": "MultiLineString",
-            //         "coordinates": coords,
-            //     },
-            //     "properties": {
-            //         "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),   
-            //         "primary_type": trajectory.Primary_Type,
-            //         "description": trajectory.Description,
-            //         "year": trajectory.Year,
-            //         "lineWidth": 0.3,
-            //         "Longitude": trajectory.Longitude,
-            //         "Latitude": trajectory.Latitude,
-            //         "date": trajectory.Date,
-            //         "location_description": trajectory.Location_Description  
-            //     }
-            // });
+            })    
 
             switch (trajectory.Primary_Type) {
                 case "BATTERY":
@@ -130,13 +134,15 @@ calculateTrajectoryGEOJSON = (data) => {
                     trajectory.Primary_Type = "ASSAULT";
                     break;
             }
-            if (coords[0].length > 1)
+
+            //Add to same type trajectory
+            if (coordsSameType[0].length > 1)
             {
-                trajectoryGeoJSON[0].features.push({
+                trajectorySameTypeGeoJSON[0].features.push({
                     "type": "Feature",
                     "geometry": {
                         "type": "MultiLineString",
-                        "coordinates": coords,
+                        "coordinates": coordsSameType,
                     },
                     "properties": {
                         "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
@@ -150,7 +156,31 @@ calculateTrajectoryGEOJSON = (data) => {
                         "location_description": trajectory.Location_Description
                     }
                 });
-                coords.map((i) => trajectoryOnlyGeoJSON.push(i));
+                coordsSameType.map((i) => trajectoryOnlySameTypeGeoJSON.push(i));
+            }
+
+            //Add to all type trajectory
+            if (coordsAllType[0].length > 1)
+            {
+                trajectoryAllTypeGeoJSON[0].features.push({
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "MultiLineString",
+                        "coordinates": coordsAllType,
+                    },
+                    "properties": {
+                        "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
+                        "primary_type": trajectory.Primary_Type,
+                        "description": trajectory.Description,
+                        "year": trajectory.Year,
+                        "lineWidth": 0.1,
+                        "Longitude": trajectory.Longitude,
+                        "Latitude": trajectory.Latitude,
+                        "date": trajectory.Date,
+                        "location_description": trajectory.Location_Description
+                    }
+                });
+                coordsAllType.map((i) => trajectoryOnlyAllTypeGeoJSON.push(i));
             }
 
             //Delete checked value
@@ -161,11 +191,19 @@ calculateTrajectoryGEOJSON = (data) => {
         otherData.pop(trajectory);
     });
 
-
-    let centroids = calculateCentroid(trajectoryOnlyGeoJSON);
+    let centroidsSame = calculateCentroid(trajectoryOnlySameTypeGeoJSON);
+    let centroidsAll = calculateCentroid(trajectoryOnlyAllTypeGeoJSON);
+    console.log("Same count: " + trajectorySameTypeGeoJSON[0].features.length)
+    console.log("All count: " + trajectoryAllTypeGeoJSON[0].features.length)
     //console.log(JSON.stringify(crimeGeoPoints, null, 2))
     console.log(`Trajectory calculation time: ${new Date() - timeStart}ms`)
-    return { trajectoryGeoJSON, centroids, crimeGeoPoints }; //return final GeoJSON with trajectories and centroid data
+    return { 
+        trajectorySameTypeGeoJSON, 
+        trajectoryAllTypeGeoJSON, 
+        centroidsSame,
+        centroidsAll, 
+        crimeGeoPoints 
+    }; //return final GeoJSON with trajectories and centroid data
 }
 
 calculateCentroid = (trajectories) => {
@@ -203,18 +241,18 @@ calculateCentroid = (trajectories) => {
 }
 
 generateTwitterGEOJSON = (data) => {
-    let tweettrajectoryGeoJSON = [{
+    let tweettrajectorySameTypeGeoJSON = [{
         "type": "FeatureCollection",
         "features": []
     }];
 
     data.forEach((tweet) => {
-        let coords = [tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]];
-        tweettrajectoryGeoJSON[0].features.push({
+        let coordsSameType = [tweet.coordinates[0].coordinates[0], tweet.coordinates[0].coordinates[1]];
+        tweettrajectorySameTypeGeoJSON[0].features.push({
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": coords,
+                "coordinates": coordsSameType,
             },
             "properties": {
                 "Longitude": tweet.coordinates[0].coordinates[0],
@@ -223,13 +261,13 @@ generateTwitterGEOJSON = (data) => {
             }
         });
     });
-    return tweettrajectoryGeoJSON;
+    return tweettrajectorySameTypeGeoJSON;
 }
 
 //Initial rendering
 exports.initMapData = async(req, res) => {
 
-    let crimeGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
+    let crimeGeoJSON = calculatetrajectorySameTypeGeoJSON(await chicagoDataFactory.getMapData(req.body));
     let tweetGeoJSON = generateTwitterGEOJSON(await chicagoDataFactory.getChicagoTweetsWithLocation());
     res.send({ crime: crimeGeoJSON, tweets: tweetGeoJSON });
 }
@@ -238,7 +276,7 @@ exports.initMapData = async(req, res) => {
 //Update map when using Filter form
 exports.queryMapData = async(req, res) => {
 
-    let crimeGeoJSON = calculateTrajectoryGEOJSON(await chicagoDataFactory.getMapData(req.body));
+    let crimeGeoJSON = calculatetrajectorySameTypeGeoJSON(await chicagoDataFactory.getMapData(req.body));
     res.send({ crime: crimeGeoJSON });
 }
 
