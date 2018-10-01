@@ -57,22 +57,29 @@ def loadTrainingData():
     # After working more on the backend
     # http://144.6.226.34:3000/nte/1000
 
-    dataJson = requests.get('http://144.6.226.34:3000/getStoredTweets/10000/checked/true').json()
-    chicagoJson = requests.get('http://localhost:3000/getStoredTweets/10000/checked/true').json()
+    dataJson = requests.get('http://43.240.97.166:3000/getStoredTweets/10000/checked/true').json()
+    chicagoJson = requests.get('http://43.240.97.166:3000/getStoredTweets/10000/checked/true').json()
     tweetData = []
+    print(dataJson[0]['crime'])
     for t in dataJson:
-        tweetData.append((str(t['full_text']).replace("#", ""), str(t['crime']), str(t['type_of_crime'])))
+        data = str(t['full_text']).replace("#", "") + str(t['crime'])
+        if ('type_of_crime' in t):
+           data += str(t['type_of_crime'])
+        tweetData.append(data)
+        
     for t in chicagoJson:
         tweetData.append((str(t['full_text']).replace("#", ""), str(t['crime']), 'null'))
     
     return tweetData
 
 def loadKeywordTrainingData():
-    dataJson = requests.get('http://144.6.226.34:3000/getStoredTweets/10000/crime/true').json()
+    dataJson = requests.get('http://43.240.97.166:3000/getStoredTweets/10000/crime/false').json()
     tweetData = []
     for t in dataJson:
-        tweetData.append((str(t['full_text']).replace("#", ""), str(t['crime']), str(t['type_of_crime'])))
-
+        data = str(t['full_text']).replace("#", "") + str(t['crime'])
+        if ('type_of_crime' in t):
+           data += str(t['type_of_crime'])
+        tweetData.append(data)
     return tweetData
 
 # Loads 5 random checked testing data
@@ -85,7 +92,7 @@ def checkData():
     # dataJson = requests.get('http://localhost:3000/returnAll').json()
     # dataJson = requests.get('http://144.6.226.34:3000/returnAll').json()
     # dataJson = requests.get('http://144.6.226.34:3000/getStoredTweets/10000/checked/true').json()
-    dataJson = requests.get('http://localhost:3000/getStoredTweets').json()
+    dataJson = requests.get('http://43.240.97.166:3000/getStoredTweets').json()
     tweetData = []
     for t in dataJson:
         tweetData.append((str(t['full_text']), str(t['crime'])))
@@ -96,6 +103,7 @@ def printOutput(arg):
     # Print output
     cFalse = 0
     cTrue = 0
+    entFound = {}
     JSONres = {}    
     JSONres['predData'] = []
 
@@ -104,16 +112,19 @@ def printOutput(arg):
             print('---------------------------')
             print ("Tweet:", td[0], "\nPred:", pred, "\nKeyPred:", keyPred)
             print('+++++++++++++++++++++++++++')
+            cTrue += 1
             for i in nlp(td[0]).ents:
                 if (i.label_ == 'GPE' or i.label_ == 'LOC'):
-                    print(i, i.label_)
-            cTrue += 1
-    #     JSONres['predData'].append({
-    #         'Tweet' : td[0],
-    #         'Expected' : td[1],
-    #         'Predicted' : pred,
-    #         'KeywordPred' : keyPred
-    #     })
+                    entFound = {i, i.label_}
+                else:
+                    entFound = {}
+            JSONres['predData'].append({
+                'Tweet' : td[0],
+                'Expected' : td[1],
+                'Predicted' : pred,
+                'KeywordPred' : keyPred,
+                'LocationPred' : entFound
+            })
     #     if (arg == True):
     #         if (pred == "True"):
     #             print('---------------------------')
