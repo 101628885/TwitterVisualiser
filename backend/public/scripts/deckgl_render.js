@@ -19,7 +19,6 @@ let chicago_trajectory_all_type_data = null;
 let centroid_same_type_data = null;
 let centroid_all_type_data = null;
 
-let pointColour = [255, 40, 0, 255]
 let pointHighlightColour = [0, 255, 162, 255]
 
 let trajectoryLineColour = [255, 221, 51, 150]
@@ -46,13 +45,24 @@ const deckgl = new deck.DeckGL({
 });
 
 // hex layer color range
-const COLOR_RANGE = [
+const TWEET_COLOR_RANGE = [
 	[1, 152, 189],
 	[73, 227, 206],
 	[216, 254, 181],
 	[254, 237, 177],
 	[254, 173, 84],
 	[209, 55, 78]
+];
+
+const CRIME_COLOR_RANGE = [
+	[65, 244, 113],
+	[66, 244, 244],
+	[66, 194, 244],
+	[66, 134, 244],
+	[69, 66, 244],
+	[244, 66, 244],
+	[188, 66, 244],
+	[244, 66, 66]
 ];
 
 // hex layer light range
@@ -257,15 +267,42 @@ const renderLayers = () => {
 		id: 'chicago-crime-layer',
 		data: chicago_crime_data,
 		stroked: true,
-		getFillColor: d => pointColour,
+		getFillColor: d => {
+			switch(d.properties.primary_type) {
+				case "ASSAULT":
+					return CRIME_COLOR_RANGE[0];
+					break;
+				case "THEFT":
+					return CRIME_COLOR_RANGE[1];
+					break;
+				case "SEX OFFENSE":
+					return CRIME_COLOR_RANGE[2];
+					break;
+				case "OTHER OFFENSE":
+					return CRIME_COLOR_RANGE[3];
+					break;
+				case "OFFENSE INVOLVING CHILDREN":
+					return CRIME_COLOR_RANGE[4];
+					break;
+				case "NARCOTICS":
+					return CRIME_COLOR_RANGE[5];
+					break;
+				case "CRIMINAL DAMAGE":
+					return CRIME_COLOR_RANGE[6];
+					break;
+				case "HOMICIDE":
+					return CRIME_COLOR_RANGE[7];
+					break;
+			};
+		},
 		getLineColor: d => pointColour,
-		getRadius: d => 30,
+		getRadius: d => 60,
 		autoHighlight: true,
 		highlightColor: pointHighlightColour, 
 		radiusMinPixels: 30,
 		pickable: true,
+		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		fp64: true,
 		visble: visibleTrajectoryValue
 	});
 
@@ -282,8 +319,8 @@ const renderLayers = () => {
 		highlightColor: trajectoryHighlightColor, 
 		radiusMinPixels: 60,
 		pickable: true,
+		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		fp64: true,
 		...optionsTrajectorySame
 	});
 
@@ -300,8 +337,8 @@ const renderLayers = () => {
 		highlightColor: trajectoryHighlightColor, 
 		radiusMinPixels: 60,
 		pickable: true,
+		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		fp64: true,
 		...optionsTrajectoryAll
 	});
 
@@ -316,8 +353,8 @@ const renderLayers = () => {
 		getRadius: d => 20,
 		radiusMinPixels: 20,
 		pickable: true,
+		fp64: false,
 		onHover: updatecentroidSameTypeLayerTooltip,
-		fp64: true,
 		...optionsCentroidSame
 	});
 
@@ -332,14 +369,14 @@ const renderLayers = () => {
 		getRadius: d => 20,
 		radiusMinPixels: 20,
 		pickable: true,
+		fp64: false,
 		onHover: updatecentroidSameTypeLayerTooltip,
-		fp64: true,
 		...optionsCentroidAll
 	});
 
 	const chicagoTweetLayer = new deck.HexagonLayer({
 		id: 'chicago-tweet-layer',
-		colorRange: COLOR_RANGE,
+		colorRange: TWEET_COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
 		data: chicago_tweet_data,
 		elevationRange: [0, 800],
@@ -348,8 +385,8 @@ const renderLayers = () => {
 		opacity: 0.4,
 		coverage: 0.8,
 		pickable: true,
+		fp64: false,
 		onHover: updateTweetLayerTooltip,
-		fp64: true,
 		z: 1,
 		...optionsTweet
 	});
@@ -366,12 +403,12 @@ const renderLayers = () => {
 		onHover: info => console.log('Hovered:', info),
 		getRadius: d => 60,
 		radiusMinPixels: 60,
-		fp64: true,
+		fp64: false,
 		...optionsTweet
 	});
 
 	deckgl.setProps({
-		layers: [chicagoTrajectorySameTypeLayer, chicagoTrajectoryAllTypeLayer, centroidSameTypeLayer, centroidAllTypeLayer, chicagoTweetLayer, chicagoPointLayer]
+		layers: [chicagoTweetLayer, chicagoTrajectorySameTypeLayer, chicagoTrajectoryAllTypeLayer, centroidSameTypeLayer, centroidAllTypeLayer, chicagoPointLayer]
 	});
 	$('.loader').hide()
 };
