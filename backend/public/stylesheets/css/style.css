@@ -1,0 +1,151 @@
+html, body, #outer {
+  height: 100%;
+  width: 100%;
+}
+
+body:not(#map body) {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 300;
+}
+
+h1:not(#map h1) {
+	color: white;
+}
+
+.card {
+	background-color: white;
+	border-width: 0.2em;
+}
+
+img:not(#map img) {
+	border-radius: 100%;
+}
+
+.card-body {
+	padding: 10px;
+}
+
+#tweetdp {
+  grid-area: tweetdp;
+  display: inline-block;
+  width: 48px;
+}
+
+#tweetheader {
+  grid-area: tweetheader
+}
+
+#tweetbody {
+  grid-area: tweetbody
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'tweetdp tweetheader'
+    'tweetdp tweetbody'
+}
+
+#filterform {
+  position: absolute;
+  z-index: 1;
+}
+
+#map {
+  position: absolute;
+  z-index: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#hometext {
+  margin-top: 8em;
+  animation: fadein 2s;
+}
+
+@keyframes fadein {
+  from { 
+    opacity: 0;
+    padding-top: 2em;
+   }
+  to { 
+    opacity: 1;
+    padding-top: 0em;
+  }
+}
+
+#jumbotext {
+  font-size: 7em;
+}
+
+#container {
+  width: 100vw; 
+  height: 92.5vh;
+  position: absolute;
+}
+
+#deckmap {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+#control-panel {
+  position: absolute;
+  margin-top: 2em;
+  padding: 1em 1em 0 1em;
+  background-color: white;
+  height: 85%;
+  max-width: 350px;
+  overflow: scroll;
+}
+
+#stats-panel {
+  position: absolute;
+  left: 80%;
+  padding: 1rem;
+  margin-top: 4em;
+  background-color: white;
+}
+
+#stats-container {
+  position: relative;
+  padding: 1rem;
+}
+
+#footnote {
+  position: absolute;
+  margin: 2em;
+  color: lightslategray;
+  right: 0;
+}
+
+#tooltip {
+  font-size: 11px;
+  position: absolute;
+  padding: 4px;
+  margin: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  max-width: 300px;
+  z-index: 9;
+  pointer-events: none;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

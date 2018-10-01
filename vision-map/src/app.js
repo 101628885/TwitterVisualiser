@@ -18,29 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
+import { css } from 'react-emotion';
 import window from 'global/window';
-import {connect} from 'react-redux';
-import Banner from './components/banner';
-import Announcement from './components/announcement';
-// Kepler.gl Data processing APIs
-import {loadSampleConfigurations} from './actions';
-import {replaceLoadDataModal} from './factories/load-data-modal';
+import { connect } from 'react-redux';
+import * as fs from 'fs';
+import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import QueryForm from './components/queryForm.js'
 
-const KeplerGl = require('kepler.gl/components').injectComponents([
-  replaceLoadDataModal()
-]);
+// Kepler.gl Data processing APIs
+import { loadSampleConfigurations } from './actions';
+import { replaceLoadDataModal } from './factories/load-data-modal';
+const KeplerGl = require('kepler.gl/components').injectComponents();
+
+function requireAll(requireContext) {
+  return requireContext.keys().map(requireContext);
+}
+var jsonTypes = requireAll(require.context("./data", false, /.json$/));
 
 const MAPBOX_TOKEN = process.env.MapboxAccessToken; // eslint-disable-line
 
 // Sample data
 /* eslint-disable no-unused-vars */
-import chicagoData from './data/chicagoData-geojson.json';
-import sampleTripData from './data/sample-trip-data';
-import sampleGeojson from './data/sample-geojson.json';
-import sampleIconCsv, {config as savedMapConfig} from './data/sample-icon-csv';
-import {updateVisData, addDataToMap} from 'kepler.gl/actions';
+import { updateVisData, addDataToMap } from 'kepler.gl/actions';
 import Processors from 'kepler.gl/processors';
 /* eslint-enable no-unused-vars */
 
@@ -55,170 +58,162 @@ const GlobalStyleDiv = styled.div`
   *,
   *:before,
   *:after {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
   }
 `;
-
 class App extends Component {
-  state = {
-    showBanner: false,
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
+  
+  constructor(props) {
+	super(props);
+	this.state = {
+	  showGrid: false,
+	  width: window.innerWidth ,
+	  showTools: true,
+	  height: window.innerHeight * 0.75,
+	  loading: true,
+	  type: 'All',
+	  year: 2018,
+	  month: 1,
+	  day: 2,
+	  startDate: moment()
+	};
+
+	// This binding is necessary to make `this` work in the callback
+	this.getDataForMap = this.getDataForMap.bind(this);
+	this._toggleTools = this._toggleTools.bind(this);
+  }
 
   componentWillMount() {
-    // if we pass an id as part of the url
-    // we ry to fetch along map configurations
-    const {params: {id: sampleMapId} = {}} = this.props;
-    this.props.dispatch(loadSampleConfigurations(sampleMapId));
-    window.addEventListener('resize', this._onResize);
-    this._onResize();
+	window.addEventListener('resize', this._onResize);
+	this._onResize();
   }
 
-  componentDidMount() {
-    // delay 2s to show the banner
-    if (!window.localStorage.getItem('kgHideBanner')) {
-      window.setTimeout(this._showBanner, 3000);
-    }
-    const data = Processors.processGeojson(chicagoData);
-    // Create dataset structure
-    const dataset = {
-      data,
-      info: {
-        // `info` property are optional, adding an `id` associate with this dataset makes it easier
-        // to replace it later
-        id: 'my_data'
-      }
-    };
-    // addDataToMap action to inject dataset into kepler.gl instance
-    this.props.dispatch(addDataToMap({datasets: dataset}));
-  }
+	componentDidMount() 
+	{
+		//axios.get('http://localhost:3000/tweetMap')
+		axios.get('http://43.240.97.166:3000/tweetMap')
+		.then((res) => 
+		{
+			console.log(res);
+			res.data.tweets.forEach(item => 
+			{            
+				let label = "Tweets"
+				const data  = Processors.processGeojson(item);
+				const dataset = 
+				{ 
+					data,
+					info: 
+					{
+						label: label
+					}
+				};
+				this.props.dispatch(addDataToMap({ datasets: dataset }));
+			});
+			res.data.trajectory.forEach(item => 
+			{            
+				let label = "Chicago Crime Data"
+				const data  = Processors.processGeojson(item);
+				const dataset = 
+				{ 
+					data,
+					info: 
+					{
+						label: label
+					}
+				};
+				this.props.dispatch(addDataToMap({ datasets: dataset }));
+			});
+			console.log(res);
+		});
+	}
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this._onResize);
-  }
-
-  _onResize = () => {
-    this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
-  };
-
-  _showBanner = () => {
-    this.setState({showBanner: true});
-  };
-
-  _hideBanner = () => {
-    this.setState({showBanner: false});
-  };
-
-  _disableBanner = () => {
-    this._hideBanner();
-    window.localStorage.setItem('kgHideBanner', 'true');
-  };
-
-  _loadSampleData() {
-    this.props.dispatch(
-      updateVisData(
-        // datasets
-        {
-          info: {
-            label: 'Sample Taxi Trips in New York City',
-            id: 'test_trip_data'
-          },
-          data: sampleTripData
-        },
-        // option
-        {
-          centerMap: true,
-          readOnly: false
-        },
-        // config
-        {
-          filters: [
-            {
-              id: 'me',
-              dataId: 'test_trip_data',
-              name: 'tpep_pickup_datetime',
-              type: 'timeRange',
-              enlarged: true
-            }
-          ]
-        }
-      )
-    );
-
-    // load icon data and config and process csv file
-    this.props.dispatch(
-      addDataToMap({
-        datasets: [
-          {
-            info: {
-              label: 'Icon Data',
-              id: 'test_icon_data'
-            },
-            data: Processors.processCsvData(sampleIconCsv)
-          }
-        ],
-        options: {
-          centerMap: false
-        },
-        config: savedMapConfig
-      })
-    );
-
-    // load geojson
-    this.props.dispatch(
-      updateVisData({
-        info: {label: 'SF Zip Geo'},
-        data: Processors.processGeojson(sampleGeojson)
-      })
-    );
-  }
-
-  render() {
-    const {showBanner, width, height} = this.state;
-    return (
-      <GlobalStyleDiv>
-        <Banner
-          show={this.state.showBanner}
-          height={bannerHeight}
-          onClose={this._hideBanner}
-        >
-          <Announcement onDisable={this._disableBanner}/>
-        </Banner>
-        <div
-          style={{
-            transition: 'margin 1s, height 1s',
-            position: 'absolute',
-            width: '100%',
-            height: showBanner ? `calc(100% - ${bannerHeight}px)` : '100%',
-            minHeight: `calc(100% - ${bannerHeight}px)`,
-            marginTop: showBanner ? `${bannerHeight}px` : 0
-          }}
-        >
-          <KeplerGl
-            mapboxApiAccessToken="pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ"
-            id="map"
-            /*
-             * Specify path to keplerGl state, because it is not mount at the root
-             */
-            getState={state => state.demo.keplerGl}
-            width={width}
-            height={height - (showBanner ? bannerHeight : 0)}
-          />
-
-        </div>
-      </GlobalStyleDiv>
-    );
-  }
+	_onResize = () => {
+		this.setState({
+			width: window.innerWidth - 16,
+			height: window.innerHeight * 0.75
+		});
+	};
+  
+	_toggleTools = () =>
+	{
+		this.state.showTools = this.state.showTools ? false : true;
+	 	console.log(this.state.showTools)
+	}
+	getDataForMap = (query) => {
+		console.log(query)
+		axios.post('http://43.240.97.166:3000/tweetMap', query)
+		.then((res) => 
+		{
+			// res.data.tweets.forEach(item => 
+			// {            
+			// 	let label = "Tweets"
+			// 	const data  = Processors.processGeojson(item);
+			// 	const dataset = 
+			// 	{ 
+			// 		data,
+			// 		info: 
+			// 		{
+			// 			label: label
+			// 		}
+			// 	};
+			// 	this.props.dispatch(addDataToMap({ datasets: dataset }));
+			// });
+			res.data.trajectory.forEach(item => 
+			{            
+				let label = `${query.Primary_Type || "ALL"} - ${query.Year || 
+					(moment(query.Date.$gte).diff(query.Date.$lt, 'days') > 2 
+						? moment(query.Date.$gte).format("DD/MM/YYYY") 
+						: moment(query.Date.$gte).format("DD/MM/YYYY") + " - " + moment(query.Date.$lt).format("DD/MM/YYYY") )}` 
+				const data  = Processors.processGeojson(item);
+				const dataset = 
+				{ 
+					data,
+					info: 
+					{
+						label: label
+					}
+				};
+				this.props.dispatch(addDataToMap({ datasets: dataset }));
+			});
+			console.log(res);
+		});
+	}
+	render() {
+		const { showBanner, width, height } = this.state;
+		return (
+			<div>
+				<GlobalStyleDiv>
+					<div
+						style={{
+						transition: 'margin 1s, height 1s',
+						position: 'absolute',
+						width: '95%',
+						height: '100%',
+						paddingLeft: '16px',
+						paddingTop: '16px',
+						paddingRight: '16px',
+						minHeight: `calc(100% - ${bannerHeight}px)`,
+						visibility: this.state.showTools ? 'visible' : 'hidden'
+						}}>
+						<KeplerGl
+							mapboxApiAccessToken="pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ"
+							id="map"
+							getState={state => state.demo.keplerGl}
+							width={width - 16}
+							height={height}
+						/>
+					</div>
+				</GlobalStyleDiv>
+				<QueryForm getDataForMap={this.getDataForMap}/>
+			</div>
+		);
+	}
 }
 
 const mapStateToProps = state => state;
-const dispatchToProps = dispatch => ({dispatch});
+const dispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   mapStateToProps,

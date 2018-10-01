@@ -16,7 +16,7 @@ exports.getPredictedData = async (req, res) =>
 exports.queryDB = async(query, limit) =>
 {
     let result = [];
-    await tweetMelb.find(query).sort({'date': -1}).lean().limit(parseInt(limit)).exec().then(function(res){result = res}).catch(function(err){console.log(err)});
+    await tweetChicago.find(query).sort({'date': -1}).lean().limit(parseInt(limit)).exec().then(function(res){result = res}).catch(function(err){console.log(err)});
     return result;
 };
 
@@ -59,7 +59,7 @@ exports.getCrimeWordCount = async (req,res, next) =>
 {
     var tweet = db.model('tweets', tweet);
     words = {};
-    tweet.find({crime: true}).limit(10000).exec(function(err, posts) 
+    tweetMelb.find({crime: true}).limit(10000).exec(function(err, posts) 
     {
         let tweetNum = posts.length;
         let uniqueWords = 0;

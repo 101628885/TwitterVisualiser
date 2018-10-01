@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/shadertools/test/index-fp64.js"],"names":["require"],"mappings":";;AAAAA,OAAO,CAAC,mBAAD,CAAP;;AACAA,OAAO,CAAC,0CAAD,CAAP","sourcesContent":["require('tap-browser-color')();\nrequire('../src/modules/fp64/fp64-arithmetic.spec');\n"],"file":"index-fp64.js"}

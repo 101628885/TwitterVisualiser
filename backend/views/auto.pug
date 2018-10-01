@@ -1,30 +1,26 @@
 extends layout
 
 block content
-    div(class="row")
-        div(class="col-sm-1")
-            img(src="images/Twitter_Logo_WhiteOnBlue.png" align="left" width="64px")
-        div(class="col-sm-11")
-            h1 VISION: Data Collection
-    div(class="card")
-
-
-        form(method='POST', action='/auto')
-            #form-group
-                label #{monitoredWord}
-                br
-                br
-                label(hidden = !isHidden) #{shouldResume}
-                input.form-control(name='word1', type='text', hidden = isHidden)
-                input.form-control(name='word2', type='text', hidden = isHidden)
-                input.form-control(name='word3', type='text', hidden = isHidden)
-                input.form-control(name='word4', type='text', hidden = isHidden)
-                input.form-control(name='word5', type='text', hidden = isHidden)
-                br
-                label(for='resume', hidden = isHidden) Automatically resume collection if VISION restarts:
-                input.form-control(name='resume', id = 'resume', type = 'checkbox', hidden = isHidden)
-                br
-            input.btn.btn-primary(type='submit', value = toggle)
-        br
-        br
-        h6 Status: #{status}
+	.container-fluid
+		.row
+			.col-md-12.p-5
+				form(method='POST', action='/auto')
+					p.h4.mb-4 Data Collection
+					p.h6.my-4 Status: #{status}
+					p(hidden = isHidden) Enter a set of keyword(s) for the app to query the public Twitter API.
+					label #{monitoredWord}
+					p
+						br
+						label(hidden = !isHidden) #{shouldResume}
+					.row
+						.col-md-4
+							input.form-control.mb-2(name='word1', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word2', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word3', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word4', type='text', hidden = isHidden)
+							input.form-control.mb-2(name='word5', type='text', hidden = isHidden)
+					.custom-control.custom-checkbox.my-4
+						input#resume.custom-control-input(name='resume', type='checkbox', hidden = isHidden)
+						label.custom-control-label(for='resume', hidden = isHidden) Automatically resume collection if the app restarts
+					button.btn.btn-primary(type='submit') #{toggle}
+					

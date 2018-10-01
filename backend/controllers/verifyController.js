@@ -8,7 +8,7 @@ var NodeGeocoder = require('node-geocoder');
 var options = {
 	httpAdapter: 'https',
 	provider: 'google',
-	apiKey: process.env.GOOGLE_PLACES_API,
+	apiKey: process.env.GOOGLE_PLACES_API
 };
 
 var geocoder = NodeGeocoder(options);
@@ -18,10 +18,8 @@ var geocoder = NodeGeocoder(options);
 
 function sendNextTweet(req, res)
 {
-	console.log("Sending...");
 	if (req.params.geo === "chicago")
 	{
-		console.log("Verify Controller: Location is Chicago");
 		tweetChicago.find({checked: false}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
 		{
 			if(!err)
@@ -32,7 +30,6 @@ function sendNextTweet(req, res)
 	}
 	else
 	{
-		console.log("Verify Controller: Location is Melbourne");
 		tweetMelb.find({checked: false}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
 		{
 			if(!err)
@@ -55,18 +52,15 @@ exports.getUncheckedTweets = async (req,res, next) =>
 };
 exports.checkTweets = async (req,res, next) =>
 {
-	console.log("Location selected: ", req.params.geo);
 	let tweetid= req.params.id;
 	let value = req.params.value;
 	let location = req.params.location;
 	let type = req.params.type;
 	let query = {id: tweetid};
-	console.log(req.params);
 
 
 	if (tweetid === "0")
 	{
-		console.log("DB change requested by user, skipping...");
 		sendNextTweet(req, res);
 	}
 	else
@@ -74,7 +68,7 @@ exports.checkTweets = async (req,res, next) =>
 		//If marked as true, use the geocoder to get a place object and update the tweet with type of crime and the place object
 		if (value == "true")
 		{
-			console.log("huh1");
+			console.log("Selected true for current tweet...");
 			geocoder.geocode(location, function(error, place)
 			{
 				if(!error)
@@ -104,11 +98,15 @@ exports.checkTweets = async (req,res, next) =>
 						});
 					}
 				}
+				else
+				{
+					console.log(error);
+				}
 			})
 		}
 		else
 		{
-
+			console.log("Selected false for current tweet...");
 			if (req.params.geo === "chicago")
 			{
 				tweetChicago.update(query, { checked: true, crime: value}, function(err)

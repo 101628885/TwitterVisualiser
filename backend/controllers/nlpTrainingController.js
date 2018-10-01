@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const tweet = require('../models/tweet_schema');
+var schemas = require('./mongoController');
+var tweetMelb = schemas.tweetMelb;
+var tweetChicago = schemas.tweetChicago;
 const pythonShell = require('python-shell');
 const db = mongoose.connection;
 
@@ -15,7 +17,7 @@ exports.returnNLPDataSet = async (req,res) => {
         query.checked = true;
     }
 
-    tweet.find(query).sort({'date': -1}).limit(parseInt(req.params.count)).lean().exec(function(err, posts)
+    tweetMelb.find(query).sort({'date': -1}).limit(parseInt(req.params.count)).lean().exec(function(err, posts)
     {
         if(!err)
         {

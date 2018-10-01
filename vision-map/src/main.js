@@ -26,6 +26,8 @@ import {syncHistoryWithStore} from 'react-router-redux';
 import {render} from 'react-dom';
 import store from './store';
 import App from './app';
+
+
 // import {getAppUrlPrefix} from './constants/default-settings';
 
 const history = syncHistoryWithStore(hashHistory, store);

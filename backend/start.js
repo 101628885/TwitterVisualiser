@@ -65,6 +65,13 @@ const server = app.listen(app.get('port'), "0.0.0.0", () => {
         "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
 
     console.log("\n                                     Welcome to VISION.\n\n");
+
+    if (!process.env.DISABLE_DEVELOPER_MODE)
+    {
+        console.log("\x1b[31m", "\x1b[1m", "\nVISION is running in Developer Mode. Some database features are unavailable.\n", "\x1b[0m");
+    }
     console.log("System output:");
     console.log(`\nVISION now running on port: ${server.address().port}`);
+    //console.log(process.env.DEVELOPER_MODE);
+    
 });

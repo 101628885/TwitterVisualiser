@@ -1,11 +1,18 @@
 const request = require('request');
 const fs = require('fs');
+const chicagoAuto = require('./chicagoDataFactory');
 var shouldRun = false;
 var query = [];
 var autoCollect = false;
 var shouldResume = false;
 var querySelect = 0;
 var geo = "melbourne";
+
+
+
+if (fs.existsSync(fs.existsSync(process.cwd() + "/preferences"))) {
+
+}
 
 if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
 {
@@ -22,13 +29,12 @@ if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume f
     shouldResume = data.shouldResume;
 }
 
-
 setInterval(function(){
 
     if (shouldRun)
     {
 
-        console.log("Checking word: ", query[querySelect], " in location ", geo);
+        //console.log("Checking word: ", query[querySelect], " in location ", geo);
         collect(query[querySelect], geo);
 
         if (querySelect < query.length - 1)
@@ -41,17 +47,23 @@ setInterval(function(){
 
 	        if (geo === "melbourne")
 	        {
-	            console.log("Finished run, setting location to Chicago");
+	            //console.log("Finished run, setting location to Chicago");
 		        geo = "chicago";
 	        }
 	        else if(geo === "chicago")
 	        {
-	            console.log("Finished run, setting location to Melbourne");
+	            //console.log("Finished run, setting location to Melbourne");
 		        geo = "melbourne";
 	        }
         }
     }
-}, 8000);
+}, 12000);
+
+setInterval(function(){
+
+	chicagoAuto.saveCrimeData().catch((err) => console.log(err));
+
+}, 7200000); //call once every 2 hours
 
 
 
@@ -107,7 +119,7 @@ exports.autoGet = function(req, res)
 
 exports.autoPost = function(req, res)
 {
-
+	//hold value in between POSTs
     autoCollect = !autoCollect; //toggle autoCollect
 
     if (req.body.word1 !== "")
@@ -144,10 +156,9 @@ exports.autoPost = function(req, res)
         query.push("theft");//default search term if no entry is specified
     }
 
-
+	//Write a preference file to disk if asked to resume
 	if (req.body.resume)
 	{
-		console.log("VISION will automatically resume...");
 		//handle writing params to disk
 
         shouldResume = true;
@@ -158,21 +169,20 @@ exports.autoPost = function(req, res)
 		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
 			if (err)
 			{
-				console.log(err);
+				//console.log(err);
 			}
 		})
 	}
 	else
 	{
 	    shouldResume = false;
-		console.log("A restart will stop data collection...");
 
 		let data = {shouldResume: false, query: []};
 
 		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
 			if (err)
 			{
-				console.log(err);
+				//console.log(err);
 			}
 		})
 	}

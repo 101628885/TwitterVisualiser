@@ -62,14 +62,15 @@ the items from the sprints.
 2. If you're using `yarn` be sure to run a `yarn install`.
 3. Open up your preferred IDE or Text Editor - like VS Code ;) - and edit `app.js` or create and import new files.
 
-## Running kepler.gl map
+## Running Kepler.gl map
 
-```
-cd vision-map
-npm install
-export MapboxAccessToken=pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ
-npm start
-```
+To configure the visualisation application and to map the data we need to configure the mapping.
+For this project we are using Kepler.gl.
+
+1. To install the dependencies we must first run the `npm install` command in the 'vision-map' folder.
+2. As Kepler.gl uses mapbox to display the map we must then export the token to be able to view the map with:  
+```export MapboxAccessToken=pk.eyJ1IjoidmlzaW9uc3dpbiIsImEiOiJjamtyeHV6c3kzejQ5M3FvM25mYmo2bTM1In0.kaVi7yYgddR5uEjkGHfuSQ```
+3. Finally we can run a simple `npm start` to run the map which can then be accessed on port 8080 on the localhost.
 
 ## Running the application
 
