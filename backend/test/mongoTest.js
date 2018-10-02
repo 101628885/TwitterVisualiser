@@ -220,4 +220,81 @@ describe('storeTweets()', function(){
 	})
 });
 
+describe('getStoredTweets()', function(){
+
+	it('should return tweets with the right parameters', async() =>
+	{
+		const count = 5;
+
+		//SETUP
+		let query1 = {checked: true};
+		let query2 = {crime: false};
+		let query3 = {checked: false};
+		let query4 = {crime: true};
+
+		let resultMelb1 = await mongo.getStoredTweets("melbourne", query1, count, false);//5 tweets from Melb all with checked = true
+		let resultMelb2 = await mongo.getStoredTweets("melbourne", query2, count, false);//5 tweets from Melb all with crime = false
+		let resultMelb3 = await mongo.getStoredTweets("melbourne", query3, count, false);//5 tweets from Melb all with checked = false
+		let resultMelb4 = await mongo.getStoredTweets("melbourne", query4, count, false);//5 tweets from Melb all with checked = false
+
+		let resultChicago1 = await mongo.getStoredTweets("chicago", query1, count, false);//5 tweets from Chicago all with checked = true
+		let resultChicago2= await mongo.getStoredTweets("chicago", query2, count, false);//5 tweets from Chicago all with crime = false
+		let resultChicago3 = await mongo.getStoredTweets("chicago", query3, count, false);//5 tweets from Chicago all with checked = false
+		let resultChicago4 = await mongo.getStoredTweets("chicago", query4, count, false);//5 tweets from Chicago all with checked = false
+
+		resultMelb1.map((i) =>
+		{
+			expect(i.checked).to.be.equal(true);
+		});
+
+		resultMelb2.map((i) =>
+		{
+			expect(i.crime).to.be.equal(false);
+		});
+
+		resultMelb3.map((i) =>
+		{
+			expect(i.checked).to.be.equal(false);
+		});
+
+
+		resultMelb4.map((i) =>
+		{
+			expect(i.crime).to.be.equal(true);
+		});
+		expect(resultMelb1.length).to.be.equal(count);
+		expect(resultMelb2.length).to.be.equal(count);
+		expect(resultMelb3.length).to.be.equal(count);
+
+		resultChicago1.map((i) =>
+		{
+			expect(i.checked).to.be.equal(true);
+		});
+
+		resultChicago2.map((i) =>
+		{
+			expect(i.crime).to.be.equal(false);
+		});
+
+		resultChicago3.map((i) =>
+		{
+			expect(i.checked).to.be.equal(false);
+		});
+
+		resultChicago4.map((i) =>
+		{
+			expect(i.crime).to.be.equal(true);
+		});
+
+		expect(resultChicago1.length).to.be.equal(count);
+		expect(resultChicago2.length).to.be.equal(count);
+		expect(resultChicago3.length).to.be.equal(count);
+
+
+
+
+	})
+
+})
+
 

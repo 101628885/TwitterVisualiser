@@ -10,9 +10,23 @@ const databaseMelb = {location: "Melbourne", url : "mongodb://team:swinburne@43.
 const databaseChicago = {location: "Chicago", url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
 
 const databaseChicagoCrime = {location:"Chicago Crime", url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
+
 const connectFailure = function() {console.log("This will abort the NodeJS process."); process.exit(1);}
 
 init();
+
+function init()
+{
+	let tweetMelb = createDBConnectionObject(databaseMelb).model('tweets');
+
+	let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
+
+	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
+
+	module.exports.tweetMelb = tweetMelb;
+	module.exports.tweetChicago = tweetChicago;
+	module.exports.chicagoCrime = chicagoCrime;
+}
 
 function createDBConnectionObject(database)
 {
@@ -28,21 +42,6 @@ function createDBConnectionObject(database)
 	});
 
 	return conn;
-}
-
-
-function init()
-{
-	let tweetMelb = createDBConnectionObject(databaseMelb).model('tweets');
-
-	let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
-
-	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
-
-	module.exports.tweetMelb = tweetMelb;
-	module.exports.tweetChicago = tweetChicago;
-	module.exports.chicagoCrime = chicagoCrime;
-
 }
 
 exports.getStoredTweets = async (location, query, count, skip) =>
@@ -167,7 +166,7 @@ exports.storeTweets = function(tweetsToStore, geo)
 	}
 };
 
-exports.removeDuplicates = async function(db) //deprecated
+async function removeDuplicates(db) //deprecated
 {
 	let tweets = {};
 	let dupsRemoved = 0;
