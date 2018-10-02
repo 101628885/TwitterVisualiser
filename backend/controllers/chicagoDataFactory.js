@@ -188,23 +188,77 @@ exports.testEndpoint = async(req, res) =>
 exports.getMapData = async(query) =>
 {
 	let timeStart = new Date()
+	let baseLimit = 5000;
+
 	result = [];
+
+	if(query.Date != undefined)
+	{
+		query.Date.$gte = moment(query.Date.$gte, "DD/MM/YYYY")
+		query.Date.$lt = query.Date.$lt == "" ?  moment(query.Date.$gte, "DD/MM/YYYY").add(1, "days") : moment(query.Date.$lt, "DD/MM/YYYY")
+	}
 	console.log(query) 
 
 	var limit = query.limit || 1000
+
 	delete query.limit;
+
 	//Checking if empty, if empty set query {Year: 2018}
 	query = Object.keys(query).length === 0 && query.constructor === Object ? {Year: 2018} : query;
-	await chicagoCrime.find(query)
-	.lean()
-	.limit(parseInt(limit))
-	.sort({Date: 1})
-	.exec()
-	.then((res) => {result = result.concat(res);})
-	.catch((err) => {console.log(err)});
 
-	console.log(`Query time: ${new Date() - timeStart}ms`)
-	return result;
+	let promises = [];
+
+	if (limit > baseLimit)
+	{
+		for(let i =0; i < Math.ceil(limit / baseLimit); i++)
+		{
+			let newLimit = baseLimit
+			let skip = i * baseLimit;
+			if(skip + baseLimit > limit) newLimit = baseLimit - (skip + baseLimit - limit);
+			console.log("New Limit: " + newLimit)
+			console.log("Skip: " + skip)
+			console.log("i: " + i)
+
+			promises.push(new Promise((resolve, reject) => 
+			{
+				var pChicagoCrime = schemas.chicagoCrime;
+				pChicagoCrime.find(query)
+				.lean()
+				.limit(parseInt(newLimit))
+				.skip(skip)
+				.sort({Date: 1})
+				.exec()
+				.then((res) => 
+				{
+					result = result.concat(res);
+					resolve();
+				})
+				.catch((err) => {console.log(err); reject()});
+	        }));
+		}
+	}else
+	{
+		await chicagoCrime.find(query)
+		.lean()
+		.limit(parseInt(limit))
+		.sort({Date: 1})
+		.exec()
+		.then((res) => {result = result.concat(res);})
+		.catch((err) => {console.log(err)});
+	}
+	
+
+	if(promises.length == 0)
+	{
+		console.log(`Query time: ${new Date() - timeStart}ms`)
+		return result;
+	}
+	else
+	{
+		await Promise.all(promises);
+		console.log(`Query time: ${new Date() - timeStart}ms`)
+		return result;
+	}
 }
 
 exports.fixMapData  = async(req, res) =>

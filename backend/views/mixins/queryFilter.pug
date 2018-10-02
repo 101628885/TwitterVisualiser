@@ -1,4 +1,13 @@
 mixin queryFilter
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	script.
+		$( function() {
+			$( "#startDate" ).datepicker({ dateFormat: 'dd/mm/yy' }).val();
+			$( "#endDate" ).datepicker({ dateFormat: 'dd/mm/yy' }).val();
+		} );
 	.row
 		.col-md-12
 			label(for="type") Type
@@ -24,6 +33,15 @@ mixin queryFilter
 		.col-md-12
 			label(for="limit") Limit
 			input#limit.form-control.mb-4(name="limit", type="text")
+	.row
+		.col-md-12
+			label(for="startDate") Date Range
+			.row
+				.col-sm-6
+					input#startDate.form-control.mb-4(name="startDate", type="text" placeholder="Start Date")
+				.col-sm-6
+					input#endDate.form-control.mb-4(name="enDate", type="text" placeholder="End Date")
+
 	.row
 		.col-md-12
 			button(class="btn btn-primary" onClick="filterMap()") Filter Historical Crime

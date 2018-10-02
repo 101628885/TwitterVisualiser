@@ -12,9 +12,17 @@ const INITIAL_VIEW_STATE = {
 
 // initial data variables
 let chicago_tweet_data = null;
-let chicago_trajectory_data = null;
-let centroid_data = null;
+let chicago_crime_data = null;
 
+let chicago_trajectory_same_type_data = null;
+let chicago_trajectory_all_type_data = null;
+let centroid_same_type_data = null;
+let centroid_all_type_data = null;
+
+let pointHighlightColour = [0, 255, 162, 255]
+
+let trajectoryLineColour = [255, 221, 51, 150]
+let trajectoryHighlightColor = [51, 187, 255, 255]
 // array of options available to the user
 const OPTIONS = {
 	TWEET: ['radius', 'visible', 'extruded'],
@@ -37,13 +45,24 @@ const deckgl = new deck.DeckGL({
 });
 
 // hex layer color range
-const COLOR_RANGE = [
+const TWEET_COLOR_RANGE = [
 	[1, 152, 189],
 	[73, 227, 206],
 	[216, 254, 181],
 	[254, 237, 177],
 	[254, 173, 84],
 	[209, 55, 78]
+];
+
+const CRIME_COLOR_RANGE = [
+	[65, 244, 113],
+	[66, 244, 244],
+	[66, 194, 244],
+	[66, 134, 244],
+	[69, 66, 244],
+	[244, 66, 244],
+	[188, 66, 244],
+	[244, 66, 66]
 ];
 
 // hex layer light range
@@ -63,21 +82,76 @@ function filterMap() {
 		query.limit = $('#limit').val();
 	query.Year = $('#year').val();
 	
+	if($('#startDate').val() != "")
+	{
+		query.Date = {
+						$gte: $('#startDate').val(), 
+						$lt: $('#endDate').val()
+					};
+	}
+
 	axios.post('/tweetMap', query)
 	.then((res) => 
 	{
-		console.log(JSON.stringify(res));
-		chicago_trajectory_data = res.data.trajectory.finalGeoJSON[0];
+		chicago_trajectory_same_type_data = res.data.crime.trajectorySameTypeGeoJSON[0];
+		chicago_trajectory_all_type_data = res.data.crime.trajectoryAllTypeGeoJSON[0];
 
-		centroid_data = res.data.trajectory.centroids;
+		centroid_same_type_data = res.data.crime.centroidsSame;
+		centroid_all_type_data = res.data.crime.centroidsAll;
+
+		chicago_crime_data = res.data.crime.crimeGeoPoints[0];
+
+		statsBuilder();
 		renderLayers();
 	});
 	
 }
 
-const updateTrajectoryLayerTooltip = ({x, y, object}) => {
+statsBuilder = () =>
+{
+	let crimeCount = chicago_crime_data.features.length;
+	let crimeDateRange = `${chicago_crime_data.features[0].properties.date_stats_text} - ${chicago_crime_data.features[crimeCount - 1].properties.date_stats_text}`
+	let crimeTypeObject = {}
+	chicago_crime_data.features.forEach((crime) => 
+	{
+		if(crimeTypeObject.hasOwnProperty(`${crime.properties.primary_type}`))
+		{
+			crimeTypeObject[`${crime.properties.primary_type}`] += 1  
+		} else
+		{
+			crimeTypeObject[`${crime.properties.primary_type}`] = 1  
+		}
+	})
+	$("#stats-date-range p").empty()
+	$("#stats-total p").empty()
+	$( "#stats-crimes p").empty()
+	$("#stats-panel p").empty()
+
+	$("#stats-date-range").append("<p><strong>" + crimeDateRange + "</strong>")
+	$("#stats-total").append("<p><strong>Total Found:</strong> " + crimeCount)
+	
+	Object.keys(crimeTypeObject).forEach(function(crime)
+	{
+    	$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
+	});
+
+	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
+
+	$("#stats-panel").show()
+}
+
+toTitleCase = (str) => {
+	str = str.toLowerCase().split(' ');
+	for (var i = 0; i < str.length; i++) {
+		str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+	}
+	return str.join(' ');
+};
+
+const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 	try {
 		const tooltip = document.getElementById('tooltip');
+
 		if (object) {
 			tooltip.style.visibility = 'visible';
 			tooltip.style.top = `${y}px`;
@@ -86,7 +160,8 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 			if (object.geometry.coordinates[1])
 			{
 				tooltip.innerHTML = `
-				<div>Crime Details -></div>
+				<div>Crime Details</div>
+				<div>Date: ${object.properties.date_text}</div>
 				<div>Latitude: ${object.geometry.coordinates[1]}</div>
 				<div>Longitude: ${object.geometry.coordinates[0]}</div>
 				<div>Crime Type: ${object.properties.primary_type}</div>
@@ -101,6 +176,7 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
 				`;
 				});
+				renderLayers();
 			}
 		} else {
 			tooltip.innerHTML = '';
@@ -111,7 +187,7 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 	}
 };
 
-const updateCentroidLayerTooltip = ({x, y, object}) => {
+const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.getElementById('tooltip');
 		if (object) {
@@ -157,8 +233,11 @@ const renderLayers = () => {
 
 
 	const optionsTweet = {};
-	const optionsTrajectory = {};
-	const optionsCentroid = {};
+	const optionsTrajectorySame = {};
+	const optionsTrajectoryAll = {};
+
+	const optionsCentroidAll = {};
+	const optionsCentroidSame = {};
 
 	const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
 	document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
@@ -170,31 +249,102 @@ const renderLayers = () => {
 	const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
 	optionsTweet.extruded = extrudedTweetValue;
 
+
+	//Trjectory Checking
 	const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
-	optionsTrajectory.visible = visibleTrajectoryValue;
 
+	const visibleTrajectorySameTypeValue = document.getElementById('visible-type-trajectory-handle').checked;
+	optionsTrajectorySame.visible = visibleTrajectoryValue ? visibleTrajectorySameTypeValue : visibleTrajectoryValue;
+	optionsTrajectoryAll.visible = visibleTrajectoryValue ? !visibleTrajectorySameTypeValue : visibleTrajectoryValue;
+
+	//Centroid Checking
 	const centroidValue = document.getElementById('visible-centroid-handle').checked;
-	optionsCentroid.visible = centroidValue;
+	optionsCentroidSame.visible = centroidValue ? visibleTrajectorySameTypeValue : centroidValue;
+	optionsCentroidAll.visible = centroidValue ? !visibleTrajectorySameTypeValue : centroidValue;
 
-	const chicagoTrajectoryLayer = new deck.GeoJsonLayer({
-		id: 'chicago-trajectory-layer',
-		data: chicago_trajectory_data,
+	
+	const chicagoPointLayer = new deck.GeoJsonLayer({
+		id: 'chicago-crime-layer',
+		data: chicago_crime_data,
+		stroked: true,
+		getFillColor: d => {
+			switch(d.properties.primary_type) {
+				case "ASSAULT":
+					return CRIME_COLOR_RANGE[0];
+					break;
+				case "THEFT":
+					return CRIME_COLOR_RANGE[1];
+					break;
+				case "SEX OFFENSE":
+					return CRIME_COLOR_RANGE[2];
+					break;
+				case "OTHER OFFENSE":
+					return CRIME_COLOR_RANGE[3];
+					break;
+				case "OFFENSE INVOLVING CHILDREN":
+					return CRIME_COLOR_RANGE[4];
+					break;
+				case "NARCOTICS":
+					return CRIME_COLOR_RANGE[5];
+					break;
+				case "CRIMINAL DAMAGE":
+					return CRIME_COLOR_RANGE[6];
+					break;
+				case "HOMICIDE":
+					return CRIME_COLOR_RANGE[7];
+					break;
+			};
+		},
+		getLineColor: d => pointColour,
+		getRadius: d => 60,
+		autoHighlight: true,
+		highlightColor: pointHighlightColour, 
+		radiusMinPixels: 30,
+		pickable: true,
+		fp64: false,
+		onHover: updateTrajectoryLayerTooltip,
+		visble: visibleTrajectoryValue
+	});
+
+	const chicagoTrajectorySameTypeLayer = new deck.GeoJsonLayer({
+		id: 'chicago-trajectory-same-layer',
+		data: chicago_trajectory_same_type_data,
 		stroked: true,
 		lineWidthMinPixels: 3,
 		lineJointRounded: true,
-		getFillColor: d => [204, 0, 0, 200],
-		getLineColor: d => [204, 0, 0, 200],
+		getFillColor: d => trajectoryLineColour,
+		getLineColor: d => trajectoryLineColour,
 		getRadius: d => 60,
+		autoHighlight: true,
+		highlightColor: trajectoryHighlightColor, 
 		radiusMinPixels: 60,
 		pickable: true,
+		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		fp64: true,
-		...optionsTrajectory
+		...optionsTrajectorySame
 	});
 
-	const centroidLayer =	new deck.GeoJsonLayer({
-		id: 'centroid-layer',
-		data: centroid_data,
+	const chicagoTrajectoryAllTypeLayer = new deck.GeoJsonLayer({
+		id: 'chicago-trajectory-all-layer',
+		data: chicago_trajectory_all_type_data,
+		stroked: true,
+		lineWidthMinPixels: 3,
+		lineJointRounded: true,
+		getFillColor: d => trajectoryLineColour,
+		getLineColor: d => trajectoryLineColour,
+		getRadius: d => 60,
+		autoHighlight: true,
+		highlightColor: trajectoryHighlightColor, 
+		radiusMinPixels: 60,
+		pickable: true,
+		fp64: false,
+		onHover: updateTrajectoryLayerTooltip,
+		...optionsTrajectoryAll
+	});
+
+	const centroidSameTypeLayer =	new deck.GeoJsonLayer({
+		id: 'centroid-same-layer',
+		data: centroid_same_type_data,
 		stroked: true,
 		lineWidthMinPixels: 3,
 		lineJointRounded: false,
@@ -203,14 +353,30 @@ const renderLayers = () => {
 		getRadius: d => 20,
 		radiusMinPixels: 20,
 		pickable: true,
-		onHover: updateCentroidLayerTooltip,
-		fp64: true,
-		...optionsCentroid
+		fp64: false,
+		onHover: updatecentroidSameTypeLayerTooltip,
+		...optionsCentroidSame
+	});
+
+	const centroidAllTypeLayer =	new deck.GeoJsonLayer({
+		id: 'centroid-all-layer',
+		data: centroid_all_type_data,
+		stroked: true,
+		lineWidthMinPixels: 3,
+		lineJointRounded: false,
+		getFillColor: d => [241, 206, 74, 100],
+		getLineColor: d => [241, 206, 74, 100],
+		getRadius: d => 20,
+		radiusMinPixels: 20,
+		pickable: true,
+		fp64: false,
+		onHover: updatecentroidSameTypeLayerTooltip,
+		...optionsCentroidAll
 	});
 
 	const chicagoTweetLayer = new deck.HexagonLayer({
 		id: 'chicago-tweet-layer',
-		colorRange: COLOR_RANGE,
+		colorRange: TWEET_COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
 		data: chicago_tweet_data,
 		elevationRange: [0, 800],
@@ -219,8 +385,8 @@ const renderLayers = () => {
 		opacity: 0.4,
 		coverage: 0.8,
 		pickable: true,
+		fp64: false,
 		onHover: updateTweetLayerTooltip,
-		fp64: true,
 		z: 1,
 		...optionsTweet
 	});
@@ -237,12 +403,12 @@ const renderLayers = () => {
 		onHover: info => console.log('Hovered:', info),
 		getRadius: d => 60,
 		radiusMinPixels: 60,
-		fp64: true,
+		fp64: false,
 		...optionsTweet
 	});
 
 	deckgl.setProps({
-		layers: [chicagoTrajectoryLayer, centroidLayer, chicagoTweetLayer]
+		layers: [chicagoTweetLayer, chicagoTrajectorySameTypeLayer, chicagoTrajectoryAllTypeLayer, centroidSameTypeLayer, centroidAllTypeLayer, chicagoPointLayer]
 	});
 	$('.loader').hide()
 };
@@ -253,18 +419,20 @@ const renderLayers = () => {
  */
 const initialiseData = async () => {
 	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY).then(res => res.json());
-	// response_chicago_trajectory = await response_chicago_trajectory.json();
-	//console.log(response_chicago_trajectory);
-	chicago_trajectory_data = response_chicago_trajectory.trajectory.finalGeoJSON[0];
+
+	chicago_trajectory_same_type_data = response_chicago_trajectory.crime.trajectorySameTypeGeoJSON[0];
+	chicago_trajectory_all_type_data = response_chicago_trajectory.crime.trajectoryAllTypeGeoJSON[0];
+
+	chicago_crime_data = response_chicago_trajectory.crime.crimeGeoPoints[0];
+
 	chicago_tweet_data = response_chicago_trajectory
 	.tweets[0]
 	.features
 	.map(tweet => (tweet.geometry.coordinates));
 
-	centroid_data = response_chicago_trajectory.trajectory.centroids;
-
-	// console.log(chicago_trajectory_data)
-	// console.log(chicago_tweet_data)
+	centroid_same_type_data = response_chicago_trajectory.crime.centroidsSame;
+	centroid_all_type_data = response_chicago_trajectory.crime.centroidsAll;
+	statsBuilder();
 	renderLayers();
 };
 
@@ -286,6 +454,7 @@ const registerEventHandlers = (options) => {
 		//Ask Jason about doing this automagically
 		//Bodge for now soz
 		document.getElementById("visible-centroid-handle").onclick = renderLayers;
+		document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
 
 		let inputType = document.getElementById(key + idSuffix).getAttribute("type");
 		
