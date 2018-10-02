@@ -1,5 +1,17 @@
 extends layout
 
+//- md bootstrap (deprecated)
+//- will delete soon, i'm only leaving this here because the deckgl map control panel uses 
+//- styles from this template
+//- i don't like the template tbh (md bootstrap)
+//- too many paid options
+append head
+	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
+	link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
+	script(type='text/javascript' src="/stylesheets/js/popper.min.js")
+	script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
+	script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
+
 include ./mixins/queryFilter
 
 block content

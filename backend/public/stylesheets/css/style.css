@@ -79,6 +79,11 @@ h1:not(#map h1) {
   }
 }
 
+.viscrime-navicon {
+  font-size:17px;
+  margin:0 5px 0 5px;
+}
+
 /* google maps module */
 
 #map {

@@ -5,38 +5,49 @@ html
     meta(name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no")
     meta(http-equiv="x-ua-compatible" content="ie=edge")
     title= title
-    
-    //- fonts
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
-    link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
-    
-    //- css
-    link(type="text/css" rel="stylesheet" href="stylesheets/css/materialize.min.css" media="screen,projection")
-    link(type="text/css" rel="stylesheet" href="stylesheets/css/style.css" media="screen,projection")
-    
-    //- scripts
-    script(type="text/javascript" src="stylesheets/js/materialize.min.js")
-    script(src="./scripts/map_render.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js") 
-    //- md-bootstrap (gonna remove this soon ayy lmao)
-    //- link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
-    //- link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
-    //- script(type='text/javascript' src="/stylesheets/js/popper.min.js")
-    //- script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
-    //- script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
+
+    //- put scripts at the bottom of page, past the content block
+    block head
+      //- fonts
+      link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' integrity='sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU' crossorigin='anonymous')
+      link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+      
+      //- css
+      link(type="text/css" rel="stylesheet" href="/stylesheets/css/materialize.min.css" media="screen,projection")
+      link(type="text/css" rel="stylesheet" href="/stylesheets/css/style.css" media="screen,projection")
+
   body
     nav.grey.darken-4(role="navigation")
       .nav-wrapper.container
         a#logo-container.brand-logo(href="/") VisCrime
+        a.sidenav-trigger(href="#" data-target="mobile-menu")
+          i.fas.fa-bars
         ul.right.hide-on-med-and-down
           li
-            a(href="/deckmap") Map
+            a.valign-wrapper(href="/deckmap")
+              i.fas.fa-map-marker-alt.viscrime-navicon
+              span Explore 
           li
-            a(href="/browseTwitter") Browse
+            a.valign-wrapper(href="/lookup/api")
+              i.fas.fa-search.viscrime-navicon
+              span Lookup  
           li
-            a(href="/list") Tweets
-          li
-            a(href="/auto") Config
+            a.valign-wrapper(href="/auto")
+              i.fas.fa-cog.viscrime-navicon
+              span Config 
+    ul#mobile-menu.sidenav
+      li
+        a.valign-wrapper(href="/deckmap")
+          i.fas.fa-map-marker-alt.viscrime-navicon
+          span Explore 
+      li
+        a.valign-wrapper(href="/lookup/api")
+          i.fas.fa-search.viscrime-navicon
+          span Lookup  
+      li
+        a.valign-wrapper(href="/auto")
+          i.fas.fa-cog.viscrime-navicon
+          span Config 
     //- header
     //-   nav.navbar.navbar-expand-lg.navbar-dark.elegant-color
     //-     a.navbar-brand(href='/') VISION
@@ -68,5 +79,13 @@ html
     //-           i.fa.fa-github
     //-           span.clearfix.d-none.d-sm-inline-block GitHub
 
-    //- main content
+    //- main content, this section will be replaced by other pugs
     block content
+
+    //- scripts
+    //- external
+    script(type="text/javascript" src="/stylesheets/js/materialize.min.js")
+    script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js") 
+    //- internal
+    script(type="text/javascript" src="/scripts/map_render.js")
+    script(type="text/javascript" src="/scripts/setupLayout.js")

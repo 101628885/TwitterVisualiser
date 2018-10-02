@@ -1,21 +1,23 @@
 var express = require('express');
 var router = express.Router();
 
-const twitterController = require("../controllers/twitterController");
-const dbpediaController = require("../controllers/dbpediaController");
-const mongoController = require("../controllers/mongoController");
-const verifyController = require("../controllers/verifyController");
-const reactController = require("../controllers/reactController");
-const nlpTrainingController = require("../controllers/nlpTrainingController");
-const autoController = require("../controllers/autoController");
-const visualisationController = require("../controllers/visualisationController");
-const cacheController = require("../controllers/cacheController");
-const tweetMapController = require("../controllers/tweetMapController");
+// TODO: clean these up
+const twitterController       = require("../controllers/twitterController");
+const listviewController      = require("../controllers/listViewController");
+const dbpediaController       = require("../controllers/dbpediaController");
+const lookupController        = require("../controllers/lookupController");
+const verifyController        = require("../controllers/verifyController");
+const nlpTrainingController   = require("../controllers/nlpTrainingController");
+const autoController          = require("../controllers/autoController");
+const tweetMapController      = require("../controllers/tweetMapController");
+const reactController         = require("../controllers/reactController");
 const historicCrimeController = require("../controllers/historicCrimeController");
-const listviewController = require("../controllers/listViewController");
-const chicagoDataFactory = require("../controllers/chicagoDataFactory");
+const visualisationController = require("../controllers/visualisationController");
 
-const chicago_data_factory = require("../controllers/chicagoDataFactory");
+// const mongoController      = require("../controllers/mongoController");
+// const cacheController      = require("../controllers/cacheController");
+const chicagoDataFactory      = require("../controllers/chicagoDataFactory");
+const chicago_data_factory    = require("../controllers/chicagoDataFactory");
 
 // get homepage
 router.get('/', function(req, res) {
@@ -37,6 +39,17 @@ router.get('/browseTwitter', twitterController.browseTwitter);
 router.get('/getTweets', twitterController.browseTwitter);
 router.post('/getTweets', dbpediaController.getCombination, twitterController.getTweets);
 
+/**
+ * lookup controller routes
+ * handles the returning of lists of tweets to display on the lookup view
+ */
+router.get('/lookup', lookupController.getAPITweetsView);
+router.post('/lookup', dbpediaController.getCombination, lookupController.getAPITweetsView);
+router.get('/lookup/api', lookupController.getAPITweetsView);
+router.post('/lookup/api', dbpediaController.getCombination, lookupController.getAPITweetsView);
+router.get('/lookup/db', lookupController.getDBTweetsView);
+router.post('/lookup/db', dbpediaController.getCombination, lookupController.getDBTweetsView);
+
 // auto controller
 router.get('/auto', autoController.autoGet);
 router.post('/auto', autoController.autoPost);
@@ -50,7 +63,11 @@ router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTwee
 router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);  //returns crime: true or false
 router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);  //returns both checked and unchecked
 
-// react controller
+/**
+ * react controller routes
+ * handles all interactions inteded for the react native mobile app
+ * don't remove these, i think some parts in the web app actually use these
+ */
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount);
 router.get('/getPredictedData', reactController.getPredictedData);
 router.get('/getStoredTweets/:count/checked/:checked', reactController.getStoredTweets);  //returns checked: true or false
@@ -58,13 +75,19 @@ router.get('/getStoredTweets/:count/crime/:crime', reactController.getStoredTwee
 router.get('/getStoredTweets/:count', reactController.getStoredTweets);  //returns tweets from DB
 router.get('/getStoredTweets/', reactController.getStoredTweets);  //returns all tweets stored in the DB
 
-// visualisation controller
+/**
+ * visualisation controller routes
+ * handles the supply of d3 data
+ * i don't think we're using these anymore? we should delete :)
+ */
 router.get('/visualisation', visualisationController.getVisualisation);
 router.get('/visualisationData', visualisationController.getVisualisationData);
 router.get('/nlpData', visualisationController.getNLPData);
 
-
-//TweetMap Controller
+/**
+ * tweetmap controller routes
+ * handles the generation of trajectories to be displayed on the layered map
+ */
 router.get('/tweetMap', tweetMapController.initMapData);
 router.post('/tweetMap', tweetMapController.queryMapData);
 
@@ -72,7 +95,10 @@ router.post('/tweetMap', tweetMapController.queryMapData);
 router.get('/list', listviewController.listTweets);
 router.post('/list', listviewController.findTweets);
 
-// historic crime controller
+/**
+ * historiccrime controller routes
+ * handles the supply of data from various historical records from various u.s. cities
+ */
 router.get('/chicago', historicCrimeController.chicagoHandler); 
 router.get('/seattle', historicCrimeController.seattleHandler); 
 router.get('/baltimore', historicCrimeController.baltimoreHandler); 
@@ -80,12 +106,9 @@ router.get('/baltimore', historicCrimeController.baltimoreHandler);
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 router.get('/fixMapData', chicago_data_factory.fixMapData); 
 
-
-//Test dummy data
+// test dummy data
 router.post('/trajectoryData', chicagoDataFactory.getDummyData);
 router.get('/tweetsChicagoWithLocation', chicagoDataFactory.getChicagoTweetsWithLocation);
-
-//Test dummy data saving
 router.get('/saveDummy', chicagoDataFactory.saveCrimeData);
 
 module.exports = router;

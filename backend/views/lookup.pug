@@ -1,0 +1,119 @@
+extends layout
+
+block content
+	.container
+		.section
+			.row
+				.col.s12.m3
+					//- form for selecting tweet source
+					form#selectsourceform
+						.row
+							input-field.col.s12
+								label Tweet Source
+								p
+									label 
+										input(type="radio" name="datasource" value="twitterapi" onchange="toggleForm(this)" checked)
+										span Twitter API
+								p
+									label
+										input(type="radio" name="datasource" value="database" onchange="toggleForm(this)")
+										span Local Database
+					//- form for querying the twitter api
+					form#apiform(action="/lookup/api", method="POST")
+						.row
+							input-field.col.s12
+								label(for="location") Select Location
+								select#location(name="location")
+									option(value="melbourne" selected) Melbourne
+									option(value="chicago") Chicago
+						.row
+							input-field.col.s12
+								label(for="word") Enter Keyword
+								input#word(type="text", name="word", placeholder="e.g. crime")
+						.row
+							input-field.col.s12
+								label(for="dist") Enter Radius
+								input#dist(type="text", name="dist", placeholder="Default: 10km")
+								input(type='text', name='shouldStoreTweets', hidden, value=false)
+						.row
+							input-field.col.s12
+								button.btn.waves-effect.waves-light(type="submit") Filter
+					//- form for querying the local database
+					form#dbform(action="/lookup/db", method="POST")
+						.row
+							input-field.col.s12
+								label(for="db_location") Select Location
+								select#db_location(name="db_location")
+									option(value="melbourne" selected) Melbourne
+									option(value="chicago") Chicago
+						.row
+							input-field.col.s12
+								label(for="db_count") Amount of Results
+								input#db_count(type="text", name="db_count", placeholder="Default: 20")
+						.row
+							input-field.col.s12
+								p
+									label
+										input#db_random(type="checkbox")
+										span Randomise
+								p
+									label
+										input#db_checked(type="checkbox")
+										span Only get checked tweets
+								p
+									label
+										input#db_crime(type="checkbox")
+										span Only get crime-related tweets
+						.row
+							input-field.col.s12
+								button.btn.waves-effect.waves-light(type="submit") Filter
+				.col.s12.m9.l9
+					each tweet, index in data
+						.row(style="margin: 0;")
+							.col.s12
+								.card
+									.card-content
+										.row(style="margin: 0;")
+											.col.s1
+												img.circle(src=`${tweet.user.profile_image_url}` width="48" height="48")
+											.col.s11(style="padding-left: 20px;")
+												p #[strong #{tweet.user.name}] #{tweet.created_at} - #{tweet.geo}
+												p #{tweet.full_text}
+	//- .container-fluid
+	//- 	.row.mx-5
+	//- 		.col-md-12.my-5
+	//- 			form(action="/getTweets", method="POST")
+	//- 				p Query the the Twitter public API to search for tweets based on the following optional parameters.
+	//- 				.row
+	//- 					.col-md-4.col-sm-8
+	//- 						label(for="count") Enter a word to find tweets:
+	//- 						input.form-control.mb-4(id="word" name="word", type="text", placeholder="e.g. crime")
+	//- 						label(for="location") Location
+	//- 						select#location.custom-select.mb-4(name="location")
+	//- 							option(value="melbourne") Melbourne
+	//- 							option(value="chicago") Chicago
+	//- 						label(for="count") Enter radius:
+	//- 						input.form-control.mb-4(id="dist" name="dist", type="text", placeholder="default: 10km")
+	//- 						input(type='text', name='shouldStoreTweets', hidden, value=false)
+	//- 						button.btn.btn-primary(type="submit") Search
+	//- 	.row.mx-5
+	//- 		.col-md-12
+	//- 			if searchwords
+	//- 				.alert.alert-success(role='alert') Query sent to Twitter #[em #{searchwords}]
+	//- 			if wordCount
+	//- 				.alert.alert-info(role='alert') 
+	//- 					each value, key in wordCount
+	//- 						p The word #[em #{key}] was found #{value} times
+	//- 	.row.mx-5
+	//- 		.col-md-12
+	//- 			each tweet, index in data
+	//- 				.card.mb-3
+	//- 					.card-body
+	//- 						.grid-container
+	//- 							img#tweetdp.mx-2(src=`${tweet.user.profile_image_url}`)
+	//- 							p#tweetheader(class="card-title")
+	//- 								span
+	//- 									strong #{tweet.user_name} 
+	//- 								span #{tweet.created_at} - #{tweet.geo}
+	//- 							p#tweetbody #{tweet.full_text}
+	script(type="text/javascript" src="/scripts/setupList.js")
