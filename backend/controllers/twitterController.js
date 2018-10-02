@@ -91,5 +91,3 @@ exports.getTweets = async(req,res) => {
 		}
 	});
 }
-
-

@@ -1,5 +1,17 @@
 extends layout
 
+//- md bootstrap (deprecated)
+//- will delete soon, i'm only leaving this here because the deckgl map control panel uses 
+//- styles from this template
+//- i don't like the template tbh (md bootstrap)
+//- too many paid options
+append head
+	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
+	link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
+	script(type='text/javascript' src="/stylesheets/js/popper.min.js")
+	script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
+	script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
+
 include ./mixins/queryFilter
 
 block content
@@ -13,21 +25,19 @@ block content
 					.row
 						.col-md-12
 							.row
-								h3 Crime Stats
+								.col-sm-12
+									h5 Crime Stats
 							.row
-								hr
+								.col-sm-12
+									#stats-date-rangew
+									#stats-total 
+									#stats-crimes 
 							.row
-								#stats-date-range
+								.col-sm-12
+									h5 Tweets
 							.row
-								#stats-total 
-							.row
-								#stats-crimes 
-							.row
-								h3 Tweets
-							.row
-								hr
-							.row
-								#stats-tweets
+								.col-sm-12
+									#stats-tweets
 
 		#tooltip(style="visibility: hidden")
 		#panels.collapse.show
@@ -35,21 +45,21 @@ block content
 				.container-fluid
 					.row.my-3
 						.col-md-12
-							p.h2 30.0K
-								span(style="font-size: 12px; margin-left: 0.5em") tweets aggregated
-							hr
+							//- p.h2 30.0K
+							//- 	span(style="font-size: 12px; margin-left: 0.5em") tweets aggregated
+							//- hr
 							p.h6 Tweet Layer
-							#radius-control.form-group(style="display: flex;")
-								span(for="radius-tweet-handle") Radius
-								input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="10" value="200" style="margin: 0 1em 0 1em;")
-								span#radius-tweet-value 200
-								span m
+							//- #radius-control.form-group(style="display: flex;")
+							//- 	span(for="radius-tweet-handle") Radius
+							//- 	input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="10" value="200" style="margin: 0 1em 0 1em;")
+							//- 	span#radius-tweet-value 200
+							//- 	span m
 							.custom-control.custom-checkbox.mb-2
 								input#visible-tweet-handle.custom-control-input(checked name="visible-tweet-handle", type="checkbox")
 								label.custom-control-label(for="visible-tweet-handle", hidden = isHidden) Visible
-							.custom-control.custom-checkbox.mb-2
-								input#extruded-tweet-handle.custom-control-input(checked name="extruded-tweet-handle", type="checkbox")
-								label.custom-control-label(for="extruded-tweet-handle", hidden = isHidden) Extruded
+							//- .custom-control.custom-checkbox.mb-2
+							//- 	input#extruded-tweet-handle.custom-control-input(checked name="extruded-tweet-handle", type="checkbox")
+							//- 	label.custom-control-label(for="extruded-tweet-handle", hidden = isHidden) Extruded
 					
 					//-.row.my-3
 						.col-md-12
@@ -65,21 +75,19 @@ block content
 
 					.row.my-3
 						.col-md-12
-							p.h6 Trajectory Layer
+							p.h6 Crime Layer
 							.custom-control.custom-checkbox.mb-2
 								input#visible-trajectory-handle.custom-control-input(checked name="visible-trajectory-handle", type="checkbox")
-								label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Visible
+								label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Show trajectories
 							.custom-control.custom-checkbox.mb-2
 								input#visible-type-trajectory-handle.custom-control-input(checked name="visible-type-trajectory-handle", type="checkbox")
-								label.custom-control-label(for="visible-type-trajectory-handle", hidden = isHidden) Restrict Trajectory to Crime Type
-
-					.row.my-3
-						.col-md-12
-							p.h6 Centroid Layer
+								label.custom-control-label(for="visible-type-trajectory-handle", hidden = isHidden) Show only related trajectories
 							.custom-control.custom-checkbox.mb-2
 								input#visible-centroid-handle.custom-control-input(checked name="visible-centroid-handle", type="checkbox")
-								label.custom-control-label(for="visible-centroid-handle", hidden = isHidden) Visible
-
+								label.custom-control-label(for="visible-centroid-handle", hidden = isHidden) Show Trajectory Centroids
+							.custom-control.custom-checkbox.mb-2
+								input#visible-crime-point-handle.custom-control-input(checked name="visible-crime-point-handle", type="checkbox")
+								label.custom-control-label(for="visible-crime-point-handle", hidden = isHidden) Show Crime Points
 					.row
 						.col-md-12
 							+queryFilter

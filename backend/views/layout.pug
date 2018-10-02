@@ -1,75 +1,93 @@
 doctype html
 html
   head
-    meta(charset='utf-8')
-    meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
-    meta(http-equiv='x-ua-compatible' content='ie=edge')
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no")
+    meta(http-equiv="x-ua-compatible" content="ie=edge")
     title= title
-    //- style links
-    //- font awesome
-    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
-    //- bootstrap core
-    link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
-    //- material bootstrap
-    link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
-    //- other styles
-    link(rel='stylesheet' href='/stylesheets/css/style.css')
-    //- scripts
-    //- jquery
-    script(type='text/javascript' src="/stylesheets/js/jquery-3.3.1.min.js")
-    //- bootstrap tooltips
-    script(type='text/javascript' src="/stylesheets/js/popper.min.js")
-    //- bootstrap core js
-    script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
-    //- material core js
-    script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
-    //- google maps rendering
-    script(src="./scripts/map_render.js")
-    //- Axios
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js")
-  body
-    header
-      nav.navbar.navbar-expand-lg.navbar-dark.elegant-color
-        a.navbar-brand(href='/') VISION
-        div
-          button.navbar-toggler(type='button' data-toggle='collapse' data-target='#basicExampleNav' aria-controls='basicExampleNav' aria-expanded='false' aria-label='Toggle navigation')
-            span.navbar-toggler-icon
-          #basicExampleNav.collapse.navbar-collapse
-            ul.navbar-nav.mr-auto
-              li.nav-item
-                a.nav-link(href='/browseTwitter') Browse
-              li.nav-item
-                a.nav-link(href='/deckmap') Map
-              li.nav-item
-                a.nav-link(href='/list') Tweets
-              li.nav-item.dropdown
-                a#navbarDropdownMenuLink.nav-link.dropdown-toggle(data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Configure
-                .dropdown-menu.dropdown-primary(aria-labelledby='navbarDropdownMenuLink')
-                  a.dropdown-item(href='/auto') Monitor
-                  a.dropdown-item(href='/check') Manual Checking
-              li.nav-item.dropdown
-                a#navbarDropdownMenuLink.nav-link.dropdown-toggle(data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Crime Statistics
-                .dropdown-menu.dropdown-primary(aria-labelledby='navbarDropdownMenuLink')
-                  a.dropdown-item(href='/chicago') Chicago
-                  a.dropdown-item(href='/seattle') Seattle
-                  a.dropdown-item(href='/baltimore') Baltimore
-        ul.nav.navbar-nav.nav-flex-icons.ml-auto
-          li.nav-item
-            a.nav-link(href='http://github.com/101628885/TwitterVisualiser')
-              i.fa.fa-github
-              span.clearfix.d-none.d-sm-inline-block GitHub
 
-    //- main content
+    //- put scripts at the bottom of page, past the content block
+    block head
+      //- fonts
+      script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous")
+
+      link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' integrity='sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU' crossorigin='anonymous')
+      link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+      
+      //- css
+      link(type="text/css" rel="stylesheet" href="/stylesheets/css/materialize.min.css" media="screen,projection")
+      link(type="text/css" rel="stylesheet" href="/stylesheets/css/style.css" media="screen,projection")
+
+  body
+    nav.grey.darken-4(role="navigation")
+      .nav-wrapper.container
+        a#logo-container.brand-logo(href="/") VisCrime
+        a.sidenav-trigger(href="#" data-target="mobile-menu")
+          i.fas.fa-bars
+        ul.right.hide-on-med-and-down
+          li
+            a.valign-wrapper(href="/deckmap")
+              i.fas.fa-map-marker-alt.viscrime-navicon
+              span Explore 
+          li
+            a.valign-wrapper(href="/lookup/api")
+              i.fas.fa-search.viscrime-navicon
+              span Lookup  
+          li
+            a.valign-wrapper(href="/auto")
+              i.fas.fa-cog.viscrime-navicon
+              span Config 
+    ul#mobile-menu.sidenav
+      li
+        a.valign-wrapper(href="/deckmap")
+          i.fas.fa-map-marker-alt.viscrime-navicon
+          span Explore 
+      li
+        a.valign-wrapper(href="/lookup/api")
+          i.fas.fa-search.viscrime-navicon
+          span Lookup  
+      li
+        a.valign-wrapper(href="/auto")
+          i.fas.fa-cog.viscrime-navicon
+          span Config 
+    //- header
+    //-   nav.navbar.navbar-expand-lg.navbar-dark.elegant-color
+    //-     a.navbar-brand(href='/') VISION
+    //-     div
+    //-       button.navbar-toggler(type='button' data-toggle='collapse' data-target='#basicExampleNav' aria-controls='basicExampleNav' aria-expanded='false' aria-label='Toggle navigation')
+    //-         span.navbar-toggler-icon
+    //-       #basicExampleNav.collapse.navbar-collapse
+    //-         ul.navbar-nav.mr-auto
+    //-           li.nav-item
+    //-             a.nav-link(href='/browseTwitter') Browse
+    //-           li.nav-item
+    //-             a.nav-link(href='/deckmap') Map
+    //-           li.nav-item
+    //-             a.nav-link(href='/list') Tweets
+    //-           li.nav-item.dropdown
+    //-             a#navbarDropdownMenuLink.nav-link.dropdown-toggle(data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Configure
+    //-             .dropdown-menu.dropdown-primary(aria-labelledby='navbarDropdownMenuLink')
+    //-               a.dropdown-item(href='/auto') Monitor
+    //-               a.dropdown-item(href='/check') Manual Checking
+    //-           li.nav-item.dropdown
+    //-             a#navbarDropdownMenuLink.nav-link.dropdown-toggle(data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Crime Statistics
+    //-             .dropdown-menu.dropdown-primary(aria-labelledby='navbarDropdownMenuLink')
+    //-               a.dropdown-item(href='/chicago') Chicago
+    //-               a.dropdown-item(href='/seattle') Seattle
+    //-               a.dropdown-item(href='/baltimore') Baltimore
+    //-     ul.nav.navbar-nav.nav-flex-icons.ml-auto
+    //-       li.nav-item
+    //-         a.nav-link(href='http://github.com/101628885/TwitterVisualiser')
+    //-           i.fa.fa-github
+    //-           span.clearfix.d-none.d-sm-inline-block GitHub
+
+    //- main content, this section will be replaced by other pugs
     block content
 
-    //- i'll fix this later
-    //- footer
-    //- footer.page-footer.font-small.elegant-color
-    //-   .container
-    //-     .row
-    //-       .col-md-12.py-2
-    //-         .mb-2.flex-center
-    //-           a.fb-ic(href='http://github.com/101628885/TwitterVisualiser')
-    //-             i.fa.fa-github.fa-lg.white-text.mr-md-5.mr-3.fa-2x
-    //-   .footer-copyright.text-center.py-3
-    //-     | Created for the Software Engineering Project at Swinburne University of Technology
+    //- scripts
+    //- external
+    script(type="text/javascript" src="/stylesheets/js/materialize.min.js")
+    script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js") 
+    //- internal
+    script(type="text/javascript" src="/scripts/map_render.js")
+    script(type="text/javascript" src="/scripts/setupLayout.js")
