@@ -59,12 +59,28 @@ function init()
 		console.log("Connected to the Chicago Crime DB at", databaseChicagoCrime.url)
 	});
 
-
-
 	module.exports.tweetMelb = tweetMelb;
 	module.exports.tweetChicago = tweetChicago;
 	module.exports.chicagoCrime = chicagoCrime;
 
+}
+
+exports.getStoredTweets = async (location, query, count, skip) =>
+{
+
+	let result = [];
+	if (location.toLowerCase() === "melbourne")
+	{
+		await this.tweetMelb.find(query).skip(skip).limit(parseInt(count)).lean().exec().then((res) => {result = res;});
+	}
+	else if (location.toLowerCase() === "chicago")
+	{
+		await this.tweetChicago.find(query).skip(skip).limit(parseInt(count)).lean().exec().then((res) => {result = res;});
+	}
+
+
+	return result;
+	
 }
 
 exports.storeTweets = function(tweetsToStore, geo)
@@ -156,7 +172,7 @@ exports.storeTweets = function(tweetsToStore, geo)
 		if (geo === "melbourne")
 		{
 			thread.send({tweetsToStore: tweetsToStore, database: databaseMelb})
-				.on('progress', function(progress){//console.log("Processing storage request ID ", id, ": ", progress, "% complete.")
+				.on('progress', function(progress){
 			})
 				.on('message', function(){thread.kill()});
 
@@ -164,7 +180,7 @@ exports.storeTweets = function(tweetsToStore, geo)
 		else if (geo === "chicago")
 		{
 			thread.send({tweetsToStore: tweetsToStore, database: databaseChicago})
-				.on('progress', function(progress){//console.log("Processing storage request ID ", id, ": ", progress, "% complete.")
+				.on('progress', function(progress){
 			})
 				.on('message', function(){thread.kill()});
 		}

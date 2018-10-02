@@ -42,16 +42,17 @@ router.post('/check/:id/:value/:geo', verifyController.checkTweets);
 router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTweets);
 
 // nlp training controller
-router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);  //returns crime: true or false
-router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);  //returns both checked and unchecked
+//router.get('/nlpTrainingEndpoint/:count/:crime', nlpTrainingController.returnNLPDataSet);  //returns crime: true or false
+//router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);  //returns both checked and unchecked
+
+//new endpoints for NLP
+router.get('/nlpTraining/:location/:count/checked/:checked', nlpTrainingController.returnNLPData);
+router.get('/nlpTraining/:location/:count/crime/:crime', nlpTrainingController.returnNLPData);
+
 
 // react controller
 router.get('/getCrimeWordCount', reactController.getCrimeWordCount);
 router.get('/getPredictedData', reactController.getPredictedData);
-router.get('/getStoredTweets/:count/checked/:checked', reactController.getStoredTweets);  //returns checked: true or false
-router.get('/getStoredTweets/:count/crime/:crime', reactController.getStoredTweets);  //returns crime: true or false
-router.get('/getStoredTweets/:count', reactController.getStoredTweets);  //returns tweets from DB
-router.get('/getStoredTweets/', reactController.getStoredTweets);  //returns all tweets stored in the DB
 
 // visualisation controller
 router.get('/visualisation', visualisationController.getVisualisation);
