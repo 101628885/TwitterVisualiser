@@ -1,12 +1,12 @@
-# TwitterVisualiser
+# VISION
 
 [![Build Status](https://travis-ci.org/101628885/TwitterVisualiser.svg?branch=dev)](https://travis-ci.org/101628885/TwitterVisualiser)
 
 > Modern cross-platform application with state of the art data visualisation
 
-## What is TwitterVisualiser?
+## What is VISION?
 
-TwitterVisualiser is essentially an application which allows its users to view *crime* data pulled from Twitter.
+VISION is essentially an application which allows its users to view *crime* data pulled from Twitter.
 This data is collected and filtered via a *Natural Language Processing (NLP)* system, which is used for *Data Visualisation*,
 *Tweet Searches* and also *Trajectory mappings*.
 
@@ -44,14 +44,12 @@ Now you will have installed the necessary tools to create and/or run `react-nati
 
 ## Opening (Backend)
 
-Right now, the application is quite barebone. The backend is hosted in a *Nectar instance*, meaning
-backend is something you don't have to worry about too much. This also means building and running the
-backend is quite rare, hence its already hosted.
+The VISION backend forms the main part of VISION, which hosts the web app, DeckGL visualisation map and handles storing, retrieving and processing data from the MongoDB database. 
 
 1. To install dependencies for the backend, run the `npm install` command in the backend folder.
 2. If you're making changes, please make sure `mongoController` isn't writing to our production MongoDB on Nectar:
 `const url = 'mongodb://localhost:27017/tweets';`
-3. Run `nodemon`, which will automatically re-start the Node server whenever it detects changes to files.
+3. When deploying the backend system on the production server instance, add `DISABLE_DEVELOPER_MODE = true` to `variables.env`, which will allow VISION to perform dynamic updates of its database with the latest datasets from the Internet.
 
 ## Opening (Frontend)
 
