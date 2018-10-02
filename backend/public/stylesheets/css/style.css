@@ -103,21 +103,31 @@ h1:not(#map h1) {
 
 #control-panel {
   position: absolute;
-  margin-top: 2em;
+  margin-top: 0.8em;
   padding: 1em 1em 0 1em;
   background-color: white;
-  height: 85%;
-  max-width: 350px;
+  max-height: 675px;
+  height: 80%;
+  max-width: 250px;
   overflow-y: scroll;
   overflow-x: hidden;
+  border-radius: 0 0.8rem 0.8rem 0px;
+  font-size: 0.25rem;
 }
 
 #stats-panel {
   position: absolute;
   right: 0;
   padding: 1em 1em 0 1em;
-  margin-top: 4em;
+  margin-top: 0.8rem;
   background-color: white;
+  max-height: 500px;
+  height: auti;
+  max-width: 250px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-radius:  0.825rem 0 0 0.8rem;
+  font-size: 0.825rem;
 }
 
 #stats-container {

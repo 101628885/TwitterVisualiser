@@ -46,8 +46,8 @@ const deckgl = new deck.DeckGL({
 
 // hex layer color range
 const TWEET_COLOR_RANGE = [
-	[1, 152, 189],
-	[73, 227, 206],
+	[29, 161, 242],
+	[73, 227, 255],
 	[216, 254, 181],
 	[254, 237, 177],
 	[254, 173, 84],
@@ -233,21 +233,27 @@ const renderLayers = () => {
 
 
 	const optionsTweet = {};
+
+	const optionsCrimePoints = {};
+
 	const optionsTrajectorySame = {};
 	const optionsTrajectoryAll = {};
 
 	const optionsCentroidAll = {};
 	const optionsCentroidSame = {};
 
-	const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
-	document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
-	optionsTweet.radius = radiusTweetValue;
+	// const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
+	// document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
+	// optionsTweet.radius = radiusTweetValue;
 
 	const visibleTweetValue = document.getElementById('visible-tweet-handle').checked;
 	optionsTweet.visible = visibleTweetValue;
 
-	const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
-	optionsTweet.extruded = extrudedTweetValue;
+	const visibleCrimePointValue = document.getElementById('visible-crime-point-handle').checked;
+	optionsCrimePoints.visible = visibleCrimePointValue;
+
+	// const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
+	// optionsTweet.extruded = extrudedTweetValue;
 
 
 	//Trjectory Checking
@@ -303,7 +309,7 @@ const renderLayers = () => {
 		pickable: true,
 		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		visble: visibleTrajectoryValue
+		...optionsCrimePoints
 	});
 
 	const chicagoTrajectorySameTypeLayer = new deck.GeoJsonLayer({
@@ -382,12 +388,14 @@ const renderLayers = () => {
 		elevationRange: [0, 800],
 		elevationScale: 4,
 		getPosition: d => d,
-		opacity: 0.4,
+		opacity: 0.6,
 		coverage: 0.8,
 		pickable: true,
 		fp64: false,
 		onHover: updateTweetLayerTooltip,
 		z: 1,
+		radius: 250,
+		extruded: true,
 		...optionsTweet
 	});
 
@@ -455,6 +463,7 @@ const registerEventHandlers = (options) => {
 		//Bodge for now soz
 		document.getElementById("visible-centroid-handle").onclick = renderLayers;
 		document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
+		document.getElementById("visible-crime-point-handle").onclick = renderLayers;
 
 		let inputType = document.getElementById(key + idSuffix).getAttribute("type");
 		
