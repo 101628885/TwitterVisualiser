@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const react = require('../controllers/reactController');
-const resultLimit = 50;
+const resultLimit = 5;
 
 describe('queryDB()', function(){
 

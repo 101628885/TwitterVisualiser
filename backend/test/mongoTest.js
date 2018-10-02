@@ -1,3 +1,4 @@
+require('dotenv').config({ path: 'variables.env' });
 const expect = require('chai').expect;
 var mongo = require('../controllers/mongoController');
 var tweetMelb = mongo.tweetMelb;
@@ -219,42 +220,4 @@ describe('storeTweets()', function(){
 	})
 });
 
-/*
-describe('getDummyData()', function(){
-
-	it('should return only chicago crime documents that match the query', async function(){
-
-		//SETUP, create a sample simple and complex query
-		let simpleRes = {};
-		let complexRes = {};
-
-		let simpleQuery = {"2007": 4, "2014": 2};
-		let complexQuery = {
-			"crimes": [{
-				"crime": "BATTERY", //If year is not specified it won't be included in the search
-				"count": 50
-			},
-				{
-					"crime": "BURGLARY",
-					"year": "2014", //specifying year
-					"count": 20
-				}
-			]
-		};
-
-		//ACTION
-		await chicagoCrimeFactory.getDummyData(simpleQuery).then((res) => {simpleRes = res});
-		await chicagoCrimeFactory.getDummyData(complexQuery).then((res) => {complexRes = res});
-
-
-		for(let i in simpleRes)
-		{
-			expect
-		}
-
-
-
-	})
-});
-*/
 
