@@ -12,36 +12,68 @@ append head
 include ./mixins/queryFilter
 
 block content
-	#container
+	#map-container
 		#deckmap
 		.map-panel
-			#container
-				.row
-					.col.s11.m4.l3
-						ul.collapsible
-							li.active 
-								.collapsible-header 
-									.row.no-margin
-										.col.s4
-											span #[strong Config]
-										.col.s1
-											i.fas.fa-angle-down.collapsible-header-icon
-								.collapsible-body
-									.row.no-margin
-										.col.s12
-											p.no-margin #[strong Tweet Layer]
-									.row.no-margin
-										.col.s12
-											p
-												label(for="radius-tweet-handle") Radius
-									.row.no-margin.valign-wrapper
-										.col.s9
-											input-field
-												p
-													#radius-tweet-handle
-										.col.s3
-											span#radius-tweet-value 200
-											span m
+			ul.collapsible.expandable
+				li.active 
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Select Visualisation]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					.collapsible-body
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									p
+										label
+											input(type="radio" name="preset-select" value="tweet-density" checked)
+											span Tweet Density
+									p
+										label
+											input(type="radio" name="preset-select" value="crime-trajectories")
+											span Crime Trajectories
+				li.active#menu-tweet-density
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Tweet Density]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					.collapsible-body
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									p
+										label(for="radius-tweet-handle") Radius
+							.row.valign-wrapper(style="margin: 0;")
+								.col.s9
+									input-field
+										p
+											#radius-tweet-handle
+								.col.s3
+									span#radius-tweet-value 200
+									span m
+				li.active#menu-crime-trajectories
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Crime Trajectories]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					.collapsible-body
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									p FUCKING NORMIES GET OUT
 							
 							//- #radius-control.form-group(style="display: flex;")
 							//- 	span(for="radius-tweet-handle") Radius
@@ -54,7 +86,7 @@ block content
 							//- .custom-control.custom-checkbox.mb-2
 							//- 	input#extruded-tweet-handle.custom-control-input(checked name="extruded-tweet-handle", type="checkbox")
 							//- 	label.custom-control-label(for="extruded-tweet-handle", hidden = isHidden) Extruded
-		.loader
+		//- .loader
 		//- #panels.collapse.show
 		//- 	#stats-panel(style="display: none;z-index: 999").d-none.d-md-block
 		//- 		#stats-container
@@ -133,8 +165,8 @@ block content
 		//- 					+queryFilter
 		//- 				br
 		//- 				br
-		#footnote.d-none.d-md-block
-			span Hold down shift to rotate
+		//- #footnote.d-none.d-md-block
+		//- 	span Hold down shift to rotate
 	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
 	script(src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
 	script(src="./scripts/deckgl_render.js")

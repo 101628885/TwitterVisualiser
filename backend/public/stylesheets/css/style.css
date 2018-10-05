@@ -4,7 +4,7 @@ html, body, #outer {
   width: 100%;
 }
 
-#container {
+#map-container {
   width: 100vw;
   position: absolute;
 }
@@ -101,15 +101,6 @@ h1:not(#map h1) {
 	width: 100%;
 }
 
-/* something */
-.no-margin {
-  margin: 0em;
-}
-
-.no-padding {
-  padding: 0em;
-}
-
 /* deckgl module */
 
 #deckmap {
@@ -127,6 +118,21 @@ h1:not(#map h1) {
 .map-panel {
   position: absolute;
   margin: 1em;
+}
+
+/* large desktop devices */
+@media(min-width: 1200px) {
+  .map-panel { width: 20%; }
+}
+
+/* desktop devices */
+@media(max-width: 1200px) {
+  .map-panel { width: 25%; }
+}
+
+/* mobile devices and tablets */
+@media(max-width: 992px) {
+  .map-panel { width: 90%; }
 }
 
 #control-panel {

@@ -6,7 +6,8 @@ const INITIAL_VIEW_STATE = {
 	latitude: 41.88,
 	longitude: -87.62,
 	zoom: 12,
-	pitch: 40.5,
+	// pitch: 40.5,
+	pitch: 0,
 	bearing: 0,
 };
 
@@ -19,10 +20,11 @@ let chicago_trajectory_all_type_data = null;
 let centroid_same_type_data = null;
 let centroid_all_type_data = null;
 
-let pointHighlightColour = [0, 255, 162, 255]
+let pointHighlightColour = [0, 255, 162, 255];
 
-let trajectoryLineColour = [255, 221, 51, 150]
-let trajectoryHighlightColor = [51, 187, 255, 255]
+let trajectoryLineColour = [255, 221, 51, 150];
+let trajectoryHighlightColor = [51, 187, 255, 255];
+
 // array of options available to the user
 const OPTIONS = {
 	TWEET: ['radius', 'visible', 'extruded'],
@@ -34,6 +36,7 @@ const OPTIONS = {
 const DATA_URL = {
 	CHICAGO_TWEET: '/tweetmap',
 	CHICAGO_TRAJECTORY: '/tweetmap',
+	CHICAGO_TEMP: 'https://tinyurl.com/ycawn5tc',
 }
 
 // main deck.gl object
@@ -85,9 +88,9 @@ function filterMap() {
 	if($('#startDate').val() != "")
 	{
 		query.Date = {
-						$gte: $('#startDate').val(), 
-						$lt: $('#endDate').val()
-					};
+			$gte: $('#startDate').val(), 
+			$lt: $('#endDate').val()
+		};
 	}
 
 	axios.post('/tweetMap', query)
@@ -230,43 +233,41 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
  */
 const renderLayers = () => {
+	// const optionsTweet = {};
+
+	// const optionsCrimePoints = {};
+
+	// const optionsTrajectorySame = {};
+	// const optionsTrajectoryAll = {};
+
+	// const optionsCentroidAll = {};
+	// const optionsCentroidSame = {};
+
+	// // const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
+	// // document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
+	// // optionsTweet.radius = radiusTweetValue;
+
+	// const visibleTweetValue = document.getElementById('visible-tweet-handle').checked;
+	// optionsTweet.visible = visibleTweetValue;
+
+	// const visibleCrimePointValue = document.getElementById('visible-crime-point-handle').checked;
+	// optionsCrimePoints.visible = visibleCrimePointValue;
+
+	// // const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
+	// // optionsTweet.extruded = extrudedTweetValue;
 
 
-	const optionsTweet = {};
+	// //Trjectory Checking
+	// const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
 
-	const optionsCrimePoints = {};
+	// const visibleTrajectorySameTypeValue = document.getElementById('visible-type-trajectory-handle').checked;
+	// optionsTrajectorySame.visible = visibleTrajectoryValue ? visibleTrajectorySameTypeValue : visibleTrajectoryValue;
+	// optionsTrajectoryAll.visible = visibleTrajectoryValue ? !visibleTrajectorySameTypeValue : visibleTrajectoryValue;
 
-	const optionsTrajectorySame = {};
-	const optionsTrajectoryAll = {};
-
-	const optionsCentroidAll = {};
-	const optionsCentroidSame = {};
-
-	// const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
-	// document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
-	// optionsTweet.radius = radiusTweetValue;
-
-	const visibleTweetValue = document.getElementById('visible-tweet-handle').checked;
-	optionsTweet.visible = visibleTweetValue;
-
-	const visibleCrimePointValue = document.getElementById('visible-crime-point-handle').checked;
-	optionsCrimePoints.visible = visibleCrimePointValue;
-
-	// const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
-	// optionsTweet.extruded = extrudedTweetValue;
-
-
-	//Trjectory Checking
-	const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
-
-	const visibleTrajectorySameTypeValue = document.getElementById('visible-type-trajectory-handle').checked;
-	optionsTrajectorySame.visible = visibleTrajectoryValue ? visibleTrajectorySameTypeValue : visibleTrajectoryValue;
-	optionsTrajectoryAll.visible = visibleTrajectoryValue ? !visibleTrajectorySameTypeValue : visibleTrajectoryValue;
-
-	//Centroid Checking
-	const centroidValue = document.getElementById('visible-centroid-handle').checked;
-	optionsCentroidSame.visible = centroidValue ? visibleTrajectorySameTypeValue : centroidValue;
-	optionsCentroidAll.visible = centroidValue ? !visibleTrajectorySameTypeValue : centroidValue;
+	// //Centroid Checking
+	// const centroidValue = document.getElementById('visible-centroid-handle').checked;
+	// optionsCentroidSame.visible = centroidValue ? visibleTrajectorySameTypeValue : centroidValue;
+	// optionsCentroidAll.visible = centroidValue ? !visibleTrajectorySameTypeValue : centroidValue;
 
 	
 	const chicagoPointLayer = new deck.GeoJsonLayer({
@@ -309,7 +310,7 @@ const renderLayers = () => {
 		pickable: true,
 		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		...optionsCrimePoints
+		// ...optionsCrimePoints
 	});
 
 	const chicagoTrajectorySameTypeLayer = new deck.GeoJsonLayer({
@@ -327,7 +328,7 @@ const renderLayers = () => {
 		pickable: true,
 		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		...optionsTrajectorySame
+		// ...optionsTrajectorySame
 	});
 
 	const chicagoTrajectoryAllTypeLayer = new deck.GeoJsonLayer({
@@ -345,7 +346,7 @@ const renderLayers = () => {
 		pickable: true,
 		fp64: false,
 		onHover: updateTrajectoryLayerTooltip,
-		...optionsTrajectoryAll
+		// ...optionsTrajectoryAll
 	});
 
 	const centroidSameTypeLayer =	new deck.GeoJsonLayer({
@@ -361,7 +362,7 @@ const renderLayers = () => {
 		pickable: true,
 		fp64: false,
 		onHover: updatecentroidSameTypeLayerTooltip,
-		...optionsCentroidSame
+		// ...optionsCentroidSame
 	});
 
 	const centroidAllTypeLayer =	new deck.GeoJsonLayer({
@@ -377,7 +378,7 @@ const renderLayers = () => {
 		pickable: true,
 		fp64: false,
 		onHover: updatecentroidSameTypeLayerTooltip,
-		...optionsCentroidAll
+		// ...optionsCentroidAll
 	});
 
 	const chicagoTweetLayer = new deck.HexagonLayer({
@@ -389,62 +390,46 @@ const renderLayers = () => {
 		elevationScale: 4,
 		getPosition: d => d,
 		opacity: 0.6,
-		coverage: 0.8,
+		coverage: 0.9,
 		pickable: true,
 		fp64: false,
 		onHover: updateTweetLayerTooltip,
 		z: 1,
 		radius: 250,
-		extruded: true,
-		...optionsTweet
-	});
-
-
-	const chicagoTweetGeoLayer = new deck.GeoJsonLayer({
-		id: 'chicago-tweet-geo-layer',
-		data: chicago_tweet_data,
-		stroked: true,
-		lineWidthMinPixels: 3,
-		lineJointRounded: true,
-		getFillColor: d => [0, 255, 255, 200],
-		getLineColor: d => [0, 153, 153, 255],
-		onHover: info => console.log('Hovered:', info),
-		getRadius: d => 60,
-		radiusMinPixels: 60,
-		fp64: false,
-		...optionsTweet
+		extruded: false,
+		// ...optionsTweet
 	});
 
 	deckgl.setProps({
-		layers: [chicagoTweetLayer, chicagoTrajectorySameTypeLayer, chicagoTrajectoryAllTypeLayer, centroidSameTypeLayer, centroidAllTypeLayer, chicagoPointLayer]
+		// layers: [chicagoTweetLayer, chicagoTrajectorySameTypeLayer, chicagoTrajectoryAllTypeLayer, centroidSameTypeLayer, centroidAllTypeLayer, chicagoPointLayer]
+		layers: [chicagoTweetLayer],
 	});
-	$('.loader').hide()
+	// $('.loader').hide()
 };
 
 /**
- * initialiseData() initialises the global data variables by fetching data from the endpoints
+ * Initialise the global data variables by fetching data from the endpoints
  * specified in DATA_URL. Called once only.
  */
 const initialiseData = async () => {
-	let response_chicago_trajectory = await fetch(DATA_URL.CHICAGO_TRAJECTORY).then(res => res.json());
+	await fetch(DATA_URL.CHICAGO_TRAJECTORY)
+	.then(res => res.json())
+	.then(data => {
+		chicago_trajectory_same_type_data = data.crime.trajectorySameTypeGeoJSON[0];
+		chicago_trajectory_all_type_data = data.crime.trajectoryAllTypeGeoJSON[0];
+		chicago_crime_data = data.crime.crimeGeoPoints[0];
+		chicago_tweet_data = data.tweets[0].features.map(tweet => (tweet.geometry.coordinates));
+		centroid_same_type_data = data.crime.centroidsSame;
+		centroid_all_type_data = data.crime.centroidsAll;
+	});
 
-	chicago_trajectory_same_type_data = response_chicago_trajectory.crime.trajectorySameTypeGeoJSON[0];
-	chicago_trajectory_all_type_data = response_chicago_trajectory.crime.trajectoryAllTypeGeoJSON[0];
-
-	chicago_crime_data = response_chicago_trajectory.crime.crimeGeoPoints[0];
-
-	chicago_tweet_data = response_chicago_trajectory
-	.tweets[0]
-	.features
-	.map(tweet => (tweet.geometry.coordinates));
-
-	centroid_same_type_data = response_chicago_trajectory.crime.centroidsSame;
-	centroid_all_type_data = response_chicago_trajectory.crime.centroidsAll;
 	statsBuilder();
 	renderLayers();
 };
 
-// Assign the renderLayers() function as an event handler to each input control
+/**
+ * Assign the renderLayers() function as an event handler to each input control
+ */
 const registerEventHandlers = (options) => {
 	// there's probably a better way to do this
 	options.forEach(key => {
@@ -461,66 +446,97 @@ const registerEventHandlers = (options) => {
 
 		//Ask Jason about doing this automagically
 		//Bodge for now soz
-		// chu mean homie 
+		// wachu mean homie 
 		//            - Jason
-		document.getElementById("visible-centroid-handle").onclick = renderLayers;
-		document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
-		document.getElementById("visible-crime-point-handle").onclick = renderLayers;
+		// document.getElementById("visible-centroid-handle").onclick = renderLayers;
+		// document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
+		// document.getElementById("visible-crime-point-handle").onclick = renderLayers;
 
-		let inputType = document.getElementById(key + idSuffix).getAttribute("type");
+		// let inputType = document.getElementById(key + idSuffix).getAttribute("type");
 		
-		if (inputType === "checkbox") {
-			console.log("Registering " + key + idSuffix);
-			document.getElementById(key + idSuffix).onclick = renderLayers; }
-		else
-			document.getElementById(key + idSuffix).oninput = renderLayers;
+		// if (inputType === "checkbox") {
+		// 	console.log("Registering " + key + idSuffix);
+		// 	document.getElementById(key + idSuffix).onclick = renderLayers; }
+		// else
+		// 	document.getElementById(key + idSuffix).oninput = renderLayers;
 	});
 };
 
-// UI setup
+/**
+ * Initialise the interactive JS components
+ */
 const setupUI = () => {
-	// load collapsible panels
-	document.addEventListener('DOMContentLoaded', function() {
-		var elems = document.querySelectorAll('.collapsible');
-		var instances = M.Collapsible.init(elems);
+	// load collapsible menus
+	document.addEventListener("DOMContentLoaded", () => {
+		var elems = document.querySelectorAll(".collapsible");
+		var instances = M.Collapsible.init(elems, {
+			accordion: false
+		});
+	});
+
+	// setup menu visiblity toggles
+	var presetRadios = document.getElementsByName("preset-select");
+	var tweetDensityMenu = document.querySelector("#menu-tweet-density");
+	var crimeTrajectoriesMenu = document.querySelector("#menu-crime-trajectories");
+
+	crimeTrajectoriesMenu.style.display = "none";
+
+	presetRadios.forEach(elem => {
+		elem.addEventListener("click", () => {
+			switch(elem.value) {
+				case "tweet-density":
+					tweetDensityMenu.style.display = "block";
+					crimeTrajectoriesMenu.style.display = "none";
+					break;
+				case "crime-trajectories":
+					tweetDensityMenu.style.display = "none";
+					crimeTrajectoriesMenu.style.display = "block";
+					break;
+				default:
+					break;
+			}
+		});
+	});
+
+	// load dropdown menus
+	document.addEventListener("DOMContentLoaded", () => {
+		var elements = document.querySelectorAll("select");
+		var instances = M.FormSelect.init(elements);
 	});
 
 	// setup slider for radius of tweet hexes
-	var tweetRadiusSlider = document.querySelector('#radius-tweet-handle');
-	var tweetRadiusLabel = document.querySelector('#radius-tweet-value');
-
+	var tweetRadiusSlider = document.querySelector("#radius-tweet-handle");
+	var tweetRadiusLabel = document.querySelector("#radius-tweet-value");
 	noUiSlider.create(tweetRadiusSlider, {
 		range: {
-			'min': 100,
-			'max': 800
+			"min": 100,
+			"max": 800
 		},
 		step: 10,
 		start: [200],
 		connect: true,
-		orientation: 'horizontal',
+		orientation: "horizontal",
 		tooltips: false,
 		format: wNumb({
 			decimals: 0
 		}),
 	});
-
-	tweetRadiusSlider.noUiSlider.on('update', (values, handle) => {
+	
+	// register event handler for tweetRadiusSlider (range input obj) on value update
+	tweetRadiusSlider.noUiSlider.on("update", (values, handle) => {
 		var value = values[handle];
 		tweetRadiusLabel.innerHTML = Math.floor(value);
 	});
-
-	tweetRadiusLabel.addEventListener('change', () => {
-		tweetRadiusSlider.noUiSlider.set([this.value, null]);
-	});
 };
 
-// initialise the everything
+/**
+ * initialise the everything
+ */
 const _init = () => {
 	setupUI();
 	initialiseData();
 	for (var key in OPTIONS) {
 		registerEventHandlers(OPTIONS[key]);
-		console.log(key);
 	}	
 }
 
