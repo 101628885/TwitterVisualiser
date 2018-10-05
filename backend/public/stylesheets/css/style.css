@@ -5,8 +5,7 @@ html, body, #outer {
 }
 
 #container {
-  width: 100vw; 
-  height: 92.5vh;
+  width: 100vw;
   position: absolute;
 }
 
@@ -18,6 +17,10 @@ body:not(#map body) {
 #filterform {
   position: absolute;
   z-index: 1;
+}
+
+nav {
+  height: 9vh;
 }
 
 /* tweet card */
@@ -64,7 +67,7 @@ h1:not(#map h1) {
   animation: fadein 2s;
 }
 
-#jumbotext {
+.jumbotext {
   font-size: 56px;
 }
 
@@ -80,8 +83,13 @@ h1:not(#map h1) {
 }
 
 .viscrime-navicon {
-  font-size:17px;
-  margin:0 5px 0 5px;
+  font-size: 17px;
+  margin: 0 5px 0 5px;
+}
+
+.collapsible-header-icon {
+  font-size: 10px;
+  margin: 0px;
 }
 
 /* google maps module */
@@ -93,16 +101,36 @@ h1:not(#map h1) {
 	width: 100%;
 }
 
+/* something */
+.no-margin {
+  margin: 0em;
+}
+
+.no-padding {
+  padding: 0em;
+}
+
 /* deckgl module */
 
 #deckmap {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 91vh;
   position: absolute;
 }
 
-#control-panel {
+.collapsible-body {
+  background-color: white;
+  overflow-y: scroll;
+  max-height: 70vh;
+}
+
+.map-panel {
   position: absolute;
+  margin: 1em;
+}
+
+#control-panel {
+  /* position: absolute;
   margin-top: 0.8em;
   padding: 1em 1em 0 1em;
   background-color: white;
@@ -112,7 +140,7 @@ h1:not(#map h1) {
   overflow-y: scroll;
   overflow-x: hidden;
   border-radius: 0 0.8rem 0.8rem 0px;
-  font-size: 0.25rem;
+  font-size: 0.25rem; */
 }
 
 #stats-panel {

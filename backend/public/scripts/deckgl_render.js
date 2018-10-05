@@ -132,7 +132,7 @@ statsBuilder = () =>
 	
 	Object.keys(crimeTypeObject).forEach(function(crime)
 	{
-    	$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
+			$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
 	});
 
 	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
@@ -461,6 +461,8 @@ const registerEventHandlers = (options) => {
 
 		//Ask Jason about doing this automagically
 		//Bodge for now soz
+		// chu mean homie 
+		//            - Jason
 		document.getElementById("visible-centroid-handle").onclick = renderLayers;
 		document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
 		document.getElementById("visible-crime-point-handle").onclick = renderLayers;
@@ -475,7 +477,46 @@ const registerEventHandlers = (options) => {
 	});
 };
 
+// UI setup
+const setupUI = () => {
+	// load collapsible panels
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.collapsible');
+		var instances = M.Collapsible.init(elems);
+	});
+
+	// setup slider for radius of tweet hexes
+	var tweetRadiusSlider = document.querySelector('#radius-tweet-handle');
+	var tweetRadiusLabel = document.querySelector('#radius-tweet-value');
+
+	noUiSlider.create(tweetRadiusSlider, {
+		range: {
+			'min': 100,
+			'max': 800
+		},
+		step: 10,
+		start: [200],
+		connect: true,
+		orientation: 'horizontal',
+		tooltips: false,
+		format: wNumb({
+			decimals: 0
+		}),
+	});
+
+	tweetRadiusSlider.noUiSlider.on('update', (values, handle) => {
+		var value = values[handle];
+		tweetRadiusLabel.innerHTML = Math.floor(value);
+	});
+
+	tweetRadiusLabel.addEventListener('change', () => {
+		tweetRadiusSlider.noUiSlider.set([this.value, null]);
+	});
+};
+
+// initialise the everything
 const _init = () => {
+	setupUI();
 	initialiseData();
 	for (var key in OPTIONS) {
 		registerEventHandlers(OPTIONS[key]);
@@ -484,4 +525,3 @@ const _init = () => {
 }
 
 _init();
-
