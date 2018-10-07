@@ -268,7 +268,6 @@ generateTwitterGEOJSON = (data) => {
 
 //Initial rendering
 exports.initMapData = async(req, res) => {
-
     let crimeGeoJSON = calculatetrajectorySameTypeGeoJSON(await chicagoDataFactory.getMapData(req.body));
     let tweetGeoJSON = generateTwitterGEOJSON(await chicagoDataFactory.getChicagoTweetsWithLocation());
     res.send({ crime: crimeGeoJSON, tweets: tweetGeoJSON });

@@ -233,7 +233,6 @@ const renderLayers = () => {
 
 
 	const optionsTweet = {};
-
 	const optionsCrimePoints = {};
 
 	const optionsTrajectorySame = {};
@@ -448,30 +447,32 @@ const initialiseData = async () => {
 const registerEventHandlers = (options) => {
 	// there's probably a better way to do this
 	options.forEach(key => {
-		let idSuffix = "";
-		switch(options) {
-			case OPTIONS.TRAJECTORY: 
-				idSuffix = "-trajectory-handle";
-				break;
-			case OPTIONS.TWEET: 
-				idSuffix = "-tweet-handle";
-			default: 
-				break;
-		}
+		// let idSuffix = "";
+		// switch(options) {
+		// 	case OPTIONS.TRAJECTORY: 
+		// 		idSuffix = "-trajectory-handle";
+		// 		break;
+		// 	case OPTIONS.TWEET: 
+		// 		idSuffix = "-tweet-handle";
+		// 	default: 
+		// 		break;
+		// }
 
 		//Ask Jason about doing this automagically
 		//Bodge for now soz
 		document.getElementById("visible-centroid-handle").onclick = renderLayers;
 		document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
 		document.getElementById("visible-crime-point-handle").onclick = renderLayers;
-
-		let inputType = document.getElementById(key + idSuffix).getAttribute("type");
+		document.getElementById("visible-trajectory-handle").onclick = renderLayers;
+		document.getElementById("visible-tweet-handle").onclick = renderLayers;
 		
-		if (inputType === "checkbox") {
-			console.log("Registering " + key + idSuffix);
-			document.getElementById(key + idSuffix).onclick = renderLayers; }
-		else
-			document.getElementById(key + idSuffix).oninput = renderLayers;
+		// let inputType = document.getElementById(key + idSuffix).getAttribute("type");
+		
+		// if (inputType === "checkbox") {
+		// 	console.log("Registering " + key + idSuffix);
+		// 	document.getElementById(key + idSuffix).onclick = renderLayers; }
+		// else
+		// 	document.getElementById(key + idSuffix).oninput = renderLayers;
 	});
 };
 
