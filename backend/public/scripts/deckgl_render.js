@@ -131,8 +131,14 @@ statsBuilder = () =>
 	$("#stats-date-range").append("<p><strong>" + crimeDateRange + "</strong>")
 	$("#stats-total").append("<p><strong>Total Found:</strong> " + crimeCount)
 	
+	let ordered = {};
+	Object.keys(crimeTypeObject).sort().forEach(function(key) {
+	  ordered[key] = crimeTypeObject[key];
+	});
+	crimeTypeObject = ordered;
 	Object.keys(crimeTypeObject).forEach(function(crime)
 	{
+		//This is really really bad, to be fixed
 		let dotColour = function(dotCrime){
 			switch(dotCrime) 
 			{
@@ -160,9 +166,9 @@ statsBuilder = () =>
 				case "HOMICIDE":
 					return CRIME_COLOR_RANGE[7];
 					break;
-				return CRIME_COLOR_RANGE[7];
+				default: 
+					return CRIME_COLOR_RANGE[7];
 		}}(crime);
-		console.log(dotColour)
     	$( "#stats-crimes" ).append( `<p><span class="dot" style="background-color: ${"rgba(" + dotColour.join(", ") + "1"}"></span><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
 	});
 
@@ -202,10 +208,8 @@ const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 			else
 			{
 				tooltip.innerHTML = '<div>Trajectory Points -></div>';
-				object.geometry.coordinates[0].forEach(item => {
-				tooltip.innerHTML += `
-					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
-				`;
+				object.properties.trajectory_description.forEach((item, i, array) => {
+				tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
 				});
 				renderLayers();
 			}
@@ -329,6 +333,8 @@ const renderLayers = () => {
 				case "HOMICIDE":
 					return CRIME_COLOR_RANGE[7];
 					break;
+				default: 	
+					return CRIME_COLOR_RANGE[7];
 			};
 		},
 		getLineColor: d => pointColour,
