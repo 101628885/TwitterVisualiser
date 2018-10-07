@@ -19,7 +19,7 @@ let chicago_trajectory_all_type_data = null;
 let centroid_same_type_data = null;
 let centroid_all_type_data = null;
 
-let pointHighlightColour = [0, 255, 162, 255]
+let pointHighlightColour = [255, 221, 51, 255]
 
 let trajectoryLineColour = [255, 221, 51, 150]
 let trajectoryHighlightColor = [51, 187, 255, 255]
@@ -55,7 +55,7 @@ const TWEET_COLOR_RANGE = [
 ];
 
 const CRIME_COLOR_RANGE = [
-	[65, 244, 113],
+	[255, 166, 13],
 	[66, 244, 244],
 	[66, 194, 244],
 	[66, 134, 244],
@@ -128,7 +128,7 @@ statsBuilder = () =>
 	$( "#stats-crimes p").empty()
 	$("#stats-panel p").empty()
 
-	$("#stats-date-range").append("<p><strong>" + crimeDateRange + "</strong>")
+	$("#stats-date-range").append("<p><strong>Range: " + crimeDateRange + "</strong>")
 	$("#stats-total").append("<p><strong>Total Found:</strong> " + crimeCount)
 	
 	let ordered = {};
