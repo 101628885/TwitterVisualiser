@@ -56,6 +56,10 @@ nav {
   grid-area: tweetbody
 }
 
+p {
+  margin: 0;
+}
+
 /* typography */
 
 h1:not(#map h1) {
@@ -113,11 +117,11 @@ h1:not(#map h1) {
   background-color: white;
   overflow-y: scroll;
   max-height: 70vh;
+  padding: 1em;
 }
 
 .map-panel {
   position: absolute;
-  margin: 1em;
 }
 
 /* large desktop devices */
@@ -136,20 +140,14 @@ h1:not(#map h1) {
 }
 
 #control-panel {
-  /* position: absolute;
-  margin-top: 0.8em;
-  padding: 1em 1em 0 1em;
-  background-color: white;
-  max-height: 675px;
-  height: 80%;
-  max-width: 250px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  border-radius: 0 0.8rem 0.8rem 0px;
-  font-size: 0.25rem; */
+  left: 8px;
 }
 
-#stats-panel {
+#statistics-panel {
+  right: 8px;
+}
+
+/* #stats-panel {
   position: absolute;
   right: 0;
   padding: 1em 1em 0 1em;
@@ -162,7 +160,7 @@ h1:not(#map h1) {
   overflow-x: hidden;
   border-radius:  0.825rem 0 0 0.8rem;
   font-size: 0.825rem;
-}
+} */
 
 #stats-container {
   position: relative;
@@ -175,6 +173,12 @@ h1:not(#map h1) {
   color: lightslategray;
   top: 0;
   right: 0;
+}
+
+.legend {
+  display: inline-block;
+  height: 12px; 
+  width: 16.667%;
 }
 
 #tooltip {

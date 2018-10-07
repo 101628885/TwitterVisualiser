@@ -14,7 +14,7 @@ include ./mixins/queryFilter
 block content
 	#map-container
 		#deckmap
-		.map-panel
+		#control-panel.map-panel
 			ul.collapsible.expandable
 				li.active 
 					.collapsible-header
@@ -48,18 +48,17 @@ block content
 										i.fas.fa-angle-down.collapsible-header-icon
 					.collapsible-body
 						.container(style="margin: 0; width: 100%;")
-							.row(style="margin: 0;")
-								.col.s12
-									p
-										label(for="radius-tweet-handle") Radius
 							.row.valign-wrapper(style="margin: 0;")
+								.col.s3
+									p.left-align
+										label(for="date-tweet-handle") Date(s)
 								.col.s9
 									input-field
 										p
-											#radius-tweet-handle
-								.col.s3
-									span#radius-tweet-value 200
-									span m
+											#date-tweet-handle
+							.row(style="margin: 0;")
+								input-field.col.s12
+									button.btn.waves-effect.waves-light(type="submit") Update Map
 				li.active#menu-crime-trajectories
 					.collapsible-header
 						.container(style="margin: 0; width: 100%;")
@@ -72,9 +71,66 @@ block content
 					.collapsible-body
 						.container(style="margin: 0; width: 100%;")
 							.row(style="margin: 0;")
+								input-field.col.s12
+									button.btn.waves-effect.waves-light(type="submit") Update Map
+		#statistics-panel.map-panel
+			ul.collapsible.expandable
+				li.active 
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Display Options]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					.collapsible-body
+						.container(style="margin: 0; width: 100%;")
+							.row.valign-wrapper(style="margin: 0;")
+								.col.s3
+									p.left-align
+										label(for="radius-tweet-handle") Radius
+								.col.s6
+									input-field
+										p
+											#radius-tweet-handle
+								.col.s3
+									p
+										label 
+											span#radius-tweet-value
+											span m
+				li.active
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Statistics]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					.collapsible-body
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
 								.col.s12
-									p FUCKING NORMIES GET OUT
-							
+									.legend(style="background: rgb(29, 161, 242) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(73, 227, 255) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(216, 254, 181) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(254, 237, 177) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(254, 173, 84) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(209, 55, 78) none repeat scroll 0% 0%;")
+							.row(style="margin: 0;")
+								.col.s6
+									p.left-align
+										label Less Tweets
+								.col.s6
+									p.right-align
+										label More Tweets
+							.row(style="margin: 0;")
+								.col.s12
+									p yes we still have
+									span(style="font-size: 36px;") #[strong 30.0k]
+									span(style="margin-left: 5px;") tweets aggregated of course
+														
 							//- #radius-control.form-group(style="display: flex;")
 							//- 	span(for="radius-tweet-handle") Radius
 							//- 	input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="10" value="200" style="margin: 0 1em 0 1em;")
