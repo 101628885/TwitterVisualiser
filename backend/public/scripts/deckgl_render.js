@@ -112,6 +112,7 @@ statsBuilder = () =>
 	let crimeCount = chicago_crime_data.features.length;
 	let crimeDateRange = `${chicago_crime_data.features[0].properties.date_stats_text} - ${chicago_crime_data.features[crimeCount - 1].properties.date_stats_text}`
 	let crimeTypeObject = {}
+	
 	chicago_crime_data.features.forEach((crime) => 
 	{
 		if(crimeTypeObject.hasOwnProperty(`${crime.properties.primary_type}`))
@@ -132,7 +133,37 @@ statsBuilder = () =>
 	
 	Object.keys(crimeTypeObject).forEach(function(crime)
 	{
-    	$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
+		let dotColour = function(dotCrime){
+			switch(dotCrime) 
+			{
+				case "ASSAULT":
+					return CRIME_COLOR_RANGE[0];
+					break;
+				case "THEFT":
+					return CRIME_COLOR_RANGE[1];
+					break;
+				case "SEX OFFENSE":
+					return CRIME_COLOR_RANGE[2];
+					break;
+				case "OTHER OFFENSE":
+					return CRIME_COLOR_RANGE[3];
+					break;
+				case "OFFENSE INVOLVING CHILDREN":
+					return CRIME_COLOR_RANGE[4];
+					break;
+				case "NARCOTICS":
+					return CRIME_COLOR_RANGE[5];
+					break;
+				case "CRIMINAL DAMAGE":
+					return CRIME_COLOR_RANGE[6];
+					break;
+				case "HOMICIDE":
+					return CRIME_COLOR_RANGE[7];
+					break;
+				return CRIME_COLOR_RANGE[7];
+		}}(crime);
+		console.log(dotColour)
+    	$( "#stats-crimes" ).append( `<p><span class="dot" style="background-color: ${"rgba(" + dotColour.join(", ") + "1"}"></span><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
 	});
 
 	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
