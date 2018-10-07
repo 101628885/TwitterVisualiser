@@ -207,7 +207,7 @@ const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 			}
 			else
 			{
-				tooltip.innerHTML = '<div>Trajectory Points -></div>';
+				tooltip.innerHTML = `<div>${object.properties.trajectory_description.length} Crimes in Trajectory:</div>`;
 				object.properties.trajectory_description.forEach((item, i, array) => {
 				tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
 				});

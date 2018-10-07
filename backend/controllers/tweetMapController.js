@@ -128,7 +128,7 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                     trajectory != othertrajectory) {
                     let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                     let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                    if (timeDiff <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
+                    if (timeDiff < tTimeThreshold && timeDiff < 0 && Math.abs(distDiff) <= tDistThreshold) {
                         coordsSameType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                         trajectoryDescriptionTextSameType.push(`${othertrajectory.Primary_Type} on ${moment(othertrajectory.Date).format('MMMM Do [at] h:mm:ss A')}`)
                     }
@@ -137,7 +137,7 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                 {
                     let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                     let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                    if (timeDiff <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
+                    if (timeDiff < tTimeThreshold && timeDiff < 0 && Math.abs(distDiff) <= tDistThreshold) {
                         coordsAllType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
                         trajectoryDescriptionTextAllType.push(`${othertrajectory.Primary_Type} on ${moment(othertrajectory.Date).format('MMMM Do [at] h:mm:ss A')}`)
 
