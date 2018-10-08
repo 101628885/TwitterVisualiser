@@ -135,6 +135,10 @@ exports.saveCrimeData = async () =>
 
 		});
 	}
+	else
+	{
+		console.log("Preventing database updates: developer mode enabled")
+	}
 
 };
 

@@ -10,7 +10,7 @@ var geo = "melbourne";
 
 
 
-if (fs.existsSync(fs.existsSync(process.cwd() + "/preferences"))) {
+if (fs.existsSync(process.cwd() + "/preferences")) {
     
     if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
     {
