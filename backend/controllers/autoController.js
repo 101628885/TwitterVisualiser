@@ -11,23 +11,22 @@ var geo = "melbourne";
 
 
 if (fs.existsSync(fs.existsSync(process.cwd() + "/preferences"))) {
+    
+    if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
+    {
+        let data = JSON.parse(fs.readFileSync(process.cwd() + "/preferences/auto.json", 'utf-8'));
 
+
+        query = data.query;
+
+
+        shouldRun = data.shouldResume;
+        autoCollect = data.shouldResume;
+        shouldResume = data.shouldResume;
+    }
 }
 
-if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
-{
 
-
-	let data = JSON.parse(fs.readFileSync(process.cwd() + "/preferences/auto.json", 'utf-8'));
-
-
-	query = data.query;
-
-
-	shouldRun = data.shouldResume;
-	autoCollect = data.shouldResume;
-    shouldResume = data.shouldResume;
-}
 
 setInterval(function(){
 

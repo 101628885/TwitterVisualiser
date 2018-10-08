@@ -1,6 +1,9 @@
 const request = require('request-promise');
-
+const factory = require('./tweetMapController')
+const timeout = ms => new Promise(res => setTimeout(res, ms));
 let cachedRequestList = []; //members: url, contents{}, expiry
+const cacheExpiryTime = 3600000; //1 hour
+let trajectoryCacheState = {cachedTrajectory: {data:{}, refreshedTime:{}}, isBuilding: false};
 
 exports.getJSON = async(options) =>
 {
@@ -31,17 +34,43 @@ exports.getJSON = async(options) =>
 	return result;
 };
 
-exports.testCache = async(req, res) => //move to unit testing
+
+exports.getTrajectories = async(req, res) =>
 {
-	options =
-		{
-			method: "GET",
-			url: `https://api.datamuse.com/words?rel_trg=test`
-		};
+
+	let refreshTrajectoryData = async function(){
+		trajectoryCacheState.isBuilding = true;
+		trajectoryCacheState.cachedTrajectory.data = await factory.initMapData(req, res);
+		trajectoryCacheState.cachedTrajectory.refreshedTime = new Date();
+		trajectoryCacheState.isBuilding = false;
+	}
+
+	while(trajectoryCacheState.isBuilding)
+	{
+		console.log("Waiting for cache to finish building...")
+		await timeout(2000);
+	}
+
+	if (!Object.keys(trajectoryCacheState.cachedTrajectory.data).length) //Trajectory cache is empty
+	{
+		console.log("Building trajectory cache...");
+		await refreshTrajectoryData(trajectoryCacheState.cachedTrajectory);
+	}
+
+	if (new Date() - trajectoryCacheState.cachedTrajectory.refreshedTime > cacheExpiryTime)
+	{
+		console.log("Trajectory data cache expired, rebuilding...");
+		await refreshTrajectoryData(trajectoryCacheState.cachedTrajectory);
+	}
+	else
+	{
+		console.log("Returning cached trajectory data....");
+	}
+
+	console.log("Cache refresh in:", Math.floor((cacheExpiryTime - (new Date() - trajectoryCacheState.cachedTrajectory.refreshedTime))/1000), "seconds");
 
 
-	let result = await exports.getJSON(options);
-	res.send(result);
+	res.send(trajectoryCacheState.cachedTrajectory.data);
 
 
-};
+}

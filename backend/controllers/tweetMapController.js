@@ -221,25 +221,6 @@ calculateCentroid = (trajectories) => {
     });
 
     return result;
-
-
-    /*
-    return {
-        "type": "FeatureCollection",
-        "features": [{
-            "type": "Feature",
-            "geometry": {
-                "type": "MultiLineString",
-                "coordinates": [trajectories.map((i) => skmeans(i, 1).centroids[0])],
-            },
-            "properties": {
-                "primary_type": "Centroid",
-                "description": "a given centroid calculation",
-                "lineWidth": 0.6,
-            }
-        }]
-}
-    */
 }
 
 generateTwitterGEOJSON = (data) => {
@@ -271,7 +252,7 @@ exports.initMapData = async(req, res) => {
 
     let crimeGeoJSON = calculatetrajectorySameTypeGeoJSON(await chicagoDataFactory.getMapData(req.body));
     let tweetGeoJSON = generateTwitterGEOJSON(await chicagoDataFactory.getChicagoTweetsWithLocation());
-    res.send({ crime: crimeGeoJSON, tweets: tweetGeoJSON });
+    return({ crime: crimeGeoJSON, tweets: tweetGeoJSON });
 }
 
 
