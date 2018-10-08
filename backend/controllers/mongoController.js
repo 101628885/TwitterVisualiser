@@ -164,6 +164,10 @@ exports.storeTweets = function(tweetsToStore, geo)
 				.on('message', function(){thread.kill()});
 		}
 	}
+	else
+	{
+		console.log("Preventing database updates: developer mode enabled")
+	}
 };
 
 async function removeDuplicates(db) //deprecated

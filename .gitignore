@@ -1,3 +1,10 @@
+#autoController prefs
+preferences/
+auto.json
+
+# Disable dev mode file
+.disable_developer_mode
+
 # Nectar
 nectarkey.pem
 
