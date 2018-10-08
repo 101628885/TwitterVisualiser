@@ -101,8 +101,6 @@ router.post('/list', listviewController.findTweets);
  * handles the supply of data from various historical records from various u.s. cities
  */
 router.get('/chicago', historicCrimeController.chicagoHandler); 
-router.get('/seattle', historicCrimeController.seattleHandler); 
-router.get('/baltimore', historicCrimeController.baltimoreHandler); 
 
 router.get('/checkData', chicago_data_factory.checkLocalData); 
 router.get('/fixMapData', chicago_data_factory.fixMapData); 
