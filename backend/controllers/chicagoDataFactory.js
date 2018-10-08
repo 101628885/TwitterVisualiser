@@ -196,6 +196,11 @@ exports.getMapData = async(query) =>
 	{
 		query.Date.$gte = moment(query.Date.$gte, "MMM DD, YYYY")
 		query.Date.$lt = query.Date.$lt == "" ?  moment(query.Date.$gte, "MMM DD, YYYY").add(1, "days") : moment(query.Date.$lt, "MMM DD, YYYY")
+	} else 
+	{
+		query.Date = {};
+		query.Date.$gte = moment().subtract(1, "months");
+		query.Date.$lt = moment();
 	}
 	console.log(query) 
 

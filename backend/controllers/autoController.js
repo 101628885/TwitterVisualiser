@@ -85,7 +85,7 @@ function collect(query, geo)
     {
 	    request.post({
 		    headers: {'content-type' : 'application/x-www-form-urlencoded'},
-		    url:     'http://localhost:3000/getTweets',
+		    url:     'http://localhost:3000/lookup/api',
 		    form:    { word: query, shouldStoreTweets: true, location: geo }
 	    }, function(error, response, body){
 		    //console.log(err);

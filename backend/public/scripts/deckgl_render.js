@@ -19,7 +19,7 @@ let chicago_trajectory_all_type_data = null;
 let centroid_same_type_data = null;
 let centroid_all_type_data = null;
 
-let pointHighlightColour = [0, 255, 162, 255]
+let pointHighlightColour = [255, 221, 51, 255]
 
 let trajectoryLineColour = [255, 221, 51, 150]
 let trajectoryHighlightColor = [51, 187, 255, 255]
@@ -55,7 +55,7 @@ const TWEET_COLOR_RANGE = [
 ];
 
 const CRIME_COLOR_RANGE = [
-	[65, 244, 113],
+	[255, 166, 13],
 	[66, 244, 244],
 	[66, 194, 244],
 	[66, 134, 244],
@@ -112,6 +112,7 @@ statsBuilder = () =>
 	let crimeCount = chicago_crime_data.features.length;
 	let crimeDateRange = `${chicago_crime_data.features[0].properties.date_stats_text} - ${chicago_crime_data.features[crimeCount - 1].properties.date_stats_text}`
 	let crimeTypeObject = {}
+	
 	chicago_crime_data.features.forEach((crime) => 
 	{
 		if(crimeTypeObject.hasOwnProperty(`${crime.properties.primary_type}`))
@@ -127,12 +128,48 @@ statsBuilder = () =>
 	$( "#stats-crimes p").empty()
 	$("#stats-panel p").empty()
 
-	$("#stats-date-range").append("<p><strong>" + crimeDateRange + "</strong>")
+	$("#stats-date-range").append("<p><strong>Range: " + crimeDateRange + "</strong>")
 	$("#stats-total").append("<p><strong>Total Found:</strong> " + crimeCount)
 	
+	let ordered = {};
+	Object.keys(crimeTypeObject).sort().forEach(function(key) {
+	  ordered[key] = crimeTypeObject[key];
+	});
+	crimeTypeObject = ordered;
 	Object.keys(crimeTypeObject).forEach(function(crime)
 	{
-    	$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
+		//This is really really bad, to be fixed
+		let dotColour = function(dotCrime){
+			switch(dotCrime) 
+			{
+				case "ASSAULT":
+					return CRIME_COLOR_RANGE[0];
+					break;
+				case "THEFT":
+					return CRIME_COLOR_RANGE[1];
+					break;
+				case "SEX OFFENSE":
+					return CRIME_COLOR_RANGE[2];
+					break;
+				case "OTHER OFFENSE":
+					return CRIME_COLOR_RANGE[3];
+					break;
+				case "OFFENSE INVOLVING CHILDREN":
+					return CRIME_COLOR_RANGE[4];
+					break;
+				case "NARCOTICS":
+					return CRIME_COLOR_RANGE[5];
+					break;
+				case "CRIMINAL DAMAGE":
+					return CRIME_COLOR_RANGE[6];
+					break;
+				case "HOMICIDE":
+					return CRIME_COLOR_RANGE[7];
+					break;
+				default: 
+					return CRIME_COLOR_RANGE[7];
+		}}(crime);
+    	$( "#stats-crimes" ).append( `<p><span class="dot" style="background-color: ${"rgba(" + dotColour.join(", ") + "1"}"></span><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
 	});
 
 	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
@@ -170,11 +207,9 @@ const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 			}
 			else
 			{
-				tooltip.innerHTML = '<div>Trajectory Points -></div>';
-				object.geometry.coordinates[0].forEach(item => {
-				tooltip.innerHTML += `
-					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
-				`;
+				tooltip.innerHTML = `<div>${object.properties.trajectory_description.length} Crimes in Trajectory:</div>`;
+				object.properties.trajectory_description.forEach((item, i, array) => {
+				tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
 				});
 				renderLayers();
 			}
@@ -233,7 +268,6 @@ const renderLayers = () => {
 
 
 	const optionsTweet = {};
-
 	const optionsCrimePoints = {};
 
 	const optionsTrajectorySame = {};
@@ -299,6 +333,8 @@ const renderLayers = () => {
 				case "HOMICIDE":
 					return CRIME_COLOR_RANGE[7];
 					break;
+				default: 	
+					return CRIME_COLOR_RANGE[7];
 			};
 		},
 		getLineColor: d => pointColour,
@@ -448,30 +484,32 @@ const initialiseData = async () => {
 const registerEventHandlers = (options) => {
 	// there's probably a better way to do this
 	options.forEach(key => {
-		let idSuffix = "";
-		switch(options) {
-			case OPTIONS.TRAJECTORY: 
-				idSuffix = "-trajectory-handle";
-				break;
-			case OPTIONS.TWEET: 
-				idSuffix = "-tweet-handle";
-			default: 
-				break;
-		}
+		// let idSuffix = "";
+		// switch(options) {
+		// 	case OPTIONS.TRAJECTORY: 
+		// 		idSuffix = "-trajectory-handle";
+		// 		break;
+		// 	case OPTIONS.TWEET: 
+		// 		idSuffix = "-tweet-handle";
+		// 	default: 
+		// 		break;
+		// }
 
 		//Ask Jason about doing this automagically
 		//Bodge for now soz
 		document.getElementById("visible-centroid-handle").onclick = renderLayers;
 		document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
 		document.getElementById("visible-crime-point-handle").onclick = renderLayers;
-
-		let inputType = document.getElementById(key + idSuffix).getAttribute("type");
+		document.getElementById("visible-trajectory-handle").onclick = renderLayers;
+		document.getElementById("visible-tweet-handle").onclick = renderLayers;
 		
-		if (inputType === "checkbox") {
-			console.log("Registering " + key + idSuffix);
-			document.getElementById(key + idSuffix).onclick = renderLayers; }
-		else
-			document.getElementById(key + idSuffix).oninput = renderLayers;
+		// let inputType = document.getElementById(key + idSuffix).getAttribute("type");
+		
+		// if (inputType === "checkbox") {
+		// 	console.log("Registering " + key + idSuffix);
+		// 	document.getElementById(key + idSuffix).onclick = renderLayers; }
+		// else
+		// 	document.getElementById(key + idSuffix).oninput = renderLayers;
 	});
 };
 

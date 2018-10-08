@@ -10,7 +10,53 @@ exports.getTweetMap = function(req, res) {
     })
 };
 
-//Why is this being called twice, fix
+convertPrimaryType = (type) => 
+{
+    switch (type) {
+        case "BATTERY":
+            return "ASSAULT";
+            break;
+        case "BURGLARY":
+            return "THEFT";
+            break;
+        case "CRIM SEXUAL ASSAULT":
+            return "SEX OFFENSE";
+            break;
+        case "CRIMINAL TRESPASS":
+            return "OTHER OFFENSE";
+            break;
+        case "DECEPTIVE PRACTICE":
+            return "OTHER OFFENSE";
+            break;
+        case "INTERFERENCE WITH PUBLIC OFFICER":
+            return "OTHER OFFENSE";
+            break;
+        case "INTIMIDATION":
+            return "ASSAULT";
+            break;
+        case "LIQUOR LAW VIOLATION":
+            return "OTHER OFFENSE";
+            break;
+        case "MOTOR VEHICLE THEFT":
+            return "THEFT";
+            break;
+        case "PUBLIC PEACE VIOLATION":
+            return "OTHER OFFENSE";
+            break;
+        case "ROBBERY":
+            return "THEFT";
+            break;
+        case "STALKING":
+            return "SEX OFFENSE";
+            break;
+        case "WEAPONS VIOLATION":
+            return "ASSAULT";
+            break;
+        default:
+            return type;
+    }
+}
+
 calculatetrajectorySameTypeGeoJSON = (data) => {
     let timeStart = new Date();
     let tTimeThreshold = 180;
@@ -54,47 +100,11 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                 ]
             ];
 
-            switch (trajectory.Primary_Type) {
-                case "BATTERY":
-                    trajectory.Primary_Type = "ASSAULT";
-                    break;
-                case "BURGLARY":
-                    trajectory.Primary_Type = "THEFT";
-                    break;
-                case "CRIM SEXUAL ASSAULT":
-                    trajectory.Primary_Type = "SEX OFFENSE";
-                    break;
-                case "CRIMINAL TRESPASS":
-                    trajectory.Primary_Type = "OTHER OFFENSE";
-                    break;
-                case "DECEPTIVE PRACTICE":
-                    trajectory.Primary_Type = "OTHER OFFENSE";
-                    break;
-                case "INTERFERENCE WITH PUBLIC OFFICER":
-                    trajectory.Primary_Type = "OTHER OFFENSE";
-                    break;
-                case "INTIMIDATION":
-                    trajectory.Primary_Type = "ASSAULT";
-                    break;
-                case "LIQUOR LAW VIOLATION":
-                    trajectory.Primary_Type = "OTHER OFFENSE";
-                    break;
-                case "MOTOR VEHICLE THEFT":
-                    trajectory.Primary_Type = "THEFT";
-                    break;
-                case "PUBLIC PEACE VIOLATION":
-                    trajectory.Primary_Type = "OTHER OFFENSE";
-                    break;
-                case "ROBBERY":
-                    trajectory.Primary_Type = "THEFT";
-                    break;
-                case "STALKING":
-                    trajectory.Primary_Type = "SEX OFFENSE";
-                    break;
-                case "WEAPONS VIOLATION":
-                    trajectory.Primary_Type = "ASSAULT";
-                    break;
-            }
+            trajectory.Primary_Type = convertPrimaryType(trajectory.Primary_Type);
+            //Text Description of trajectory crimes
+            trajectoryDescriptionTextSameType = [`${trajectory.Primary_Type} on ${moment(trajectory.Date).format('MMMM Do [at] h:mm:ss A')}`];
+            trajectoryDescriptionTextAllType = [`${trajectory.Primary_Type} on ${moment(trajectory.Date).format('MMMM Do [at] h:mm:ss A')}`];
+
 
             //Creates only the point for each crime
             crimeGeoPoints[0].features.push({
@@ -105,7 +115,7 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                 },
                 "properties": {
                     "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss A'),
-                    "date_stats_text": moment(trajectory.Date).format('DD/MM/YY, h:mm A'),
+                    "date_stats_text": moment(trajectory.Date).format('MMM Do, YY[\']'),
                     "primary_type": trajectory.Primary_Type,
                     "description": trajectory.Description,
                     "year": trajectory.Year,
@@ -118,21 +128,25 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
             });
 
             otherData.forEach((othertrajectory) => {
-
+                othertrajectory.Primary_Type = convertPrimaryType(othertrajectory.Primary_Type);
                 if (othertrajectory.Primary_Type == trajectory.Primary_Type &&
                     trajectory != othertrajectory) {
                     let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                     let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
+                    if (timeDiff < tTimeThreshold && timeDiff < 0 && Math.abs(distDiff) <= tDistThreshold) {
                         coordsSameType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+
+                        trajectoryDescriptionTextSameType.push(`${othertrajectory.Primary_Type} on ${moment(othertrajectory.Date).format('MMMM Do [at] h:mm:ss A')}`)
                     }
                 }
                 if(trajectory != othertrajectory)
                 {
                     let timeDiff = getTimeDifferenceBetweenPoints(othertrajectory, trajectory);
                     let distDiff = getDistanceBetweenPoints(othertrajectory, trajectory);
-                    if (Math.abs(timeDiff) <= tTimeThreshold && Math.abs(distDiff) <= tDistThreshold) {
+                    if (timeDiff < tTimeThreshold && timeDiff < 0 && Math.abs(distDiff) <= tDistThreshold) {
                         coordsAllType[0].push([othertrajectory.Longitude, othertrajectory.Latitude])
+                        trajectoryDescriptionTextAllType.push(`${othertrajectory.Primary_Type} on ${moment(othertrajectory.Date).format('MMMM Do [at] h:mm:ss A')}`)
+
                     }
                 }
             })    
@@ -148,6 +162,7 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                     },
                     "properties": {
                         "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
+                        "trajectory_description": trajectoryDescriptionTextSameType,
                         "primary_type": trajectory.Primary_Type,
                         "description": trajectory.Description,
                         "year": trajectory.Year,
@@ -173,6 +188,7 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                     "properties": {
                         "date_text": moment(trajectory.Date).format('MMMM Do YYYY, h:mm:ss a'),
                         "primary_type": trajectory.Primary_Type,
+                        "trajectory_description": trajectoryDescriptionTextAllType,
                         "description": trajectory.Description,
                         "year": trajectory.Year,
                         "lineWidth": 0.1,
@@ -249,7 +265,6 @@ generateTwitterGEOJSON = (data) => {
 
 //Initial rendering
 exports.initMapData = async(req, res) => {
-
     let crimeGeoJSON = calculatetrajectorySameTypeGeoJSON(await chicagoDataFactory.getMapData(req.body));
     let tweetGeoJSON = generateTwitterGEOJSON(await chicagoDataFactory.getChicagoTweetsWithLocation());
     return({ crime: crimeGeoJSON, tweets: tweetGeoJSON });
