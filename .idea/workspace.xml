@@ -20,8 +20,8 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="dbpediaController.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/backend/controllers/dbpediaController.js">
+      <file leaf-file-name="datamuseController.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/backend/controllers/datamuseController.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-647">
               <caret line="109" column="115" lean-forward="false" selection-start-line="109" selection-start-column="115" selection-end-line="109" selection-end-column="115" />
@@ -199,7 +199,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/backend/controllers/dbpediaController.js" />
+        <option value="$PROJECT_DIR$/backend/controllers/datamuseController.js" />
         <option value="$PROJECT_DIR$/backend/start.js" />
         <option value="$PROJECT_DIR$/backend/controllers/autoController.js" />
         <option value="$PROJECT_DIR$/backend/controllers/mongoController.js" />
@@ -219,7 +219,7 @@
         <option value="$PROJECT_DIR$/backend/views/visualisation.pug" />
         <option value="$PROJECT_DIR$/backend/public/scripts/d3_render.js" />
         <option value="$PROJECT_DIR$/backend/routes/index.js" />
-        <option value="$PROJECT_DIR$/backend/controllers/dbpediaController.js" />
+        <option value="$PROJECT_DIR$/backend/controllers/datamuseController.js" />
         <option value="$PROJECT_DIR$/backend/controllers/cacheController.js" />
         <option value="$PROJECT_DIR$/backend/controllers/twitterController.js" />
         <option value="$PROJECT_DIR$/backend/controllers/mongoController.js" />
@@ -1325,7 +1325,7 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/backend/controllers/dbpediaController.js">
+    <entry file="file://$PROJECT_DIR$/backend/controllers/datamuseController.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1635">
           <caret line="109" column="115" lean-forward="false" selection-start-line="109" selection-start-column="115" selection-end-line="109" selection-end-column="115" />
@@ -1422,7 +1422,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/controllers/dbpediaController.js">
+    <entry file="file://$PROJECT_DIR$/backend/controllers/datamuseController.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-647">
           <caret line="109" column="115" lean-forward="false" selection-start-line="109" selection-start-column="115" selection-end-line="109" selection-end-column="115" />
@@ -1609,7 +1609,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/controllers/dbpediaController.js">
+    <entry file="file://$PROJECT_DIR$/backend/controllers/datamuseController.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2025">
           <caret line="135" column="37" selection-start-line="135" selection-start-column="37" selection-end-line="135" selection-end-column="37" />
