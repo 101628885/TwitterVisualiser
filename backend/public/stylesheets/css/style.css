@@ -116,8 +116,31 @@ h1:not(#map h1) {
 .collapsible-body {
   background-color: white;
   overflow-y: scroll;
-  max-height: 70vh;
   padding: 1em;
+}
+
+#preset-selection-panel {
+  max-height: 15vh;
+}
+
+#tweet-density-data-panel {
+  max-height: 55vh;
+}
+
+#crime-trajectories-data-panel {
+  max-height: 55vh;
+}
+
+#display-options-panel {
+  max-height: 30vh;
+}
+
+#statistics-panel {
+  max-height: 40vh;
+}
+
+#right-panel {
+  right: 8px;
 }
 
 .map-panel {
@@ -141,10 +164,6 @@ h1:not(#map h1) {
 
 #control-panel {
   left: 8px;
-}
-
-#statistics-panel {
-  right: 8px;
 }
 
 /* #stats-panel {

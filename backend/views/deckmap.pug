@@ -25,7 +25,7 @@ block content
 								.col.s2
 									span
 										i.fas.fa-angle-down.collapsible-header-icon
-					.collapsible-body
+					#preset-selection-panel.collapsible-body
 						.container(style="margin: 0; width: 100%;")
 							.row(style="margin: 0;")
 								.col.s12
@@ -46,8 +46,18 @@ block content
 								.col.s2
 									span
 										i.fas.fa-angle-down.collapsible-header-icon
-					.collapsible-body
+					#tweet-density-data-panel.collapsible-body
 						.container(style="margin: 0; width: 100%;")
+							.row
+								input-field.col.s12
+									label(for="tweet-crime-type") Type of Crime
+									select#tweet-crime-type(name="tweet-crime-type")
+										option(value="All" selected) All
+										option(value="Battery") Battery
+										option(value="Theft") Theft
+										option(value="Criminal Damage") Criminal Damage
+										option(value="Burglary") Burglary
+										option(value="Narcotics") Narcotics
 							.row.valign-wrapper(style="margin: 0;")
 								.col.s3
 									p.left-align
@@ -58,7 +68,7 @@ block content
 											#date-tweet-handle
 							.row(style="margin: 0;")
 								input-field.col.s12
-									button.btn.waves-effect.waves-light(type="submit") Update Map
+									button.btn.waves-effect.waves-light(type="submit" onclick="renderLayers()") Update Map
 				li.active#menu-crime-trajectories
 					.collapsible-header
 						.container(style="margin: 0; width: 100%;")
@@ -68,12 +78,11 @@ block content
 								.col.s2
 									span
 										i.fas.fa-angle-down.collapsible-header-icon
-					.collapsible-body
+					#crime-trajectories-data-panel.collapsible-body
 						.container(style="margin: 0; width: 100%;")
-							.row(style="margin: 0;")
-								input-field.col.s12
-									button.btn.waves-effect.waves-light(type="submit") Update Map
-		#statistics-panel.map-panel
+							.row
+								+queryFilter
+		#right-panel.map-panel
 			ul.collapsible.expandable
 				li.active 
 					.collapsible-header
@@ -84,7 +93,7 @@ block content
 								.col.s2
 									span
 										i.fas.fa-angle-down.collapsible-header-icon
-					.collapsible-body
+					#display-options-panel.collapsible-body
 						.container(style="margin: 0; width: 100%;")
 							.row.valign-wrapper(style="margin: 0;")
 								.col.s3
@@ -108,7 +117,7 @@ block content
 								.col.s2
 									span
 										i.fas.fa-angle-down.collapsible-header-icon
-					.collapsible-body
+					#statistics-panel.collapsible-body
 						.container(style="margin: 0; width: 100%;")
 							.row(style="margin: 0;")
 								.col.s12

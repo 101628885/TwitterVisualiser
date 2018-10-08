@@ -3,7 +3,7 @@
  */ 
 
 // registered mapbox api access token
-const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoidHJpcHBhbG9za2kiLCJhIjoiY2psMGFyZ3A1MTMxMTNxbG1qb3V6YWV0YyJ9.qF4x-o4Z7E6iwYedWjGo6Q';
+const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidHJpcHBhbG9za2kiLCJhIjoiY2psMGFyZ3A1MTMxMTNxbG1qb3V6YWV0YyJ9.qF4x-o4Z7E6iwYedWjGo6Q";
 
 // initial settings for the deckgl instance
 const INITIAL_VIEW_STATE = {
@@ -16,9 +16,9 @@ const INITIAL_VIEW_STATE = {
 
 // options available to the user
 const OPTIONS = {
-	TWEET: ['radius', 'visible', 'extruded'],
-	TRAJECTORY: ['visible'],
-	CENTROID: ['visible'],
+	TWEET: ["radius", "visible", "extruded"],
+	TRAJECTORY: ["visible"],
+	CENTROID: ["visible"],
 };
 
 /**
@@ -27,9 +27,9 @@ const OPTIONS = {
 
 // source data urls
 const DATA_URL = {
-	CHICAGO_TWEET: '/tweetmap',
-	CHICAGO_TRAJECTORY: '/tweetmap',
-	CHICAGO_TEMP: 'https://tinyurl.com/ycawn5tc',
+	CHI_TWEET: "/tweetmap",
+	CHI_TRAJECTORY: "/tweetmap",
+	CHI_TEMP: "https://tinyurl.com/ycawn5tc",
 };
 
 // some colo(u)rs
@@ -40,17 +40,17 @@ const DATA_COLOURS = {
 };
 
 // data objects
-let chicagoTweetData = {
+let chiTweetData = {
 	points: null,
 };
 
-let chicagoTrajectoryData = {
+let chiTrajectoryData = {
 	points: null,
 	sameType: null,
 	allType: null,
 };
 
-let chicagoCentroidData = {
+let chiCentroidData = {
 	sameType: null,
 	allType: null,
 };
@@ -75,51 +75,18 @@ const LIGHT_SETTINGS = {
 
 // main deck.gl object
 const deckgl = new deck.DeckGL({
-	container: 'deckmap',
-	mapStyle: 'mapbox://styles/mapbox/dark-v9',
+	container: "deckmap",
+	mapStyle: "mapbox://styles/mapbox/dark-v9",
 	mapboxApiAccessToken: MAPBOX_ACCESS_TOKEN,
 	...INITIAL_VIEW_STATE
 });
 
-function filterMap() {
-	$('.loader').show()
-	let query = {}
-	if($('#type').val().toUpperCase() != "ALL")
-		query.Primary_Type = $('#type').val().toUpperCase();
-	if($('#limit').val() != "" && typeof parseInt($('#limit').val()) == 'number')
-		query.limit = $('#limit').val();
-	query.Year = $('#year').val();
-	
-	if($('#startDate').val() != "")
-	{
-		query.Date = {
-			$gte: $('#startDate').val(), 
-			$lt: $('#endDate').val()
-		};
-	}
-
-	axios.post('/tweetMap', query)
-	.then((res) => 
-	{
-		chicago_trajectory_same_type_data = res.data.crime.trajectorySameTypeGeoJSON[0];
-		chicago_trajectory_all_type_data = res.data.crime.trajectoryAllTypeGeoJSON[0];
-
-		centroid_same_type_data = res.data.crime.centroidsSame;
-		centroid_all_type_data = res.data.crime.centroidsAll;
-
-		chicago_crime_data = res.data.crime.crimeGeoPoints[0];
-
-		statsBuilder();
-		renderLayers();
-	});
-}
-
 // statsBuilder = () =>
 // {
-// 	let crimeCount = chicago_crime_data.features.length;
-// 	let crimeDateRange = `${chicago_crime_data.features[0].properties.date_stats_text} - ${chicago_crime_data.features[crimeCount - 1].properties.date_stats_text}`
+// 	let crimeCount = CHI_crime_data.features.length;
+// 	let crimeDateRange = `${CHI_crime_data.features[0].properties.date_stats_text} - ${CHI_crime_data.features[crimeCount - 1].properties.date_stats_text}`
 // 	let crimeTypeObject = {}
-// 	chicago_crime_data.features.forEach((crime) => 
+// 	CHI_crime_data.features.forEach((crime) => 
 // 	{
 // 		if(crimeTypeObject.hasOwnProperty(`${crime.properties.primary_type}`))
 // 		{
@@ -139,7 +106,7 @@ function filterMap() {
 	
 // 	Object.keys(crimeTypeObject).forEach(function(crime)
 // 	{
-// 			$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
+// 			$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ":</strong> " + crimeTypeObject[crime]}</p>` );
 // 	});
 
 // 	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
@@ -148,19 +115,19 @@ function filterMap() {
 // }
 
 // toTitleCase = (str) => {
-// 	str = str.toLowerCase().split(' ');
+// 	str = str.toLowerCase().split(" ");
 // 	for (var i = 0; i < str.length; i++) {
 // 		str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
 // 	}
-// 	return str.join(' ');
+// 	return str.join(" ");
 // };
 
 // const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 // 	try {
-// 		const tooltip = document.getElementById('tooltip');
+// 		const tooltip = document.getElementById("tooltip");
 
 // 		if (object) {
-// 			tooltip.style.visibility = 'visible';
+// 			tooltip.style.visibility = "visible";
 // 			tooltip.style.top = `${y}px`;
 // 			tooltip.style.left = `${x}px`;
 
@@ -177,7 +144,7 @@ function filterMap() {
 // 			}
 // 			else
 // 			{
-// 				tooltip.innerHTML = '<div>Trajectory Points -></div>';
+// 				tooltip.innerHTML = "<div>Trajectory Points -></div>";
 // 				object.geometry.coordinates[0].forEach(item => {
 // 				tooltip.innerHTML += `
 // 					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
@@ -186,8 +153,8 @@ function filterMap() {
 // 				renderLayers();
 // 			}
 // 		} else {
-// 			tooltip.innerHTML = '';
-// 			tooltip.style.visibility = 'hidden';
+// 			tooltip.innerHTML = ";
+// 			tooltip.style.visibility = "hidden";
 // 		}
 // 	} catch(e) {
 // 		// kaksoispite dededede
@@ -196,15 +163,15 @@ function filterMap() {
 
 // const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
 // 	try {
-// 		const tooltip = document.getElementById('tooltip');
+// 		const tooltip = document.getElementById("tooltip");
 // 		if (object) {
-// 			tooltip.style.visibility = 'visible';
+// 			tooltip.style.visibility = "visible";
 // 			tooltip.style.top = `${y}px`;
 // 			tooltip.style.left = `${x}px`;
 // 			tooltip.innerHTML = `<div>Centroid at: ${object.geometry.coordinates[0]}, ${object.geometry.coordinates[1]}</div>`;
 // 		} else {
-// 			tooltip.innerHTML = '';
-// 			tooltip.style.visibility = 'hidden';
+// 			tooltip.innerHTML = ";
+// 			tooltip.style.visibility = "hidden";
 // 		}
 // 	} catch(e) {
 // 		// kaksoispite dededede
@@ -213,35 +180,24 @@ function filterMap() {
 
 // const updateTweetLayerTooltip = ({x, y, object}) => {
 // 	try {
-// 		const tooltip = document.getElementById('tooltip');
+// 		const tooltip = document.getElementById("tooltip");
 // 		if (object) {
-// 			tooltip.style.visibility = 'visible';
+// 			tooltip.style.visibility = "visible";
 // 			tooltip.style.top = `${y}px`;
 // 			tooltip.style.left = `${x}px`;
 // 			tooltip.innerHTML = `
 // 				<div>latitude: ${object.centroid[0]}</div>
 // 				<div>longitude: ${object.centroid[0]}</div>
-// 				<div>${object.points.length} tweet${(object.points.length === 1) ? '' : 's'}</div>
+// 				<div>${object.points.length} tweet${(object.points.length === 1) ? " : "s"}</div>
 // 			`;
 // 		} else {
-// 			tooltip.innerHTML = '';
-// 			tooltip.style.visibility = 'hidden';
+// 			tooltip.innerHTML = ";
+// 			tooltip.style.visibility = "hidden";
 // 		}
 // 	} catch(e) {
 // 		// kaksoispite dededede
 // 	}
 // };
-
-const CRIME_COLOR_RANGE = [
-	[65, 244, 113],
-	[66, 244, 244],
-	[66, 194, 244],
-	[66, 134, 244],
-	[69, 66, 244],
-	[244, 66, 244],
-	[188, 66, 244],
-	[244, 66, 66]
-];
 
 const getCrimeTypeColor = (type) => {
 	switch(type) {
@@ -266,50 +222,91 @@ const getCrimeTypeColor = (type) => {
 	};
 };
 
+const filterMap = () => {
+	// $(".loader").show()
+	
+	let query = {}
+	if($('#type').val().toUpperCase() != "ALL") {
+		query.Primary_Type = $('#type').val().toUpperCase();
+	}
+
+	if($('#limit').val() != "" && typeof parseInt($('#limit').val()) == 'number') {
+		query.limit = $('#limit').val();
+	}
+
+	query.Year = $('#year').val();
+	
+	if($('#startDate').val() != "") {
+		query.Date = {
+			$gte: $('#startDate').val(), 
+			$lt: $('#endDate').val()
+		};
+	}
+
+	axios.post("/tweetMap", query)
+	.then((res) => {
+		loadData(res.data, "filter");
+		renderLayers();
+	});
+};
+
 /**
  * renderLayers() updates the data layer(s) according to changes in the options and updates
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
  */
 const renderLayers = () => {
-	// const optionsTweet = {};
 
-	// const optionsCrimePoints = {};
+	// declare configurable options for each data layer
 
-	// const optionsTrajectorySame = {};
-	// const optionsTrajectoryAll = {};
+	let chiTweetOptions = {
+		points: {},
+	};
 
-	// const optionsCentroidAll = {};
-	// const optionsCentroidSame = {};
+	let chiTrajectOptions = {
+		points: {},
+		sameType: {},
+		allType: {},
+	};
 
-	// // const radiusTweetValue = document.getElementById('radius-tweet-handle').value;
-	// // document.getElementById('radius-tweet-value').innerHTML = radiusTweetValue;
-	// // optionsTweet.radius = radiusTweetValue;
+	let chiCentroidOptions = {
+		sameType: {},
+		allType: {},
+	};
 
-	// const visibleTweetValue = document.getElementById('visible-tweet-handle').checked;
-	// optionsTweet.visible = visibleTweetValue;
+	// retrieve values from html input fields in deckmap.pug
 
-	// const visibleCrimePointValue = document.getElementById('visible-crime-point-handle').checked;
-	// optionsCrimePoints.visible = visibleCrimePointValue;
+	// the value of the visualisation preset the user wants to see (tweet density or trajectories)
+	selectedPresetValue = document.querySelector("input[name='preset-select']:checked").value;
 
-	// // const extrudedTweetValue = document.getElementById('extruded-tweet-handle').checked;
-	// // optionsTweet.extruded = extrudedTweetValue;
+	// set the new values into the options objects so we can feed them into the data layers
 
+	switch(selectedPresetValue) {
+		case "tweet-density":
+			chiTweetOptions.points.visible = true;
+			chiTrajectOptions.points.visible = false;
+			chiTrajectOptions.sameType.visible = false;
+			chiTrajectOptions.allType.visible = false;
+			chiCentroidOptions.sameType.visible = false;
+			chiCentroidOptions.allType.visible = false;
+			break;
+		case "crime-trajectories":
+			chiTweetOptions.points.visible = false;
+			chiTrajectOptions.points.visible = true;
+			chiTrajectOptions.sameType.visible = true;
+			chiTrajectOptions.allType.visible = false;
+			chiCentroidOptions.sameType.visible = true;
+			chiCentroidOptions.allType.visible = false;
+			break;
+		default:
+			crimeTypeValue = "ALL";
+			break;
+	};
 
-	// //Trjectory Checking
-	// const visibleTrajectoryValue = document.getElementById('visible-trajectory-handle').checked;
-
-	// const visibleTrajectorySameTypeValue = document.getElementById('visible-type-trajectory-handle').checked;
-	// optionsTrajectorySame.visible = visibleTrajectoryValue ? visibleTrajectorySameTypeValue : visibleTrajectoryValue;
-	// optionsTrajectoryAll.visible = visibleTrajectoryValue ? !visibleTrajectorySameTypeValue : visibleTrajectoryValue;
-
-	// //Centroid Checking
-	// const centroidValue = document.getElementById('visible-centroid-handle').checked;
-	// optionsCentroidSame.visible = centroidValue ? visibleTrajectorySameTypeValue : centroidValue;
-	// optionsCentroidAll.visible = centroidValue ? !visibleTrajectorySameTypeValue : centroidValue;
+	// declare data layers
 
 	const tweetLayer = new deck.HexagonLayer({
-		id: 'tweet-layer',
-		data: chicagoTweetData.points,
+		id: "tweet-layer",
+		data: chiTweetData.points,
 		pickable: true,
 		colorRange: TWEET_COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
@@ -323,13 +320,13 @@ const renderLayers = () => {
 		extruded: false,
 		getPosition: d => d,
 		// onHover: updateTweetLayerTooltip,
-		// ...optionsTweet
+		...chiTweetOptions.points,
 	});
 
 	const historicCrimeLayer = new deck.IconLayer({
-		id: 'historic-icon-layer',
-		data: chicagoTrajectoryData.points,
-		iconAtlas: '/images/icon-point.png',
+		id: "historic-icon-layer",
+		data: chiTrajectoryData.points,
+		iconAtlas: "/images/icon-point.png",
 		pickable: true,
 		iconMapping: {
 			marker: {
@@ -343,45 +340,43 @@ const renderLayers = () => {
 		},
 		sizeScale: 15,
 		getPosition: d => d.coordinates,
-		getIcon: d => 'marker',
+		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => getCrimeTypeColor(d.properties.primary_type),
 		// onHover: (() => console.log("Got one!")),
-		// ...
+		...chiTrajectOptions.points,
 	});
 
-	const historicTrajectorySTLayer = new deck.PathLayer({
-		id: 'hitoric-trajectory-st-layer',
-		data: chicagoTrajectoryData.sameType,
+	const historicTrajectorySTLayer = new deck.GeoJsonLayer({
+		id: "hitoric-trajectory-st-layer",
+		data: chiTrajectoryData.sameType,
 		pickable: true,
-		widthScale: 20,
-		widthMinPixels: 2,
-		widthMaxPixels: 8,
-		getPath: d => d.path,
-		getColor: d => getCrimeTypeColor(d.properties.primary_type),
-		getWidth: d => 2,
+		stroked: false,
+		lineWidthScale: 20,
+		lineWidthMinPixels: 2,
+		lineWidthMaxPixels: 10,
+		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
 		// onHover: ...
-		// ...
+		...chiTrajectOptions.sameType,
 	});
 
-	const historicTrajectoryATLayer = new deck.PathLayer({
-		id: 'hitoric-trajectory-at-layer',
-		data: chicagoTrajectoryData.allType,
+	const historicTrajectoryATLayer = new deck.GeoJsonLayer({
+		id: "hitoric-trajectory-at-layer",
+		data: chiTrajectoryData.allType,
 		pickable: true,
-		widthScale: 20,
-		widthMinPixels: 2,
-		widthMaxPixels: 8,
-		getPath: d => d.path,
-		getColor: d => getCrimeTypeColor(d.properties.primary_type),
-		getWidth: d => 2,
+		stroked: false,
+		lineWidthScale: 20,
+		lineWidthMinPixels: 2,
+		lineWidthMaxPixels: 10,
+		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
 		// onHover: ...
-		// ...
+		...chiTrajectOptions.allType,
 	});
 
 	const historicCentroidSTLayer = new deck.IconLayer({
-		id: 'historic-centroid-st-layer',
-		data: chicagoCentroidData.sameType,
-		iconAtlas: '/images/icon-centroid.png',
+		id: "historic-centroid-st-layer",
+		data: chiCentroidData.sameType,
+		iconAtlas: "/images/icon-centroid.png",
 		pickable: true,
 		iconMapping: {
 			marker: {
@@ -395,17 +390,17 @@ const renderLayers = () => {
 		},
 		sizeScale: 15,
 		getPosition: d => d.coordinates,
-		getIcon: d => 'marker',
+		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => [255, 255, 0],
 		// onHover: (() => console.log("Got one!")),
-		// ...
+		...chiCentroidOptions.sameType,
 	});
 
 	const historicCentroidATLayer = new deck.IconLayer({
-		id: 'historic-centroid-at-layer',
-		data: chicagoCentroidData.allType,
-		iconAtlas: '/images/icon-centroid.png',
+		id: "historic-centroid-at-layer",
+		data: chiCentroidData.allType,
+		iconAtlas: "/images/icon-centroid.png",
 		pickable: true,
 		iconMapping: {
 			marker: {
@@ -419,17 +414,19 @@ const renderLayers = () => {
 		},
 		sizeScale: 15,
 		getPosition: d => d.coordinates,
-		getIcon: d => 'marker',
+		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => [255, 255, 0],
 		// onHover: (() => console.log("Got one!")),
-		// ...
+		...chiCentroidOptions.allType,
 	});
 
+	// add the data layers to the main deckgl object
 	deckgl.setProps({
-		layers: [],
+		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicTrajectoryATLayer, historicCentroidSTLayer, historicCentroidATLayer],
+		// layers: [tweetLayer],
 	});
-	// $('.loader').hide()
+	// $(".loader").hide()
 };
 
 const filterData = async() => {
@@ -437,40 +434,56 @@ const filterData = async() => {
 };
 
 /**
+ * @param {object} data 
+ * compute tweet data and load them into their appropriate data variables
+ */
+const loadData = (data, mode) => {
+	try {
+		console.log("attempting to load data...");
+		console.log("loading tweet data...");
+		if (mode === "default") {
+			chiTweetData.points = data.tweets[0].features.map(tweet => (
+				tweet.geometry.coordinates
+			));
+		}
+
+		console.log("loading crime point data...");
+		chiTrajectoryData.points = data.crime.crimeGeoPoints[0].features.map(point => ({
+			coordinates: point.geometry.coordinates,
+			properties: point.properties
+		}));
+
+		console.log("loading trajectory ST data...");
+		chiTrajectoryData.sameType = data.crime.trajectorySameTypeGeoJSON[0];
+
+		console.log("loading trajectory AT data...");
+		chiTrajectoryData.allType = data.crime.trajectoryAllTypeGeoJSON[0];
+
+		console.log("loading centroid ST data...");
+		chiCentroidData.sameType = data.crime.centroidsSame.features.map(centroid => ({
+			coordinates: centroid.geometry.coordinates
+		}));
+
+		console.log("loading centroid AT data...");
+		chiCentroidData.allType = data.crime.centroidsAll.features.map(centroid => ({
+			coordinates: centroid.geometry.coordinates
+		}));
+
+		console.log("data loaded. plotting data on map...");
+	} catch(e) {
+		console.log("Error: Could not load data");
+	};
+};
+
+/**
  * Initialise the global data variables by fetching data from the endpoints
  * specified in DATA_URL. Called once only.
  */
 const initialiseData = async() => {
-	await fetch(DATA_URL.CHICAGO_TRAJECTORY)
+	await fetch(DATA_URL.CHI_TRAJECTORY)
 	.then(res => res.json())
-	.then(data => {
-		chicagoTweetData.points = data.tweets[0].features.map(tweet => (
-			tweet.geometry.coordinates
-		));
-
-		chicagoTrajectoryData.points = data.crime.crimeGeoPoints[0].features.map(point => ({
-			coordinates: point.geometry.coordinates,
-			properties: point.properties,
-		}));
-
-		chicagoTrajectoryData.sameType = data.crime.trajectorySameTypeGeoJSON[0].features.map(traject => ({
-			path: traject.geometry.coordinates[0],
-			properties: traject.properties,
-		}));
-
-		chicagoTrajectoryData.allType = data.crime.trajectoryAllTypeGeoJSON[0].features.map(traject => ({
-			path: traject.geometry.coordinates[0],
-			properties: traject.properties,
-		}));
-
-		chicagoCentroidData.sameType = data.crime.centroidsSame.features.map(centroid => ({
-			coordinates: centroid.geometry.coordinates,
-		}));
-
-		chicagoCentroidData.allType = data.crime.centroidsAll.features.map(centroid => ({
-			coordinates: centroid.geometry.coordinates,
-		}));
-	});
+	.then(data => loadData(data, "default"))
+	.catch(() => console.log("Error in loading data."));
 
 	// statsBuilder();
 	renderLayers();
@@ -480,7 +493,7 @@ const initialiseData = async() => {
  * Assign the renderLayers() function as an event handler to each input control
  */
 const registerEventHandlers = (options) => {
-	// there's probably a better way to do this
+	// there"s probably a better way to do this
 	options.forEach(key => {
 		let idSuffix = "";
 		switch(options) {
@@ -553,25 +566,25 @@ const setupInterface = () => {
 	});
 
 	// setup slider for radius of tweet hexes
-	var tweetRadiusSlider = document.querySelector("#radius-tweet-handle");
-	noUiSlider.create(tweetRadiusSlider, {
-		range: {
-			"min": 100,
-			"max": 800
-		},
-		step: 10,
-		start: [200],
-		tooltips: false,
-		format: wNumb({
-			decimals: 0
-		}),
-	});
+	// var tweetRadiusSlider = document.querySelector("#radius-tweet-handle");
+	// noUiSlider.create(tweetRadiusSlider, {
+	// 	range: {
+	// 		"min": 100,
+	// 		"max": 800
+	// 	},
+	// 	step: 10,
+	// 	start: [200],
+	// 	tooltips: false,
+	// 	format: wNumb({
+	// 		decimals: 0
+	// 	}),
+	// });
 
-	// tweetRadiusSlider.noUiSlider.on('update', function (values, handle) {
+	// tweetRadiusSlider.noUiSlider.on("update", function (values, handle) {
   //   dateValues[handle].innerHTML = formatDate(new Date(+values[handle]));
 	// });
 
-	// document.querySelector('#radius-tweet-value').innerHTML = radiusTweetValue;
+	// document.querySelector("#radius-tweet-value").innerHTML = radiusTweetValue;
 
 	// DATE FUNCTIONS
 
@@ -580,20 +593,20 @@ const setupInterface = () => {
 		return new Date(str).getTime();
 	}
 
-	var tweetDateSlider = document.querySelector("#date-tweet-handle");
-	noUiSlider.create(tweetDateSlider, {
-		range: {
-				min: getTimestamp('2010'),
-				max: getTimestamp('2016')
-		},
-		step: 24 * 60 * 60 * 1000,
-		start: [getTimestamp('2011'), getTimestamp('2015')],
-		tooltips: false,
-		connect: true,
-		format: wNumb({
-				decimals: 0
-		})
-	});
+	// var tweetDateSlider = document.querySelector("#date-tweet-handle");
+	// noUiSlider.create(tweetDateSlider, {
+	// 	range: {
+	// 			min: getTimestamp("2010"),
+	// 			max: getTimestamp("2016")
+	// 	},
+	// 	step: 24 * 60 * 60 * 1000,
+	// 	start: [getTimestamp("2011"), getTimestamp("2015")],
+	// 	tooltips: false,
+	// 	connect: true,
+	// 	format: wNumb({
+	// 			decimals: 0
+	// 	})
+	// });
 };
 
 /**
