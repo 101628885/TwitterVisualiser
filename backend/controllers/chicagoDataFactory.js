@@ -122,6 +122,7 @@ exports.getMapData = async(query) =>
 
 			promises.push(new Promise((resolve, reject) => 
 			{
+				console.log("Query", query)
 				var pChicagoCrime = schemas.chicagoCrime;
 				pChicagoCrime.find(query)
 				.lean()
@@ -139,6 +140,7 @@ exports.getMapData = async(query) =>
 		}
 	}else
 	{
+		console.log("Query", query)
 		await chicagoCrime.find(query)
 		.lean()
 		.limit(parseInt(limit))
@@ -147,7 +149,6 @@ exports.getMapData = async(query) =>
 		.then((res) => {result = result.concat(res);})
 		.catch((err) => {console.log(err)});
 	}
-	
 
 	if(promises.length == 0)
 	{

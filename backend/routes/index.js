@@ -47,7 +47,7 @@ router.get('/nlpTraining/:location/:count/crime/:crime', nlpTrainingController.r
  * tweetmap controller routes
  * handles the generation of trajectories to be displayed on the layered map
  */
-router.get('/tweetMap', tweetMapController.initMapData);
+router.get('/tweetMap', cacheController.getTrajectories);
 router.post('/tweetMap', tweetMapController.queryMapData);
 
 // listview Controller
