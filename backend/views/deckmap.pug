@@ -49,23 +49,7 @@ block content
 					#tweet-density-data-panel.collapsible-body
 						.container(style="margin: 0; width: 100%;")
 							.row
-								input-field.col.s12
-									label(for="tweet-crime-type") Type of Crime
-									select#tweet-crime-type(name="tweet-crime-type")
-										option(value="All" selected) All
-										option(value="Battery") Battery
-										option(value="Theft") Theft
-										option(value="Criminal Damage") Criminal Damage
-										option(value="Burglary") Burglary
-										option(value="Narcotics") Narcotics
-							.row.valign-wrapper(style="margin: 0;")
-								.col.s3
-									p.left-align
-										label(for="date-tweet-handle") Date(s)
-								.col.s9
-									input-field
-										p
-											#date-tweet-handle
+								p Nothing here yet...
 							.row(style="margin: 0;")
 								input-field.col.s12
 									button.btn.waves-effect.waves-light(type="submit" onclick="renderLayers()") Update Map
@@ -118,28 +102,35 @@ block content
 									span
 										i.fas.fa-angle-down.collapsible-header-icon
 					#statistics-panel.collapsible-body
-						.container(style="margin: 0; width: 100%;")
-							.row(style="margin: 0;")
-								.col.s12
-									.legend(style="background: rgb(29, 161, 242) none repeat scroll 0% 0%;")
-									.legend(style="background: rgb(73, 227, 255) none repeat scroll 0% 0%;")
-									.legend(style="background: rgb(216, 254, 181) none repeat scroll 0% 0%;")
-									.legend(style="background: rgb(254, 237, 177) none repeat scroll 0% 0%;")
-									.legend(style="background: rgb(254, 173, 84) none repeat scroll 0% 0%;")
-									.legend(style="background: rgb(209, 55, 78) none repeat scroll 0% 0%;")
-							.row(style="margin: 0;")
-								.col.s6
-									p.left-align
-										label Less Tweets
-								.col.s6
-									p.right-align
-										label More Tweets
-							.row(style="margin: 0;")
-								.col.s12
-									p yes we still have
-									span(style="font-size: 36px;") #[strong 30.0k]
-									span(style="margin-left: 5px;") tweets aggregated of course
-														
+						#statistics-tweet-density
+							.container(style="margin: 0; width: 100%;")
+								.row(style="margin: 0;")
+									.col.s12
+										.legend(style="background: rgb(29, 161, 242) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(73, 227, 255) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(216, 254, 181) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(254, 237, 177) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(254, 173, 84) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(209, 55, 78) none repeat scroll 0% 0%;")
+								.row(style="margin: 0;")
+									.col.s6
+										p.left-align
+											label Less Tweets
+									.col.s6
+										p.right-align
+											label More Tweets
+								.row(style="margin: 0;")
+									.col.s12
+										p yes we still have
+										span(style="font-size: 36px;") #[strong 30.0k]
+										span(style="margin-left: 5px;") tweets aggregated of course
+						#statistics-crime-trajectories
+							.container(style="margin: 0; width: 100%;")
+								.row(style="margin: 0;")
+									.col.s12
+										canvas#crimeTrajectoriesTimeline
+		#tooltip(style="visibility: hidden")
+												
 							//- #radius-control.form-group(style="display: flex;")
 							//- 	span(for="radius-tweet-handle") Radius
 							//- 	input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="10" value="200" style="margin: 0 1em 0 1em;")
@@ -232,7 +223,11 @@ block content
 		//- 				br
 		//- #footnote.d-none.d-md-block
 		//- 	span Hold down shift to rotate
-	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
-	script(src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
-	script(src="./scripts/deckgl_render.js")
+	script(type="text/javascript" src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
+	script(type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
+	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js")
+	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js")
+	script(type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js")
+	
+	script(type="text/javascript" src="./scripts/deckgl_render.js")
 	link(rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css")

@@ -250,6 +250,43 @@ const filterMap = () => {
 	});
 };
 
+const setupTimeline = () => {
+	var crimesByDate = _.groupBy(chiTrajectoryData.points, point => {
+		return point.properties.date.substring(0, 10);
+	});
+
+	var aggregatedCrimesByDate = Object.keys(crimesByDate).map(item => ({
+		t: new Date(item),
+		y: crimesByDate[item].length
+	}));
+
+	console.log(aggregatedCrimesByDate);
+
+	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
+	var chart = new Chart(ctx, {
+		type: "line",
+		data: {
+			datasets: [{
+				label: "Data",
+				backgroundColor: "rgb(255, 99, 132)",
+				borderColor: "rgb(255, 99, 132)",
+				data: aggregatedCrimesByDate
+			}]
+		},
+		options: {
+			// scales: {
+			// 	xAxes: [{
+			// 		type: 'time',
+			// 		time: {
+			// 			unit: 'day'
+			// 		}
+			// 	}],
+			// 	yAxes: [{}]
+			// }
+		}
+	});
+};
+
 /**
  * renderLayers() updates the data layer(s) according to changes in the options and updates
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
@@ -277,11 +314,15 @@ const renderLayers = () => {
 
 	// the value of the visualisation preset the user wants to see (tweet density or trajectories)
 	selectedPresetValue = document.querySelector("input[name='preset-select']:checked").value;
+	tweetDensityStatistics = document.querySelector("#statistics-tweet-density");
+	crimeTrajectoriesStatistics = document.querySelector("#statistics-crime-trajectories");
 
 	// set the new values into the options objects so we can feed them into the data layers
 
 	switch(selectedPresetValue) {
 		case "tweet-density":
+			tweetDensityStatistics.style.display = "block";
+			crimeTrajectoriesStatistics.style.display = "none";
 			chiTweetOptions.points.visible = true;
 			chiTrajectOptions.points.visible = false;
 			chiTrajectOptions.sameType.visible = false;
@@ -290,6 +331,8 @@ const renderLayers = () => {
 			chiCentroidOptions.allType.visible = false;
 			break;
 		case "crime-trajectories":
+			tweetDensityStatistics.style.display = "none";
+			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
 			chiTrajectOptions.points.visible = true;
 			chiTrajectOptions.sameType.visible = true;
@@ -301,6 +344,27 @@ const renderLayers = () => {
 			crimeTypeValue = "ALL";
 			break;
 	};
+
+	setupTimeline();
+
+	// update display options and statistics panels
+
+	// presetRadios.forEach(elem => {
+	// 	elem.addEventListener("click", () => {
+	// 		switch(elem.value) {
+	// 			case "tweet-density":
+	// 				tweetDensityMenu.style.display = "block";
+	// 				crimeTrajectoriesMenu.style.display = "none";
+	// 				break;
+	// 			case "crime-trajectories":
+	// 				tweetDensityMenu.style.display = "none";
+	// 				crimeTrajectoriesMenu.style.display = "block";
+	// 				break;
+	// 			default:
+	// 				break;
+	// 		}
+	// 	});
+	// });
 
 	// declare data layers
 
@@ -439,37 +503,29 @@ const filterData = async() => {
  */
 const loadData = (data, mode) => {
 	try {
-		console.log("attempting to load data...");
-		console.log("loading tweet data...");
 		if (mode === "default") {
 			chiTweetData.points = data.tweets[0].features.map(tweet => (
 				tweet.geometry.coordinates
 			));
 		}
 
-		console.log("loading crime point data...");
 		chiTrajectoryData.points = data.crime.crimeGeoPoints[0].features.map(point => ({
 			coordinates: point.geometry.coordinates,
 			properties: point.properties
 		}));
 
-		console.log("loading trajectory ST data...");
 		chiTrajectoryData.sameType = data.crime.trajectorySameTypeGeoJSON[0];
 
-		console.log("loading trajectory AT data...");
 		chiTrajectoryData.allType = data.crime.trajectoryAllTypeGeoJSON[0];
 
-		console.log("loading centroid ST data...");
 		chiCentroidData.sameType = data.crime.centroidsSame.features.map(centroid => ({
 			coordinates: centroid.geometry.coordinates
 		}));
 
-		console.log("loading centroid AT data...");
 		chiCentroidData.allType = data.crime.centroidsAll.features.map(centroid => ({
 			coordinates: centroid.geometry.coordinates
 		}));
 
-		console.log("data loaded. plotting data on map...");
 	} catch(e) {
 		console.log("Error: Could not load data");
 	};
@@ -565,6 +621,10 @@ const setupInterface = () => {
 		var instances = M.FormSelect.init(elements);
 	});
 
+	document.querySelector("#statistics-crime-trajectories").style.display = "none";
+
+	setupTimeline();
+
 	// setup slider for radius of tweet hexes
 	// var tweetRadiusSlider = document.querySelector("#radius-tweet-handle");
 	// noUiSlider.create(tweetRadiusSlider, {
@@ -581,32 +641,10 @@ const setupInterface = () => {
 	// });
 
 	// tweetRadiusSlider.noUiSlider.on("update", function (values, handle) {
-  //   dateValues[handle].innerHTML = formatDate(new Date(+values[handle]));
+	//   dateValues[handle].innerHTML = formatDate(new Date(+values[handle]));
 	// });
 
 	// document.querySelector("#radius-tweet-value").innerHTML = radiusTweetValue;
-
-	// DATE FUNCTIONS
-
-	// create a new date from a string, return as a timestamp
-	const getTimestamp = str => {
-		return new Date(str).getTime();
-	}
-
-	// var tweetDateSlider = document.querySelector("#date-tweet-handle");
-	// noUiSlider.create(tweetDateSlider, {
-	// 	range: {
-	// 			min: getTimestamp("2010"),
-	// 			max: getTimestamp("2016")
-	// 	},
-	// 	step: 24 * 60 * 60 * 1000,
-	// 	start: [getTimestamp("2011"), getTimestamp("2015")],
-	// 	tooltips: false,
-	// 	connect: true,
-	// 	format: wNumb({
-	// 			decimals: 0
-	// 	})
-	// });
 };
 
 /**
