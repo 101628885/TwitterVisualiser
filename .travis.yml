@@ -6,7 +6,7 @@ os: osx
 script:
   - 'cd $TRAVIS_BUILD_DIR/frontend && yarn -appr'
   - 'cd $TRAVIS_BUILD_DIR/backend && chmod +x test.sh && ./test.sh'
-  - 'cd $TRAVIS_BUILD_DIR/backend && touch .disable_developer_mode && npm install && npm install mocha -g && npm run test'
+  - 'cd $TRAVIS_BUILD_DIR/backend && npm install && npm install mocha -g && npm run test'
 after_success:
   - wget https://raw.githubusercontent.com/tripaloski/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh

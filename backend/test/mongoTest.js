@@ -1,4 +1,4 @@
-require('dotenv').config({ path: 'variables.env' });
+process.env.DISABLE_DEVELOPER_MODE = true;
 const expect = require('chai').expect;
 var mongo = require('../controllers/mongoController');
 var tweetMelb = mongo.tweetMelb;
@@ -289,9 +289,6 @@ describe('getStoredTweets()', function(){
 		expect(resultChicago1.length).to.be.equal(count);
 		expect(resultChicago2.length).to.be.equal(count);
 		expect(resultChicago3.length).to.be.equal(count);
-
-
-
 
 	})
 
