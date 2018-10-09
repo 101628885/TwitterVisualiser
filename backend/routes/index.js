@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const listviewController      = require("../controllers/listViewController");
-const datamuseController       = require("../controllers/datamuseController");
+const datamuseController      = require("../controllers/datamuseController");
 const lookupController        = require("../controllers/lookupController");
 const verifyController        = require("../controllers/verifyController");
 const nlpTrainingController   = require("../controllers/nlpTrainingController");
