@@ -3,74 +3,86 @@ const factory = require('./tweetMapController')
 const timeout = ms => new Promise(res => setTimeout(res, ms));
 let cachedRequestList = []; //members: url, contents{}, expiry
 const cacheExpiryTime = 3600000; //1 hour
-let trajectoryCacheState = {cachedTrajectory: {data:{}, refreshedTime:{}}, isBuilding: false};
+let trajectoryCacheState = { cachedTrajectories: [], isBuilding: false };
 
-exports.getJSON = async(options) =>
-{
-	let result = {};
-	let entryFound = false;
+exports.getJSON = async (options) => {
+    let result = {};
+    let entryFound = false;
 
-	for (let i = 0; i < cachedRequestList.length; i++)
-	{
-		if (cachedRequestList[i].url === options.url)
-		{
-			console.log("Response found in cache");
-			result = cachedRequestList[i]; //return cached JSON object
-			entryFound = true;
-		}
-	}
+    for (let i = 0; i < cachedRequestList.length; i++) {
+        if (cachedRequestList[i].url === options.url) {
+            console.log("Response found in cache");
+            result = cachedRequestList[i]; //return cached JSON object
+            entryFound = true;
+        }
+    }
 
-	if (!entryFound)
-	{
-		await request(options).then(function(response)
-			{
-				console.log("Response not found in cache");
-				cachedRequestList.push({url: options.url, response: response});
-				result = response;
-			}
-		).catch(function(err){console.log(err)});
-	}
+    if (!entryFound) {
+        await request(options).then(function(response) {
+            console.log("Response not found in cache");
+            cachedRequestList.push({ url: options.url, response: response });
+            result = response;
+        }).catch(function(err) { console.log(err) });
+    }
 
-	return result;
+    return result;
 };
 
 
-exports.getTrajectories = async(req, res) =>
-{
+exports.getTrajectories = async (req, res) => {
+    
+    let query = JSON.stringify(req.body);
+    let result;
 
-	let refreshTrajectoryData = async function(){
-		trajectoryCacheState.isBuilding = true;
-		trajectoryCacheState.cachedTrajectory.data = await factory.initMapData(req, res);
-		trajectoryCacheState.cachedTrajectory.refreshedTime = new Date();
-		trajectoryCacheState.isBuilding = false;
-	}
+    let refreshTrajectoryData = async function() {
+        trajectoryCacheState.isBuilding = true;
 
-	while(trajectoryCacheState.isBuilding)
-	{
-		console.log("Waiting for cache to finish building...")
-		await timeout(2000);
-	}
+        let objectToCache = {}
+        objectToCache.data = await factory.initMapData(req, res)
+        objectToCache.refreshedTime = new Date();
+        objectToCache.query = query;
 
-	if (!Object.keys(trajectoryCacheState.cachedTrajectory.data).length) //Trajectory cache is empty
-	{
-		console.log("Building trajectory cache...");
-		await refreshTrajectoryData(trajectoryCacheState.cachedTrajectory);
-	}
+        trajectoryCacheState.isBuilding = false;
 
-	if (new Date() - trajectoryCacheState.cachedTrajectory.refreshedTime > cacheExpiryTime)
-	{
-		console.log("Trajectory data cache expired, rebuilding...");
-		await refreshTrajectoryData(trajectoryCacheState.cachedTrajectory);
-	}
-	else
-	{
-		console.log("Returning cached trajectory data....");
-	}
+        return objectToCache;
+    }
 
-	console.log("Cache refresh in:", Math.floor((cacheExpiryTime - (new Date() - trajectoryCacheState.cachedTrajectory.refreshedTime))/1000), "seconds");
+    while (trajectoryCacheState.isBuilding) { //only one build request at a time
+        console.log("Waiting for other operations to finish...")
+        await timeout(2000);
+    }
 
 
-	res.send(trajectoryCacheState.cachedTrajectory.data);
+    for (let i = 0; i < trajectoryCacheState.cachedTrajectories.length; i++) {
+        if (trajectoryCacheState.cachedTrajectories[i].query == query) //found item
+        {
+            if (new Date() - trajectoryCacheState.cachedTrajectories.refreshedTime > cacheExpiryTime) { //expired, rebuild
+                console.log("Trajectory data cache expired, rebuilding...");
+                result = await refreshTrajectoryData();
+                trajectoryCacheState.cachedTrajectories.push(result);
+            }
+            else
+            {
+            	console.log("Returning stored trajectory data") //found unexpired match
+            	result = trajectoryCacheState.cachedTrajectories[i];
+            	console.log("Object refresh in:", Math.floor((cacheExpiryTime - (new Date() - trajectoryCacheState.cachedTrajectories[i].refreshedTime)) / 1000), "seconds");
+            }
+
+            
+            break;
+        }
+    }
+
+    if (!result) //no match found
+    {
+    	console.log("Building trajectory cache...");
+
+    	result = await refreshTrajectoryData();
+
+    	trajectoryCacheState.cachedTrajectories.push(result);
+    }
+
+    res.send(result.data);
 
 
 }

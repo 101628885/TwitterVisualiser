@@ -90,7 +90,7 @@ router.get('/nlpData', visualisationController.getNLPData);
  * handles the generation of trajectories to be displayed on the layered map
  */
 router.get('/tweetMap', cacheController.getTrajectories);
-router.post('/tweetMap', tweetMapController.queryMapData);
+router.post('/tweetMap', cacheController.getTrajectories);
 
 // listview Controller
 router.get('/list', listviewController.listTweets);
