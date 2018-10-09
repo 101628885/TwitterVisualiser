@@ -1,7 +1,7 @@
 /**
  * TODO:
- * - Add crime legend on to stats panel
- * - Implement a different time chart library
+ * - Add crime legend on to stats panel ✅
+ * - Fix timeline chart scaling ✅
  * - Fix CSS on data panel
  * - Create endpoint to get # of tweets
  * - Add display options to topright panel
@@ -33,7 +33,7 @@ const OPTIONS = {
 };
 
 // hard-coded crime types
-const CRIME_TYPES = ["ASSAULT", "THEFT", "SEX OFFENSE", "OTHER OFFENSE", "OFFENSE INVOLVING CHILDREN", "NARCOTICS", "CRIMINAL DAMAGE", "HOMICIDE"];
+const CRIME_TYPES = ["ASSAULT", "THEFT", "BURGLARY", "SEX OFFENSE", "OTHER OFFENSE", "OFFENSE INVOLVING CHILDREN", "NARCOTICS", "CRIMINAL DAMAGE", "HOMICIDE"];
 
 /**
  * MAP DATA
@@ -275,15 +275,18 @@ const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
 };
 
 const getCrimeTypeColor = (type) => {
-	switch(type) {
+	switch(type.toUpperCase()) {
 		case "ASSAULT":
+		case "BATTERY":
 			return [65, 244, 113];
 		case "THEFT":
 			return [66, 244, 244];
-		case "SEX OFFENSE":
-			return [66, 194, 244];
-		case "OTHER OFFENSE":
+		case "BURGLARY":
 			return [66, 134, 244];
+		case "SEX OFFENSE":
+			return [255, 165, 0];
+		case "OTHER OFFENSE":
+			return [200, 200, 200];
 		case "OFFENSE INVOLVING CHILDREN":
 			return [69, 66, 244];
 		case "NARCOTICS":
@@ -292,6 +295,8 @@ const getCrimeTypeColor = (type) => {
 			return [188, 66, 244];
 		case "HOMICIDE":
 			return [244, 66, 66];
+		case "ALL":
+			return [0, 0, 0]
 		default:
 			return [255, 255, 255];
 	};
@@ -326,40 +331,34 @@ const filterMap = () => {
 };
 
 const setupTimeline = () => {
+	var selectedCrimeType = document.querySelector("#type").value;
+	var rgbString = `rgb(${getCrimeTypeColor(selectedCrimeType)[0]}, ${getCrimeTypeColor(selectedCrimeType)[1]}, ${getCrimeTypeColor(selectedCrimeType)[2]})`;
+
+	// group the array of crime points by date
 	var crimesByDate = _.groupBy(chiTrajectoryData.points, point => {
 		return point.properties.date.substring(0, 10);
 	});
 
-	var aggregatedCrimesByDate = Object.keys(crimesByDate).map(item => ({
-		t: new Date(item),
-		y: crimesByDate[item].length
-	}));
+	// array of dates represented in crimesByDate, to be used for the chart's x values
+	var crimeDateArray = Object.keys(crimesByDate);
 
-	// console.log(aggregatedCrimesByDate);
+	// array of total number of crimes per date, to be used for the chart's y values
+	var crimeCountArray = Object.values(crimesByDate).map(crimeArray => (crimeArray.length));
 
 	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
-	// var chart = new Chart(ctx, {
-	// 	type: "line",
-	// 	data: {
-	// 		datasets: [{
-	// 			label: "Data",
-	// 			fill: false,
-	// 			borderColor: "rgb(255, 99, 132)",
-	// 			data: aggregatedCrimesByDate
-	// 		}]
-	// 	},
-	// 	options: {
-	// 		// scales: {
-	// 		// 	xAxes: [{
-	// 		// 		type: 'time',
-	// 		// 		time: {
-	// 		// 			unit: 'day'
-	// 		// 		}
-	// 		// 	}],
-	// 		// 	yAxes: [{}]
-	// 		// }
-	// 	}
-	// });
+	var chart = new Chart(ctx, {
+		type: "line",
+		data: {
+			labels: crimeDateArray,
+			datasets: [{
+				label: selectedCrimeType,
+				fill: false,
+				borderColor: rgbString,
+				data: crimeCountArray
+			}]
+		},
+		options: {}
+	});
 };
 
 const toTitleCase = (string) => {
@@ -558,7 +557,7 @@ const renderLayers = () => {
 				y: 0,
 				width: 128,
 				height: 128,
-				anchorY: 128,
+				anchorY: 64,
 				mask: true,
 			}
 		},
@@ -582,7 +581,7 @@ const renderLayers = () => {
 				y: 0,
 				width: 128,
 				height: 128,
-				anchorY: 128,
+				anchorY: 64,
 				mask: true,
 			}
 		},
