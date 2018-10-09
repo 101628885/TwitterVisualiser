@@ -8,6 +8,7 @@ const verifyController        = require("../controllers/verifyController");
 const nlpTrainingController   = require("../controllers/nlpTrainingController");
 const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
+const cacheController		  = require("../controllers/cacheController");
 
 // get homepage
 router.get('/', function(req, res) {
