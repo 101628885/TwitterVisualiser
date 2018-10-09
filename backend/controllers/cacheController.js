@@ -48,7 +48,7 @@ exports.getTrajectories = async (req, res) => {
     }
 
     while (trajectoryCacheState.isBuilding) { //only one build request at a time
-        console.log("Waiting for other operations to finish...")
+        //console.log("Waiting for other operations to finish...")
         await timeout(2000);
     }
 
@@ -56,10 +56,12 @@ exports.getTrajectories = async (req, res) => {
     for (let i = 0; i < trajectoryCacheState.cachedTrajectories.length; i++) {
         if (trajectoryCacheState.cachedTrajectories[i].query == query) //found item
         {
-            if (new Date() - trajectoryCacheState.cachedTrajectories.refreshedTime > cacheExpiryTime) { //expired, rebuild
+            if ((new Date() - trajectoryCacheState.cachedTrajectories[i].refreshedTime) > cacheExpiryTime) { //expired, rebuild
                 console.log("Trajectory data cache expired, rebuilding...");
                 result = await refreshTrajectoryData();
+                trajectoryCacheState.cachedTrajectories.splice(i, 1); //delete expired element
                 trajectoryCacheState.cachedTrajectories.push(result);
+
             }
             else
             {

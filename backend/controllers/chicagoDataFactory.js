@@ -105,7 +105,7 @@ exports.getMapData = async(query) =>
 	console.log(query) 
 
 	var limit = query.limit || 1000
-
+	
 	delete query.limit;
 
 	//Checking if empty, if empty set query {Year: 2018}
@@ -115,6 +115,11 @@ exports.getMapData = async(query) =>
 
 	if (limit > baseLimit)
 	{
+		//why are we querying the DB in a for loop reeeeeeeeeeeeeeeeeeeee
+		console.log("For loops running:", Math.ceil(limit / baseLimit));
+		console.log("Limit:", limit);
+		console.log("Base Limit", baseLimit);
+		console.log("Query", query);
 		for(let i =0; i < Math.ceil(limit / baseLimit); i++)
 		{
 			let newLimit = baseLimit

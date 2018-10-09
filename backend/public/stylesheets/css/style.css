@@ -4,9 +4,8 @@ html, body, #outer {
   width: 100%;
 }
 
-#container {
-  width: 100vw; 
-  height: 92.5vh;
+#map-container {
+  width: 100vw;
   position: absolute;
 }
 
@@ -18,6 +17,10 @@ body:not(#map body) {
 #filterform {
   position: absolute;
   z-index: 1;
+}
+
+nav {
+  height: 9vh;
 }
 
 /* tweet card */
@@ -53,6 +56,10 @@ body:not(#map body) {
   grid-area: tweetbody
 }
 
+p {
+  margin: 0;
+}
+
 /* typography */
 
 h1:not(#map h1) {
@@ -64,7 +71,7 @@ h1:not(#map h1) {
   animation: fadein 2s;
 }
 
-#jumbotext {
+.jumbotext {
   font-size: 56px;
 }
 
@@ -80,8 +87,13 @@ h1:not(#map h1) {
 }
 
 .viscrime-navicon {
-  font-size:17px;
-  margin:0 5px 0 5px;
+  font-size: 17px;
+  margin: 0 5px 0 5px;
+}
+
+.collapsible-header-icon {
+  font-size: 10px;
+  margin: 0px;
 }
 
 /* google maps module */
@@ -96,26 +108,65 @@ h1:not(#map h1) {
 /* deckgl module */
 
 #deckmap {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 91vh;
   position: absolute;
+}
+
+.collapsible-body {
+  background-color: white;
+  overflow-y: scroll;
+  padding: 1em;
+}
+
+#preset-selection-panel {
+  max-height: 15vh;
+}
+
+#tweet-density-data-panel {
+  max-height: 55vh;
+}
+
+#crime-trajectories-data-panel {
+  max-height: 55vh;
+}
+
+#display-options-panel {
+  max-height: 30vh;
+}
+
+#statistics-panel {
+  max-height: 40vh;
+}
+
+#right-panel {
+  right: 8px;
+}
+
+.map-panel {
+  position: absolute;
+}
+
+/* large desktop devices */
+@media(min-width: 1200px) {
+  .map-panel { width: 20%; }
+}
+
+/* desktop devices */
+@media(max-width: 1200px) {
+  .map-panel { width: 25%; }
+}
+
+/* mobile devices and tablets */
+@media(max-width: 992px) {
+  .map-panel { width: 90%; }
 }
 
 #control-panel {
-  position: absolute;
-  margin-top: 0.8em;
-  padding: 1em 1em 0 1em;
-  background-color: white;
-  max-height: 675px;
-  height: 80%;
-  max-width: 250px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  border-radius: 0 0.8rem 0.8rem 0px;
-  font-size: 0.25rem;
+  left: 8px;
 }
 
-#stats-panel {
+/* #stats-panel {
   position: absolute;
   right: 0;
   padding: 1em 1em 0 1em;
@@ -128,7 +179,7 @@ h1:not(#map h1) {
   overflow-x: hidden;
   border-radius:  0.825rem 0 0 0.8rem;
   font-size: 0.825rem;
-}
+} */
 
 #stats-container {
   position: relative;
@@ -141,6 +192,12 @@ h1:not(#map h1) {
   color: lightslategray;
   top: 0;
   right: 0;
+}
+
+.legend {
+  display: inline-block;
+  height: 12px; 
+  width: 16.667%;
 }
 
 #tooltip {

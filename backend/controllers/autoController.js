@@ -98,11 +98,11 @@ exports.autoGet = function(req, res)
         let resumeText = "";
         if (shouldResume)
         {
-            resumeText = "VISION will automatically resume data collection if it restarts.";
+            resumeText = "VisCrime will automatically resume data collection if it restarts.";
         }
         else
         {
-            resumeText = "Data collection will be stopped if VISION restarts."
+            resumeText = "Data collection will be stopped if VisCrime restarts."
         }
 
         res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query.join(', '), shouldResume: resumeText});
