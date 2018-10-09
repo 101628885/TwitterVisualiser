@@ -21,14 +21,14 @@ const server = app.listen(app.get('port'), "0.0.0.0", () => {
 
 	if (!fs.existsSync(process.cwd() + "/.disable_developer_mode"))
 	{
-		console.log("\x1b[31m", "\x1b[1m", "\nVISION is running in Developer Mode. Some database features are unavailable.\n", "\x1b[0m");
+		console.log("\x1b[31m", "\x1b[1m", "\nVisCrime is running in Developer Mode. Some database features are unavailable.\n", "\x1b[0m");
 	}
 	else
 	{
 		process.env.DISABLE_DEVELOPER_MODE = true;
 	}
 	console.log("System output:");
-	console.log(`\nVISION now running on port: ${server.address().port}`);
+	console.log(`\nVisCrime now running on port: ${server.address().port}`);
 	//console.log(process.env.DEVELOPER_MODE);
 	
 });

@@ -10,12 +10,10 @@ dbFormElement.style.display = "none";
 
 const toggleForm = element => {
   if (element.value === "twitterapi") {
-    enableFormElement = apiFormElement;
-    disableFormElement = dbFormElement;
+    apiFormElement.style.display = "block";
+    dbFormElement.style.display = "none";
   } else {
-    enableFormElement = dbFormElement;
-    disableFormElement = apiFormElement;
+    apiFormElement.style.display = "none";
+    dbFormElement.style.display = "block";
   }
-  enableFormElement.style.display = "block";
-  disableFormElement.style.display = "none";
 };

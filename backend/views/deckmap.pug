@@ -1,102 +1,228 @@
 extends layout
 
-//- md bootstrap (deprecated)
-//- will delete soon, i'm only leaving this here because the deckgl map control panel uses 
-//- styles from this template
-//- i don't like the template tbh (md bootstrap)
-//- too many paid options
 append head
-	title VisCrime - Explore
-	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
-	link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
-	script(type='text/javascript' src="/stylesheets/js/popper.min.js")
-	script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
-	script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
+	link(type="text/css" rel="stylesheet" href="/stylesheets/extras/noUiSlider/nouislider.css" media="screen,projection")
+	script(type="text/javascript" src="/stylesheets/extras/noUiSlider/nouislider.js")
 
 include ./mixins/queryFilter
 
 block content
-	#container
+	#map-container
 		#deckmap
-		button(data-toggle="collapse" data-target="#panels" class="btn btn-dark hoverable" style="position: relative;") Hide/Show
-		.loader
-		#panels.collapse.show
-			#stats-panel(style="display: none;").d-none.d-md-block
-				#stats-container
-					.row
-						.col-md-12
+		#control-panel.map-panel
+			ul.collapsible.expandable
+				li.active 
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Select Visualisation]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					#preset-selection-panel.collapsible-body
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									p
+										label
+											input(type="radio" name="preset-select" value="tweet-density" checked)
+											span Tweet Density
+									p
+										label
+											input(type="radio" name="preset-select" value="crime-trajectories")
+											span Crime Trajectories
+				li.active#menu-tweet-density
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Tweet Density]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					#tweet-density-data-panel.collapsible-body
+						.container(style="margin: 0; width: 100%;")
 							.row
-								.col-sm-12
-									h5 Crime Stats
+								p Nothing here yet...
+							.row(style="margin: 0;")
+								input-field.col.s12
+									button.btn.waves-effect.waves-light(type="submit" onclick="renderLayers()") Update Map
+				li.active#menu-crime-trajectories
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Crime Trajectories]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					#crime-trajectories-data-panel.collapsible-body
+						.container(style="margin: 0; width: 100%;")
 							.row
-								.col-sm-12
-									#stats-date-range
-									#stats-total 
-									#stats-crimes 
-							.row
-								.col-sm-12
-									h5 Tweets
-							.row
-								.col-sm-12
-									#stats-tweets
-
+								+queryFilter
+		#right-panel.map-panel
+			ul.collapsible.expandable
+				li.active 
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Display Options]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					#display-options-panel.collapsible-body
+						.container(style="margin: 0; width: 100%;")
+							.row.valign-wrapper(style="margin: 0;")
+								.col.s3
+									p.left-align
+										label(for="radius-tweet-handle") Radius
+								.col.s6
+									input-field
+										p
+											#radius-tweet-handle
+								.col.s3
+									p
+										label 
+											span#radius-tweet-value
+											span m
+				li.active
+					.collapsible-header
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s10
+									span #[strong Statistics]
+								.col.s2
+									span
+										i.fas.fa-angle-down.collapsible-header-icon
+					#statistics-panel.collapsible-body
+						#statistics-tweet-density
+							.container(style="margin: 0; width: 100%;")
+								.row(style="margin: 0;")
+									.col.s12
+										.legend(style="background: rgb(29, 161, 242) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(73, 227, 255) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(216, 254, 181) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(254, 237, 177) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(254, 173, 84) none repeat scroll 0% 0%;")
+										.legend(style="background: rgb(209, 55, 78) none repeat scroll 0% 0%;")
+								.row(style="margin: 0;")
+									.col.s6
+										p.left-align
+											label Less Tweets
+									.col.s6
+										p.right-align
+											label More Tweets
+								.row(style="margin: 0;")
+									.col.s12
+										p yes we still have
+										span(style="font-size: 36px;") #[strong 30.0k]
+										span(style="margin-left: 5px;") tweets aggregated of course
+						#statistics-crime-trajectories
+							.container(style="margin: 0; width: 100%;")
+								.row(style="margin: 0;")
+									.col.s12
+										canvas#crimeTrajectoriesTimeline
 		#tooltip(style="visibility: hidden")
-		#panels.collapse.show
-			#control-panel
-				.container-fluid
-					.row.my-3
-						.col-md-12
-							//- p.h2 30.0K
-							//- 	span(style="font-size: 12px; margin-left: 0.5em") tweets aggregated
-							//- hr
-							p.h6 Tweet Layer
+												
 							//- #radius-control.form-group(style="display: flex;")
 							//- 	span(for="radius-tweet-handle") Radius
 							//- 	input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="10" value="200" style="margin: 0 1em 0 1em;")
 							//- 	span#radius-tweet-value 200
 							//- 	span m
-							.custom-control.custom-checkbox.mb-2
-								input#visible-tweet-handle.custom-control-input(checked name="visible-tweet-handle", type="checkbox")
-								label.custom-control-label(for="visible-tweet-handle", hidden = isHidden) Visible
+							//- .custom-control.custom-checkbox.mb-2
+							//- 	input#visible-tweet-handle.custom-control-input(checked name="visible-tweet-handle", type="checkbox")
+							//- 	label.custom-control-label(for="visible-tweet-handle", hidden = isHidden) Visible
 							//- .custom-control.custom-checkbox.mb-2
 							//- 	input#extruded-tweet-handle.custom-control-input(checked name="extruded-tweet-handle", type="checkbox")
 							//- 	label.custom-control-label(for="extruded-tweet-handle", hidden = isHidden) Extruded
-					
-					//-.row.my-3
-						.col-md-12
-							p.h6 Crime Layer
-							.crime-color(style="background: rgba(65, 244, 113);")
-							.crime-color(style="background: rgba(66, 244, 244);")
-							.crime-color(style="background: rgba(66, 194, 244);")
-							.crime-color(style="background: rgba(66, 134, 244);")
-							.crime-color(style="background: rgba(69, 66, 244);")
-							.crime-color(style="background: rgba(244, 66, 244);")
-							.crime-color(style="background: rgba(188, 66, 244);")
-							.crime-color(style="background: rgba(244, 66, 66);")
+		//- .loader
+		//- #panels.collapse.show
+		//- 	#stats-panel(style="display: none;z-index: 999").d-none.d-md-block
+		//- 		#stats-container
+		//- 			.row
+		//- 				.col-md-12
+		//- 					.row
+		//- 						h3 Crime Stats
+		//- 					.row
+		//- 						hr
+		//- 					.row
+		//- 						#stats-date-range
+		//- 					.row
+		//- 						#stats-total 
+		//- 					.row
+		//- 						#stats-crimes 
+		//- 					.row
+		//- 						h3 Tweets
+		//- 					.row
+		//- 						hr
+		//- 					.row
+		//- 						#stats-tweets
 
-					.row.my-3
-						.col-md-12
-							p.h6 Crime Layer
-							.custom-control.custom-checkbox.mb-2
-								input#visible-trajectory-handle.custom-control-input(checked name="visible-trajectory-handle", type="checkbox")
-								label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Show trajectories
-							.custom-control.custom-checkbox.mb-2
-								input#visible-type-trajectory-handle.custom-control-input(checked name="visible-type-trajectory-handle", type="checkbox")
-								label.custom-control-label(for="visible-type-trajectory-handle", hidden = isHidden) Show only related trajectories
-							.custom-control.custom-checkbox.mb-2
-								input#visible-centroid-handle.custom-control-input(checked name="visible-centroid-handle", type="checkbox")
-								label.custom-control-label(for="visible-centroid-handle", hidden = isHidden) Show Trajectory Centroids
-							.custom-control.custom-checkbox.mb-2
-								input#visible-crime-point-handle.custom-control-input(checked name="visible-crime-point-handle", type="checkbox")
-								label.custom-control-label(for="visible-crime-point-handle", hidden = isHidden) Show Crime Points
-					.row
-						.col-md-12
-							+queryFilter
-						br
-						br
-		#footnote.d-none.d-md-block
-			span Hold down shift to rotate
-	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
-	script(src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
-	script(src="./scripts/deckgl_render.js")
+		//- #tooltip(style="visibility: hidden")
+		//- #panels.collapse.show
+		//- 	#control-panel
+		//- 		.container-fluid
+		//- 			.row.my-3
+		//- 				.col-md-12
+		//- 					p.h2 30.0K
+		//- 						span(style="font-size: 12px; margin-left: 0.5em") tweets aggregated
+		//- 					hr
+		//- 					p.h6 Tweet Layer
+		//- 					#radius-control.form-group(style="display: flex;")
+		//- 						span(for="radius-tweet-handle") Radius
+		//- 						input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="10" value="200" style="margin: 0 1em 0 1em;")
+		//- 						span#radius-tweet-value 200
+		//- 						span m
+		//- 					.custom-control.custom-checkbox.mb-2
+		//- 						input#visible-tweet-handle.custom-control-input(checked name="visible-tweet-handle", type="checkbox")
+		//- 						label.custom-control-label(for="visible-tweet-handle", hidden = isHidden) Visible
+		//- 					.custom-control.custom-checkbox.mb-2
+		//- 						input#extruded-tweet-handle.custom-control-input(checked name="extruded-tweet-handle", type="checkbox")
+		//- 						label.custom-control-label(for="extruded-tweet-handle", hidden = isHidden) Extruded
+					
+		//- 			//-.row.my-3
+		//- 				.col-md-12
+		//- 					p.h6 Crime Layer
+		//- 					.crime-color(style="background: rgba(65, 244, 113);")
+		//- 					.crime-color(style="background: rgba(66, 244, 244);")
+		//- 					.crime-color(style="background: rgba(66, 194, 244);")
+		//- 					.crime-color(style="background: rgba(66, 134, 244);")
+		//- 					.crime-color(style="background: rgba(69, 66, 244);")
+		//- 					.crime-color(style="background: rgba(244, 66, 244);")
+		//- 					.crime-color(style="background: rgba(188, 66, 244);")
+		//- 					.crime-color(style="background: rgba(244, 66, 66);")
+
+		//- 			.row.my-3
+		//- 				.col-md-12
+		//- 					p.h6 Trajectory Layer
+		//- 					.custom-control.custom-checkbox.mb-2
+		//- 						input#visible-trajectory-handle.custom-control-input(checked name="visible-trajectory-handle", type="checkbox")
+		//- 						label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Visible
+		//- 					.custom-control.custom-checkbox.mb-2
+		//- 						input#visible-type-trajectory-handle.custom-control-input(checked name="visible-type-trajectory-handle", type="checkbox")
+		//- 						label.custom-control-label(for="visible-type-trajectory-handle", hidden = isHidden) Restrict Trajectory to Crime Type
+
+		//- 			.row.my-3
+		//- 				.col-md-12
+		//- 					p.h6 Centroid Layer
+		//- 					.custom-control.custom-checkbox.mb-2
+		//- 						input#visible-centroid-handle.custom-control-input(checked name="visible-centroid-handle", type="checkbox")
+		//- 						label.custom-control-label(for="visible-centroid-handle", hidden = isHidden) Visible
+
+		//- 			.row
+		//- 				.col-md-12
+		//- 					+queryFilter
+		//- 				br
+		//- 				br
+		//- #footnote.d-none.d-md-block
+		//- 	span Hold down shift to rotate
+	script(type="text/javascript" src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
+	script(type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
+	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js")
+	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js")
+	script(type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js")
+	
+	script(type="text/javascript" src="./scripts/deckgl_render.js")
 	link(rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css")
