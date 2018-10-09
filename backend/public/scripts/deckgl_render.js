@@ -298,7 +298,7 @@ const getCrimeTypeColor = (type) => {
 		case "HOMICIDE":
 			return [244, 66, 66];
 		default:
-			break;
+			return [255, 255, 255];
 	};
 };
 
@@ -468,7 +468,7 @@ const renderLayers = () => {
 	});
 
 	const historicCrimeLayer = new deck.IconLayer({
-		id: "historic-icon-layer",
+		id: "historic-crime-layer",
 		data: chiTrajectoryData.points,
 		iconAtlas: "/images/icon-point.png",
 		pickable: true,
