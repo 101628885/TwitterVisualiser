@@ -43,8 +43,6 @@ block content
 										i.fas.fa-angle-down.collapsible-header-icon
 					#tweet-density-data-panel.collapsible-body
 						.container(style="margin: 0; width: 100%;")
-							.row
-								p Nothing here yet...
 							.row(style="margin: 0;")
 								input-field.col.s12
 									button.btn.waves-effect.waves-light(type="submit" onclick="renderLayers()") Update Map
@@ -114,13 +112,11 @@ block content
 									.col.s6
 										p.right-align
 											label More Tweets
-								.row(style="margin: 0;")
-									.col.s12
-										p yes we still have
-										span(style="font-size: 36px;") #[strong 30.0k]
-										span(style="margin-left: 5px;") tweets aggregated of course
 						#statistics-crime-trajectories
 							.container(style="margin: 0; width: 100%;")
+								.row(style="margin: 0;")
+									.col.s12
+										#crime-type-legend
 								.row(style="margin: 0;")
 									.col.s12
 										canvas#crimeTrajectoriesTimeline

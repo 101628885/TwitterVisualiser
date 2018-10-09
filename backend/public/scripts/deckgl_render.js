@@ -32,6 +32,9 @@ const OPTIONS = {
 	CENTROID: ["visible"],
 };
 
+// hard-coded crime types
+const CRIME_TYPES = ["ASSAULT", "THEFT", "SEX OFFENSE", "OTHER OFFENSE", "OFFENSE INVOLVING CHILDREN", "NARCOTICS", "CRIMINAL DAMAGE", "HOMICIDE"];
+
 /**
  * MAP DATA
  */
@@ -171,14 +174,6 @@ const deckgl = new deck.DeckGL({
 
 // 	$("#stats-panel").show()
 // }
-
-// toTitleCase = (str) => {
-// 	str = str.toLowerCase().split(" ");
-// 	for (var i = 0; i < str.length; i++) {
-// 		str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-// 	}
-// 	return str.join(" ");
-// };
 
 const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 	try {
@@ -343,28 +338,62 @@ const setupTimeline = () => {
 	// console.log(aggregatedCrimesByDate);
 
 	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
-	var chart = new Chart(ctx, {
-		type: "line",
-		data: {
-			datasets: [{
-				label: "Data",
-				fill: false,
-				borderColor: "rgb(255, 99, 132)",
-				data: aggregatedCrimesByDate
-			}]
-		},
-		options: {
-			// scales: {
-			// 	xAxes: [{
-			// 		type: 'time',
-			// 		time: {
-			// 			unit: 'day'
-			// 		}
-			// 	}],
-			// 	yAxes: [{}]
-			// }
-		}
+	// var chart = new Chart(ctx, {
+	// 	type: "line",
+	// 	data: {
+	// 		datasets: [{
+	// 			label: "Data",
+	// 			fill: false,
+	// 			borderColor: "rgb(255, 99, 132)",
+	// 			data: aggregatedCrimesByDate
+	// 		}]
+	// 	},
+	// 	options: {
+	// 		// scales: {
+	// 		// 	xAxes: [{
+	// 		// 		type: 'time',
+	// 		// 		time: {
+	// 		// 			unit: 'day'
+	// 		// 		}
+	// 		// 	}],
+	// 		// 	yAxes: [{}]
+	// 		// }
+	// 	}
+	// });
+};
+
+const toTitleCase = (string) => {
+	string = string.toLowerCase().split(" ");
+	for (var i = 0; i < string.length; i++) {
+		string[i] = string[i].charAt(0).toUpperCase() + string[i].slice(1);
+	}
+	return string.join(" ");
+};
+
+const renderCrimeTypeLegend = () => {
+	legendDiv = document.querySelector("#crime-type-legend");
+	htmlString = ``;
+	CRIME_TYPES.forEach(item => {
+		colourArray = getCrimeTypeColor(item);
+		colourString = `${colourArray[0]}, ${colourArray[1]}, ${colourArray[2]}`;
+		htmlString += `
+			<p>
+				<span>
+					<div 
+						class="legend" 
+						style="
+							background: rgb(${colourString}) none repeat scroll 0% 0%;
+							border-radius: 5px;
+						"
+					></div>
+				</span>
+				<label>
+					${toTitleCase(item)}
+				</label>
+			</p>
+		`;
 	});
+	legendDiv.innerHTML = htmlString;
 };
 
 /**
@@ -419,6 +448,7 @@ const renderLayers = () => {
 			chiTrajectOptions.allType.visible = false;
 			chiCentroidOptions.sameType.visible = true;
 			chiCentroidOptions.allType.visible = false;
+			renderCrimeTypeLegend();
 			break;
 		default:
 			crimeTypeValue = "ALL";
@@ -478,7 +508,7 @@ const renderLayers = () => {
 				y: 0,
 				width: 128,
 				height: 128,
-				anchorY: 128,
+				anchorY: 64,
 				mask: true,
 			}
 		},
@@ -571,10 +601,6 @@ const renderLayers = () => {
 		// layers: [tweetLayer],
 	});
 	// $(".loader").hide()
-};
-
-const filterData = async() => {
-	return 0;
 };
 
 /**
