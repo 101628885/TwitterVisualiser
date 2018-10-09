@@ -1,4 +1,15 @@
 /**
+ * TODO:
+ * - Add crime legend on to stats panel
+ * - Implement a different time chart library
+ * - Fix CSS on data panel
+ * - Create endpoint to get # of tweets
+ * - Add display options to topright panel
+ * - Data points highlighting on hover (and also add a brush?)
+ * - Use more opaque icons (maybe just do a dot)
+ */
+
+/**
  * CONSTANT VALUES AND OBJECTS
  */ 
 
