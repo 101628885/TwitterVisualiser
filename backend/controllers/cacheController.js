@@ -48,7 +48,7 @@ exports.getTrajectories = async (req, res) => {
     }
 
     while (trajectoryCacheState.isBuilding) { //only one build request at a time
-        console.log("Waiting for other operations to finish...")
+        //console.log("Waiting for other operations to finish...")
         await timeout(2000);
     }
 
