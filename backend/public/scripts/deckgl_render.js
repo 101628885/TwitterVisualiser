@@ -62,7 +62,10 @@ const CRIME_COLOR_RANGE = [
 	[69, 66, 244],
 	[244, 66, 244],
 	[188, 66, 244],
-	[244, 66, 66]
+	[244, 65, 107],
+	[104, 244, 66],
+	[255, 25, 0],
+	[255, 76, 0]
 ];
 
 // hex layer light range
@@ -154,7 +157,7 @@ statsBuilder = () =>
 				case "OTHER OFFENSE":
 					return CRIME_COLOR_RANGE[3];
 					break;
-				case "OFFENSE INVOLVING CHILDREN":
+				case "DOMESTIC VIOLENCE":
 					return CRIME_COLOR_RANGE[4];
 					break;
 				case "NARCOTICS":
@@ -166,8 +169,18 @@ statsBuilder = () =>
 				case "HOMICIDE":
 					return CRIME_COLOR_RANGE[7];
 					break;
-				default: 
-					return CRIME_COLOR_RANGE[7];
+				case "GAMBLING":
+					return CRIME_COLOR_RANGE[8];
+					break;
+				case "KIDNAPPING":
+					return CRIME_COLOR_RANGE[9];
+					break;
+				case "NON-CRIMINAL":
+					return CRIME_COLOR_RANGE[10];
+					break;
+				default: 	
+					return CRIME_COLOR_RANGE[10];
+					break;
 		}}(crime);
     	$( "#stats-crimes" ).append( `<p><span class="dot" style="background-color: ${"rgba(" + dotColour.join(", ") + "1"}"></span><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
 	});
@@ -321,7 +334,7 @@ const renderLayers = () => {
 				case "OTHER OFFENSE":
 					return CRIME_COLOR_RANGE[3];
 					break;
-				case "OFFENSE INVOLVING CHILDREN":
+				case "DOMESTIC VIOLENCE":
 					return CRIME_COLOR_RANGE[4];
 					break;
 				case "NARCOTICS":
@@ -333,8 +346,18 @@ const renderLayers = () => {
 				case "HOMICIDE":
 					return CRIME_COLOR_RANGE[7];
 					break;
+				case "GAMBLING":
+					return CRIME_COLOR_RANGE[8];
+					break;
+				case "KIDNAPPING":
+					return CRIME_COLOR_RANGE[9];
+					break;
+				case "NON-CRIMINAL":
+					return CRIME_COLOR_RANGE[10];
+					break;
 				default: 	
-					return CRIME_COLOR_RANGE[7];
+					return CRIME_COLOR_RANGE[10];
+					break;
 			};
 		},
 		getLineColor: d => pointColour,
