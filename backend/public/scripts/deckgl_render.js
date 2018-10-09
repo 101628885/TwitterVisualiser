@@ -122,82 +122,103 @@ const deckgl = new deck.DeckGL({
 // 	return str.join(" ");
 // };
 
-// const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
-// 	try {
-// 		const tooltip = document.getElementById("tooltip");
+const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
+	try {
+		const tooltip = document.getElementById("tooltip");
 
-// 		if (object) {
-// 			tooltip.style.visibility = "visible";
-// 			tooltip.style.top = `${y}px`;
-// 			tooltip.style.left = `${x}px`;
+		if (object) {
+			tooltip.style.visibility = "visible";
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
 
-// 			if (object.geometry.coordinates[1])
-// 			{
-// 				tooltip.innerHTML = `
-// 				<div>Crime Details</div>
-// 				<div>Date: ${object.properties.date_text}</div>
-// 				<div>Latitude: ${object.geometry.coordinates[1]}</div>
-// 				<div>Longitude: ${object.geometry.coordinates[0]}</div>
-// 				<div>Crime Type: ${object.properties.primary_type}</div>
-// 				<div>Description: ${object.properties.description}</div>
-// 				<div>Location: ${object.properties.location_description}</div>`
-// 			}
-// 			else
-// 			{
-// 				tooltip.innerHTML = "<div>Trajectory Points -></div>";
-// 				object.geometry.coordinates[0].forEach(item => {
-// 				tooltip.innerHTML += `
-// 					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
-// 				`;
-// 				});
-// 				renderLayers();
-// 			}
-// 		} else {
-// 			tooltip.innerHTML = ";
-// 			tooltip.style.visibility = "hidden";
-// 		}
-// 	} catch(e) {
-// 		// kaksoispite dededede
-// 	}
-// };
+			if (object.geometry.coordinates[1])
+			{
+				tooltip.innerHTML = `
+				<div>Crime Details</div>
+				<div>Date: ${object.properties.date_text}</div>
+				<div>Latitude: ${object.geometry.coordinates[1]}</div>
+				<div>Longitude: ${object.geometry.coordinates[0]}</div>
+				<div>Crime Type: ${object.properties.primary_type}</div>
+				<div>Description: ${object.properties.description}</div>
+				<div>Location: ${object.properties.location_description}</div>`
+			}
+			else
+			{
+				tooltip.innerHTML = "<div>Trajectory Points -></div>";
+				object.geometry.coordinates[0].forEach(item => {
+				tooltip.innerHTML += `
+					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
+				`;
+				});
+				renderLayers();
+			}
+		} else {
+			tooltip.innerHTML = "";
+			tooltip.style.visibility = "hidden";
+		}
+	} catch(e) {
+		// kaksoispite dededede
+	}
+};
 
-// const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
-// 	try {
-// 		const tooltip = document.getElementById("tooltip");
-// 		if (object) {
-// 			tooltip.style.visibility = "visible";
-// 			tooltip.style.top = `${y}px`;
-// 			tooltip.style.left = `${x}px`;
-// 			tooltip.innerHTML = `<div>Centroid at: ${object.geometry.coordinates[0]}, ${object.geometry.coordinates[1]}</div>`;
-// 		} else {
-// 			tooltip.innerHTML = ";
-// 			tooltip.style.visibility = "hidden";
-// 		}
-// 	} catch(e) {
-// 		// kaksoispite dededede
-// 	}
-// };
+const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.getElementById("tooltip");
+		if (object) {
+			tooltip.style.visibility = "visible";
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `<div>Centroid at: ${object.geometry.coordinates[0]}, ${object.geometry.coordinates[1]}</div>`;
+		} else {
+			tooltip.innerHTML = "";
+			tooltip.style.visibility = "hidden";
+		}
+	} catch(e) {
+		// kaksoispite dededede
+	}
+};
 
-// const updateTweetLayerTooltip = ({x, y, object}) => {
-// 	try {
-// 		const tooltip = document.getElementById("tooltip");
-// 		if (object) {
-// 			tooltip.style.visibility = "visible";
-// 			tooltip.style.top = `${y}px`;
-// 			tooltip.style.left = `${x}px`;
-// 			tooltip.innerHTML = `
-// 				<div>latitude: ${object.centroid[0]}</div>
-// 				<div>longitude: ${object.centroid[0]}</div>
-// 				<div>${object.points.length} tweet${(object.points.length === 1) ? " : "s"}</div>
-// 			`;
-// 		} else {
-// 			tooltip.innerHTML = ";
-// 			tooltip.style.visibility = "hidden";
-// 		}
-// 	} catch(e) {
-// 		// kaksoispite dededede
-// 	}
-// };
+const updateTweetLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.querySelector("#tooltip");
+		if (object) {
+			tooltip.style.visibility = "visible";
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `
+				<div>latitude: ${object.centroid[0]}</div>
+				<div>longitude: ${object.centroid[0]}</div>
+				<div>${object.points.length} tweet${(object.points.length === 1) ? "" : "s"}</div>`;
+		} else {
+			tooltip.innerHTML = "";
+			tooltip.style.visibility = "hidden";
+		}
+	} catch(e) {
+		// kaksoispite dededede
+	}
+};
+
+const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
+	try {
+		const tooltip = document.querySelector("#tooltip");
+		if (object) {
+			tooltip.style.visibility = "visible";
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `
+				<div>latitude: ${object.coordinates[0]}</div>
+				<div>longitude: ${object.coordinates[1]}</div>
+				<div>date: ${object.properties.date_text}</div>
+				<div>description: ${object.properties.description}</div>
+				<div>type: ${object.properties.primary_type}</div>`;
+		} else {
+			tooltip.innerHTML = "";
+			tooltip.style.visibility = "hidden";
+		}
+	} catch(e) {
+		// kaksoispiste dededede
+	}
+};
 
 const getCrimeTypeColor = (type) => {
 	switch(type) {
@@ -260,7 +281,7 @@ const setupTimeline = () => {
 		y: crimesByDate[item].length
 	}));
 
-	console.log(aggregatedCrimesByDate);
+	// console.log(aggregatedCrimesByDate);
 
 	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
 	var chart = new Chart(ctx, {
@@ -268,7 +289,7 @@ const setupTimeline = () => {
 		data: {
 			datasets: [{
 				label: "Data",
-				backgroundColor: "rgb(255, 99, 132)",
+				fill: false,
 				borderColor: "rgb(255, 99, 132)",
 				data: aggregatedCrimesByDate
 			}]
@@ -383,7 +404,7 @@ const renderLayers = () => {
 		z: 1,
 		extruded: false,
 		getPosition: d => d,
-		// onHover: updateTweetLayerTooltip,
+		onHover: updateTweetLayerTooltip,
 		...chiTweetOptions.points,
 	});
 
@@ -407,7 +428,7 @@ const renderLayers = () => {
 		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => getCrimeTypeColor(d.properties.primary_type),
-		// onHover: (() => console.log("Got one!")),
+		onHover: updateHistoricCrimeLayerTooltip,
 		...chiTrajectOptions.points,
 	});
 
@@ -420,7 +441,7 @@ const renderLayers = () => {
 		lineWidthMinPixels: 2,
 		lineWidthMaxPixels: 10,
 		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
-		// onHover: ...
+		onHover: updateTrajectoryLayerTooltip,
 		...chiTrajectOptions.sameType,
 	});
 
@@ -433,7 +454,7 @@ const renderLayers = () => {
 		lineWidthMinPixels: 2,
 		lineWidthMaxPixels: 10,
 		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
-		// onHover: ...
+		onHover: updateTrajectoryLayerTooltip,
 		...chiTrajectOptions.allType,
 	});
 
@@ -457,7 +478,7 @@ const renderLayers = () => {
 		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => [255, 255, 0],
-		// onHover: (() => console.log("Got one!")),
+		onHover: updatecentroidSameTypeLayerTooltip,
 		...chiCentroidOptions.sameType,
 	});
 
@@ -487,7 +508,7 @@ const renderLayers = () => {
 
 	// add the data layers to the main deckgl object
 	deckgl.setProps({
-		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicTrajectoryATLayer, historicCentroidSTLayer, historicCentroidATLayer],
+		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer],
 		// layers: [tweetLayer],
 	});
 	// $(".loader").hide()
