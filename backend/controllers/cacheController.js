@@ -2,7 +2,7 @@ const request = require('request-promise');
 const factory = require('./tweetMapController')
 const timeout = ms => new Promise(res => setTimeout(res, ms));
 let cachedRequestList = []; //members: url, contents{}, expiry
-const cacheExpiryTime = 10000; //1 hour
+const cacheExpiryTime = 3600000; //1 hour
 let trajectoryCacheState = { cachedTrajectories: [], isBuilding: false };
 
 exports.getJSON = async (options) => {
