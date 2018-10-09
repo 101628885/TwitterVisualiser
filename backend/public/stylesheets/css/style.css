@@ -237,3 +237,12 @@ h1:not(#map h1) {
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0);
 }
+
+.dot {
+  height: 1rem;
+  width: 1rem;
+  margin-right: 0.5rem;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}

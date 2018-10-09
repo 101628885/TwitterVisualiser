@@ -13,7 +13,7 @@ const tweetMapController      = require("../controllers/tweetMapController");
 const reactController         = require("../controllers/reactController");
 const historicCrimeController = require("../controllers/historicCrimeController");
 const visualisationController = require("../controllers/visualisationController");
-
+const cacheController 		  = require("../controllers/cacheController");
 // const mongoController      = require("../controllers/mongoController");
 // const cacheController      = require("../controllers/cacheController");
 const chicagoDataFactory      = require("../controllers/chicagoDataFactory");
@@ -66,7 +66,7 @@ router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTwee
 //new endpoints for NLP
 router.get('/nlpTraining/:location/:count/checked/:checked', nlpTrainingController.returnNLPData);
 router.get('/nlpTraining/:location/:count/crime/:crime', nlpTrainingController.returnNLPData);
-
+//concat melb and chicago
 
 /**
  * react controller routes
@@ -89,7 +89,7 @@ router.get('/nlpData', visualisationController.getNLPData);
  * tweetmap controller routes
  * handles the generation of trajectories to be displayed on the layered map
  */
-router.get('/tweetMap', tweetMapController.initMapData);
+router.get('/tweetMap', cacheController.getTrajectories);
 router.post('/tweetMap', tweetMapController.queryMapData);
 
 // listview Controller

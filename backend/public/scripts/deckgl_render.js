@@ -83,10 +83,11 @@ const deckgl = new deck.DeckGL({
 
 // statsBuilder = () =>
 // {
-// 	let crimeCount = CHI_crime_data.features.length;
-// 	let crimeDateRange = `${CHI_crime_data.features[0].properties.date_stats_text} - ${CHI_crime_data.features[crimeCount - 1].properties.date_stats_text}`
+// 	let crimeCount = chicago_crime_data.features.length;
+// 	let crimeDateRange = `${chicago_crime_data.features[0].properties.date_stats_text} - ${chicago_crime_data.features[crimeCount - 1].properties.date_stats_text}`
 // 	let crimeTypeObject = {}
-// 	CHI_crime_data.features.forEach((crime) => 
+	
+// 	chicago_crime_data.features.forEach((crime) => 
 // 	{
 // 		if(crimeTypeObject.hasOwnProperty(`${crime.properties.primary_type}`))
 // 		{
@@ -101,12 +102,58 @@ const deckgl = new deck.DeckGL({
 // 	$( "#stats-crimes p").empty()
 // 	$("#stats-panel p").empty()
 
-// 	$("#stats-date-range").append("<p><strong>" + crimeDateRange + "</strong>")
+// 	$("#stats-date-range").append("<p><strong>Range: " + crimeDateRange + "</strong>")
 // 	$("#stats-total").append("<p><strong>Total Found:</strong> " + crimeCount)
 	
+// 	let ordered = {};
+// 	Object.keys(crimeTypeObject).sort().forEach(function(key) {
+// 	  ordered[key] = crimeTypeObject[key];
+// 	});
+// 	crimeTypeObject = ordered;
 // 	Object.keys(crimeTypeObject).forEach(function(crime)
 // 	{
-// 			$( "#stats-crimes" ).append( `<p><strong>${toTitleCase(crime) + ":</strong> " + crimeTypeObject[crime]}</p>` );
+// 		//This is really really bad, to be fixed
+// 		let dotColour = function(dotCrime){
+// 			switch(dotCrime) 
+// 			{
+// 				case "ASSAULT":
+// 					return CRIME_COLOR_RANGE[0];
+// 					break;
+// 				case "THEFT":
+// 					return CRIME_COLOR_RANGE[1];
+// 					break;
+// 				case "SEX OFFENSE":
+// 					return CRIME_COLOR_RANGE[2];
+// 					break;
+// 				case "OTHER OFFENSE":
+// 					return CRIME_COLOR_RANGE[3];
+// 					break;
+// 				case "DOMESTIC VIOLENCE":
+// 					return CRIME_COLOR_RANGE[4];
+// 					break;
+// 				case "NARCOTICS":
+// 					return CRIME_COLOR_RANGE[5];
+// 					break;
+// 				case "CRIMINAL DAMAGE":
+// 					return CRIME_COLOR_RANGE[6];
+// 					break;
+// 				case "HOMICIDE":
+// 					return CRIME_COLOR_RANGE[7];
+// 					break;
+// 				case "GAMBLING":
+// 					return CRIME_COLOR_RANGE[8];
+// 					break;
+// 				case "KIDNAPPING":
+// 					return CRIME_COLOR_RANGE[9];
+// 					break;
+// 				case "NON-CRIMINAL":
+// 					return CRIME_COLOR_RANGE[10];
+// 					break;
+// 				default: 	
+// 					return CRIME_COLOR_RANGE[10];
+// 					break;
+// 		}}(crime);
+//     	$( "#stats-crimes" ).append( `<p><span class="dot" style="background-color: ${"rgba(" + dotColour.join(", ") + "1"}"></span><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
 // 	});
 
 // 	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
@@ -131,8 +178,7 @@ const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
 
-			if (object.geometry.coordinates[1])
-			{
+			if (object.geometry.coordinates[1]) {
 				tooltip.innerHTML = `
 				<div>Crime Details</div>
 				<div>Date: ${object.properties.date_text}</div>
@@ -141,15 +187,17 @@ const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 				<div>Crime Type: ${object.properties.primary_type}</div>
 				<div>Description: ${object.properties.description}</div>
 				<div>Location: ${object.properties.location_description}</div>`
-			}
-			else
-			{
-				tooltip.innerHTML = "<div>Trajectory Points -></div>";
-				object.geometry.coordinates[0].forEach(item => {
-				tooltip.innerHTML += `
-					<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
-				`;
+			} else {
+				// tooltip.innerHTML = "<div>Trajectory Points -></div>";
+				// object.geometry.coordinates[0].forEach(item => {
+				// tooltip.innerHTML += `
+				// 	<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
+				// `;
+				tooltip.innerHTML = `<div>${object.properties.trajectory_description.length} Crimes in Trajectory:</div>`;
+				object.properties.trajectory_description.forEach((item, i, array) => {
+				tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
 				});
+				
 				renderLayers();
 			}
 		} else {
@@ -572,16 +620,16 @@ const initialiseData = async() => {
 const registerEventHandlers = (options) => {
 	// there"s probably a better way to do this
 	options.forEach(key => {
-		let idSuffix = "";
-		switch(options) {
-			case OPTIONS.TRAJECTORY: 
-				idSuffix = "-trajectory-handle";
-				break;
-			case OPTIONS.TWEET: 
-				idSuffix = "-tweet-handle";
-			default: 
-				break;
-		}
+		// let idSuffix = "";
+		// switch(options) {
+		// 	case OPTIONS.TRAJECTORY: 
+		// 		idSuffix = "-trajectory-handle";
+		// 		break;
+		// 	case OPTIONS.TWEET: 
+		// 		idSuffix = "-tweet-handle";
+		// 	default: 
+		// 		break;
+		// }
 
 		//Ask Jason about doing this automagically
 		//Bodge for now soz
