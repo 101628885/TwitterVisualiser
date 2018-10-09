@@ -52,6 +52,39 @@ convertPrimaryType = (type) =>
         case "WEAPONS VIOLATION":
             return "ASSAULT";
             break;
+        case "OFFENSE INVOLVING CHILDREN":
+            return "DOMESTIC VIOLENCE";
+            break;
+        case "NON-CRIMINAL {SUBJECT SPECIFIED}":
+            return "NON-CRIMINAL";
+            break;
+        case "RITUALISM":
+            return "OTHER OFFENSE";
+            break;
+        case "NON - CRIMINAL":
+            return "NON-CRIMINAL";
+            break;
+        case "OTHER NARCOTIC VIOLATION":
+            return "NARCOTICS";
+            break;
+        case "CONCEALED CARRY LICENSE VIOLATION":
+            return "OTHER OFFENSE";
+            break;
+        case "HUMAN TRAFFICKING":
+            return "KIDNAPPING";
+            break;
+        case "PUBLIC INDECENCY":
+            return "SEX OFFENSE";
+            break;
+        case "OBSCENITY":
+            return "ASSAULT";
+            break;
+        case "ARSON":
+            return "OTHER OFFENSE";
+            break;
+        case "PROSTITUTION":
+            return "SEX OFFENSE";
+            break;
         default:
             return type;
     }
