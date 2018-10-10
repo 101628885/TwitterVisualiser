@@ -1,7 +1,7 @@
 /**
  * TODO:
- * - Add crime legend on to stats panel
- * - Implement a different time chart library
+ * - Add crime legend on to stats panel ✅
+ * - Fix timeline chart scaling ✅
  * - Fix CSS on data panel
  * - Create endpoint to get # of tweets
  * - Add display options to topright panel
@@ -31,6 +31,9 @@ const OPTIONS = {
 	TRAJECTORY: ["visible"],
 	CENTROID: ["visible"],
 };
+
+// hard-coded crime types
+const CRIME_TYPES = ["ASSAULT", "THEFT", "BURGLARY", "SEX OFFENSE", "OTHER OFFENSE", "OFFENSE INVOLVING CHILDREN", "NARCOTICS", "CRIMINAL DAMAGE", "HOMICIDE"];
 
 /**
  * MAP DATA
@@ -172,14 +175,6 @@ const deckgl = new deck.DeckGL({
 // 	$("#stats-panel").show()
 // }
 
-// toTitleCase = (str) => {
-// 	str = str.toLowerCase().split(" ");
-// 	for (var i = 0; i < str.length; i++) {
-// 		str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-// 	}
-// 	return str.join(" ");
-// };
-
 const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 	try {
 		const tooltip = document.getElementById("tooltip");
@@ -280,15 +275,18 @@ const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
 };
 
 const getCrimeTypeColor = (type) => {
-	switch(type) {
+	switch(type.toUpperCase()) {
 		case "ASSAULT":
+		case "BATTERY":
 			return [65, 244, 113];
 		case "THEFT":
 			return [66, 244, 244];
-		case "SEX OFFENSE":
-			return [66, 194, 244];
-		case "OTHER OFFENSE":
+		case "BURGLARY":
 			return [66, 134, 244];
+		case "SEX OFFENSE":
+			return [255, 165, 0];
+		case "OTHER OFFENSE":
+			return [200, 200, 200];
 		case "OFFENSE INVOLVING CHILDREN":
 			return [69, 66, 244];
 		case "NARCOTICS":
@@ -297,8 +295,10 @@ const getCrimeTypeColor = (type) => {
 			return [188, 66, 244];
 		case "HOMICIDE":
 			return [244, 66, 66];
+		case "ALL":
+			return [0, 0, 0]
 		default:
-			break;
+			return [255, 255, 255];
 	};
 };
 
@@ -331,40 +331,68 @@ const filterMap = () => {
 };
 
 const setupTimeline = () => {
+	var selectedCrimeType = document.querySelector("#type").value;
+	var rgbString = `rgb(${getCrimeTypeColor(selectedCrimeType)[0]}, ${getCrimeTypeColor(selectedCrimeType)[1]}, ${getCrimeTypeColor(selectedCrimeType)[2]})`;
+
+	// group the array of crime points by date
 	var crimesByDate = _.groupBy(chiTrajectoryData.points, point => {
 		return point.properties.date.substring(0, 10);
 	});
 
-	var aggregatedCrimesByDate = Object.keys(crimesByDate).map(item => ({
-		t: new Date(item),
-		y: crimesByDate[item].length
-	}));
+	// array of dates represented in crimesByDate, to be used for the chart's x values
+	var crimeDateArray = Object.keys(crimesByDate);
 
-	// console.log(aggregatedCrimesByDate);
+	// array of total number of crimes per date, to be used for the chart's y values
+	var crimeCountArray = Object.values(crimesByDate).map(crimeArray => (crimeArray.length));
 
 	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
 	var chart = new Chart(ctx, {
 		type: "line",
 		data: {
+			labels: crimeDateArray,
 			datasets: [{
-				label: "Data",
+				label: selectedCrimeType,
 				fill: false,
-				borderColor: "rgb(255, 99, 132)",
-				data: aggregatedCrimesByDate
+				borderColor: rgbString,
+				data: crimeCountArray
 			}]
 		},
-		options: {
-			// scales: {
-			// 	xAxes: [{
-			// 		type: 'time',
-			// 		time: {
-			// 			unit: 'day'
-			// 		}
-			// 	}],
-			// 	yAxes: [{}]
-			// }
-		}
+		options: {}
 	});
+};
+
+const toTitleCase = (string) => {
+	string = string.toLowerCase().split(" ");
+	for (var i = 0; i < string.length; i++) {
+		string[i] = string[i].charAt(0).toUpperCase() + string[i].slice(1);
+	}
+	return string.join(" ");
+};
+
+const renderCrimeTypeLegend = () => {
+	legendDiv = document.querySelector("#crime-type-legend");
+	htmlString = ``;
+	CRIME_TYPES.forEach(item => {
+		colourArray = getCrimeTypeColor(item);
+		colourString = `${colourArray[0]}, ${colourArray[1]}, ${colourArray[2]}`;
+		htmlString += `
+			<p>
+				<span>
+					<div 
+						class="legend" 
+						style="
+							background: rgb(${colourString}) none repeat scroll 0% 0%;
+							border-radius: 5px;
+						"
+					></div>
+				</span>
+				<label>
+					${toTitleCase(item)}
+				</label>
+			</p>
+		`;
+	});
+	legendDiv.innerHTML = htmlString;
 };
 
 /**
@@ -419,6 +447,7 @@ const renderLayers = () => {
 			chiTrajectOptions.allType.visible = false;
 			chiCentroidOptions.sameType.visible = true;
 			chiCentroidOptions.allType.visible = false;
+			renderCrimeTypeLegend();
 			break;
 		default:
 			crimeTypeValue = "ALL";
@@ -468,7 +497,7 @@ const renderLayers = () => {
 	});
 
 	const historicCrimeLayer = new deck.IconLayer({
-		id: "historic-icon-layer",
+		id: "historic-crime-layer",
 		data: chiTrajectoryData.points,
 		iconAtlas: "/images/icon-point.png",
 		pickable: true,
@@ -478,7 +507,7 @@ const renderLayers = () => {
 				y: 0,
 				width: 128,
 				height: 128,
-				anchorY: 128,
+				anchorY: 64,
 				mask: true,
 			}
 		},
@@ -528,7 +557,7 @@ const renderLayers = () => {
 				y: 0,
 				width: 128,
 				height: 128,
-				anchorY: 128,
+				anchorY: 64,
 				mask: true,
 			}
 		},
@@ -552,7 +581,7 @@ const renderLayers = () => {
 				y: 0,
 				width: 128,
 				height: 128,
-				anchorY: 128,
+				anchorY: 64,
 				mask: true,
 			}
 		},
@@ -571,10 +600,6 @@ const renderLayers = () => {
 		// layers: [tweetLayer],
 	});
 	// $(".loader").hide()
-};
-
-const filterData = async() => {
-	return 0;
 };
 
 /**
