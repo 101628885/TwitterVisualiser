@@ -64,8 +64,8 @@ router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTwee
 //router.get('/nlpTrainingEndpoint/:count/', nlpTrainingController.returnNLPDataSet);  //returns both checked and unchecked
 
 //new endpoints for NLP
-router.get('/nlpTraining/:location/:count/checked/:checked', nlpTrainingController.returnNLPData);
-router.get('/nlpTraining/:location/:count/crime/:crime', nlpTrainingController.returnNLPData);
+router.get('/nlpTraining/:count/checked/:checked', nlpTrainingController.returnNLPData);
+router.get('/nlpTraining/:count/crime/:crime', nlpTrainingController.returnNLPData);
 //concat melb and chicago
 
 /**
