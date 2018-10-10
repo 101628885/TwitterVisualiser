@@ -1,6 +1,7 @@
 extends layout
 
 append head
+	title VisCrime - Explore
 	link(type="text/css" rel="stylesheet" href="/stylesheets/extras/noUiSlider/nouislider.css" media="screen,projection")
 	script(type="text/javascript" src="/stylesheets/extras/noUiSlider/nouislider.js")
 
@@ -116,10 +117,11 @@ block content
 							.container(style="margin: 0; width: 100%;")
 								.row(style="margin: 0;")
 									.col.s12
-										#crime-type-legend
+										canvas#crimeTrajectoriesTimeline
 								.row(style="margin: 0;")
 									.col.s12
-										canvas#crimeTrajectoriesTimeline
+										#crime-type-legend
+								
 		#tooltip(style="visibility: hidden")
 
 	script(type="text/javascript" src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
