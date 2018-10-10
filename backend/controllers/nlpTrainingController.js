@@ -23,13 +23,13 @@ exports.returnNLPData = async (req, res) => {
 
     await db.getStoredTweets("chicago", query, count, 0).then((res) => {
         res.map((i) => {
-            result.push({ "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
+            result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
         })
     })
 
     await db.getStoredTweets("melbourne", query, count, 0).then((res) => {
         res.map((i) => {
-            result.push({ "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
+            result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
         })
     })
 
