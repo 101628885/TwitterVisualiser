@@ -33,7 +33,7 @@ const OPTIONS = {
 };
 
 // hard-coded crime types
-const CRIME_TYPES = ["ASSAULT", "THEFT", "BURGLARY", "SEX OFFENSE", "OTHER OFFENSE", "OFFENSE INVOLVING CHILDREN", "NARCOTICS", "CRIMINAL DAMAGE", "HOMICIDE"];
+const CRIME_TYPES = ["ASSAULT", "THEFT", "BURGLARY", "SEX OFFENSE", "OTHER OFFENSE", "DOMESTIC VIOLENCE", "NARCOTICS", "CRIMINAL DAMAGE", "HOMICIDE", "GAMBLING", "KIDNAPPING", "NON-CRIMINAL"];
 
 /**
  * MAP DATA
@@ -287,7 +287,7 @@ const getCrimeTypeColor = (type) => {
 			return [255, 165, 0];
 		case "OTHER OFFENSE":
 			return [200, 200, 200];
-		case "OFFENSE INVOLVING CHILDREN":
+		case "DOMESTIC VIOLENCE":
 			return [69, 66, 244];
 		case "NARCOTICS":
 			return [244, 66, 244];
@@ -295,8 +295,14 @@ const getCrimeTypeColor = (type) => {
 			return [188, 66, 244];
 		case "HOMICIDE":
 			return [244, 66, 66];
+		case "GAMBLING":
+			return [66, 244, 170];
+		case "KIDNAPPING":
+			return [247, 255, 114];
+		case "NON-CRIMINAL":
+			return [255, 205, 113];
 		case "ALL":
-			return [0, 0, 0]
+			return [0, 0, 0];
 		default:
 			return [255, 255, 255];
 	};

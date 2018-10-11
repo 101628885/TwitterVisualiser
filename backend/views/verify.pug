@@ -6,6 +6,7 @@ extends layout
 //- i don't like the template tbh (md bootstrap)
 //- too many paid options
 append head
+	title VisCrime - Verify
 	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
 	link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
 	script(type='text/javascript' src="/stylesheets/js/popper.min.js")
@@ -44,15 +45,17 @@ block content
 								.col-md-4.mx-auto
 									label(for="crime-type") Select Category
 									select#crime-type.custom-select.mb-4(name="crime-type")
-										option(value="assault") Assault
-										option(value="murder") Murder
-										option(value="kidnapping") Kidnapping
-										option(value="extortion") Extortion
-										option(value="rape") Rape
-										option(value="theft") Theft
-										option(value="burglary") Burglary
-										option(value="vandalism") Vandalism
-										option(value="drugs") Drugs
+										option(value="ASSAULT") Assault
+										option(value="THEFT") Theft
+										option(value="SEX OFFENSE") Sex Offense
+										option(value="DOMESTIC VIOLENCE") Domestic Violence
+										option(value="NARCOTICS") Narcotics
+										option(value="CRIMINAL DAMAGE") Criminal Damage
+										option(value="HOMICIDE") Homicide
+										option(value="GAMBLING") Gambling
+										option(value="KIDNAPPING") Kidnapping
+										option(value="NON-CRIMINAL") Non Criminal
+										option(value="OTHER OFFENSE") Other Offense
 							.row
 								.col-md-4.mx-auto
 									label(for="pac-input") Location (approximate)
