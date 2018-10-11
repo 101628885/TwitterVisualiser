@@ -23,9 +23,12 @@ function init()
 
 	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
 
+	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
+
 	module.exports.tweetMelb = tweetMelb;
 	module.exports.tweetChicago = tweetChicago;
 	module.exports.chicagoCrime = chicagoCrime;
+	module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
 }
 
 function createDBConnectionObject(database)
