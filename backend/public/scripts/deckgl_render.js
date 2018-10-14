@@ -436,6 +436,10 @@ const renderLayers = () => {
 	crimeTrajectoriesVisible = document.getElementById("trajectories-visble").checked ;
 	crimePointsVisble = document.getElementById("crimes-visble").checked;
 	centroidsVisble = document.getElementById("centroids-visble").checked;
+	tweetsVisble = document.getElementById("tweets-visble").checked;
+
+	tweetDisplay = document.querySelector(".tweet-display"); 
+	crimeDisplay = document.querySelector(".crime-display"); 
 
 	console.log(crimeTrajectoriesVisible)
 	console.log(crimePointsVisble)
@@ -445,8 +449,10 @@ const renderLayers = () => {
 	switch(selectedPresetValue) {
 		case "tweet-density":
 			tweetDensityStatistics.style.display = "block";
+			tweetDisplay.style.display = "block";
+			crimeDisplay.style.display = "none";
 			crimeTrajectoriesStatistics.style.display = "none";
-			chiTweetOptions.points.visible = true;
+			chiTweetOptions.points.visible = tweetsVisble;
 			chiTrajectOptions.points.visible = false;
 			chiTrajectOptions.sameType.visible = false;
 			chiTrajectOptions.allType.visible = false;
@@ -455,6 +461,8 @@ const renderLayers = () => {
 			break;
 		case "crime-trajectories":
 			tweetDensityStatistics.style.display = "none";
+			tweetDisplay.style.display = "none";
+			crimeDisplay.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
 			chiTrajectOptions.points.visible = crimePointsVisble;
@@ -466,8 +474,10 @@ const renderLayers = () => {
 			break;
 		case "both":
 			tweetDensityStatistics.style.display = "block";
+			tweetDisplay.style.display = "block";
+			crimeDisplay.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "block";
-			chiTweetOptions.points.visible = true;
+			chiTweetOptions.points.visible = tweetsVisble;
 			chiTrajectOptions.points.visible = crimePointsVisble;
 			chiTrajectOptions.sameType.visible = crimeTrajectoriesVisible;
 			chiTrajectOptions.allType.visible = false;
