@@ -8,9 +8,11 @@ append head
 include ./mixins/dataPanel
 include ./mixins/statsPanel
 
+
 block content
 	#map-container
 		#deckmap
+		button#toggle-panels(class="waves-effect waves-light btn-small" onClick="togglePanels()") Hide Panels
 		+dataPanel
 		+statsPanel
 		#tooltip(style="visibility: hidden")

@@ -50,7 +50,7 @@ const DATA_URL = {
 const DATA_COLOURS = {
 	pointHighlight: [0, 255, 162, 255],
 	trajectoryLine: [255, 221, 51, 150],
-	trajectoryHighlight: [51, 187, 255, 255],
+	trajectoryHighlight: [255, 255, 66, 255],
 };
 
 // data objects
@@ -375,6 +375,16 @@ const toTitleCase = (string) => {
 	return string.join(" ");
 };
 
+const togglePanels = () =>
+{
+	dataPanel = document.querySelector("#control-panel");
+	statsPanel = document.querySelector("#right-panel");
+   
+	dataPanel.style.display = dataPanel.style.display == "none" ? "block" : "none";
+	statsPanel.style.display = statsPanel.style.display == "none" ? "block" : "none";
+	document.getElementById("toggle-panels").innerText = document.getElementById("toggle-panels").innerText == "HIDE PANELS" ? "Show Panels" : "Hide Panels";
+}
+
 const renderCrimeTypeLegend = () => {
 	legendDiv = document.querySelector("#crime-type-legend");
 	htmlString = ``;
@@ -446,8 +456,7 @@ const renderLayers = () => {
 	ATVisble = selectedTrajectoryValue == "all-trajectories" ? true : false;
 	STVisble = selectedTrajectoryValue == "same-trajectories" ? true : false;
 
-	console.log(ATVisble);
-	console.log(STVisble);
+
 	// set the new values into the options objects so we can feed them into the data layers
 
 	switch(selectedPresetValue) {
@@ -566,6 +575,8 @@ const renderLayers = () => {
 		pickable: true,
 		stroked: false,
 		lineWidthScale: 20,
+		autoHighlight: true,
+		highlightColor: DATA_COLOURS.trajectoryHighlight,
 		lineWidthMinPixels: 2,
 		lineWidthMaxPixels: 10,
 		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
@@ -581,6 +592,8 @@ const renderLayers = () => {
 		lineWidthScale: 20,
 		lineWidthMinPixels: 2,
 		lineWidthMaxPixels: 10,
+		autoHighlight: true,
+		highlightColor: DATA_COLOURS.trajectoryHighlight,
 		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
 		onHover: updateTrajectoryLayerTooltip,
 		...chiTrajectOptions.allType,
