@@ -49,6 +49,9 @@ jspm_packages/
 # IDE settings directory
 .idea/
 
+# VSCode settings directory
+.vscode/
+
 # TypeScript v1 declaration files
 typings/
 
