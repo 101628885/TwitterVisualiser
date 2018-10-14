@@ -375,6 +375,16 @@ const toTitleCase = (string) => {
 	return string.join(" ");
 };
 
+const togglePanels = () =>
+{
+	dataPanel = document.querySelector("#control-panel");
+	statsPanel = document.querySelector("#right-panel");
+   
+	dataPanel.style.display = dataPanel.style.display == "none" ? "block" : "none";
+	statsPanel.style.display = statsPanel.style.display == "none" ? "block" : "none";
+	document.getElementById("toggle-panels").innerText = document.getElementById("toggle-panels").innerText == "HIDE PANELS" ? "Show Panels" : "Hide Panels";
+}
+
 const renderCrimeTypeLegend = () => {
 	legendDiv = document.querySelector("#crime-type-legend");
 	htmlString = ``;
@@ -446,8 +456,7 @@ const renderLayers = () => {
 	ATVisble = selectedTrajectoryValue == "all-trajectories" ? true : false;
 	STVisble = selectedTrajectoryValue == "same-trajectories" ? true : false;
 
-	console.log(ATVisble);
-	console.log(STVisble);
+
 	// set the new values into the options objects so we can feed them into the data layers
 
 	switch(selectedPresetValue) {
