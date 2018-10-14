@@ -259,16 +259,22 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
 
 calculateCentroid = (trajectories) => {
     let result = { type: "FeatureCollection", features: [], properties: "Centroid" };
-    trajectories.map((i) => {
-        result.features.push({
-            type: "Feature",
-            geometry: {
-                "type": "Point",
-                "coordinates": skmeans(i, 1).centroids[0]
-            }
-        })
-    });
+    const meanCentroids = trajectories.map((i) => skmeans(i, 1).centroids[0]);
+    const k = Math.round(Object.keys(meanCentroids).length / 2);
+    // trajectories.map((i) => console.log(i, skmeans(i, 1)));
+    console.log(skmeans(meanCentroids, 1));
 
+    // meanCentroids.map((i) => {
+    //     result.features.push({
+    //         type: "Feature",
+    //         geometry: {
+    //             "type": "Point",
+    //             "coordinates": skmeans(i, k, [0,0], 50).centroids[0]
+    //         }
+    //     })
+    // });
+
+    // console.log(result.features);
     return result;
 }
 

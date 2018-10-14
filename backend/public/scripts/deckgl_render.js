@@ -442,11 +442,11 @@ const renderLayers = () => {
 			tweetDensityStatistics.style.display = "none";
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
-			chiTrajectOptions.points.visible = true;
-			chiTrajectOptions.sameType.visible = true;
+			chiTrajectOptions.points.visible = false;
+			chiTrajectOptions.sameType.visible = false;
 			chiTrajectOptions.allType.visible = false;
 			chiCentroidOptions.sameType.visible = true;
-			chiCentroidOptions.allType.visible = false;
+			chiCentroidOptions.allType.visible = true;
 			renderCrimeTypeLegend();
 			break;
 		default:
@@ -622,7 +622,7 @@ const loadData = (data, mode) => {
 		chiTrajectoryData.sameType = data.crime.trajectorySameTypeGeoJSON[0];
 
 		chiTrajectoryData.allType = data.crime.trajectoryAllTypeGeoJSON[0];
-
+		console.log("all", chiTrajectoryData);
 		chiCentroidData.sameType = data.crime.centroidsSame.features.map(centroid => ({
 			coordinates: centroid.geometry.coordinates
 		}));
