@@ -441,9 +441,13 @@ const renderLayers = () => {
 	tweetDisplay = document.querySelector(".tweet-display"); 
 	crimeDisplay = document.querySelector(".crime-display"); 
 
-	console.log(crimeTrajectoriesVisible)
-	console.log(crimePointsVisble)
+	selectedTrajectoryValue = document.querySelector("input[name='trajectory-crime-type']:checked").value;
+	
+	ATVisble = selectedTrajectoryValue == "all-trajectories" ? true : false;
+	STVisble = selectedTrajectoryValue == "same-trajectories" ? true : false;
 
+	console.log(ATVisble);
+	console.log(STVisble);
 	// set the new values into the options objects so we can feed them into the data layers
 
 	switch(selectedPresetValue) {
@@ -466,10 +470,10 @@ const renderLayers = () => {
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
 			chiTrajectOptions.points.visible = crimePointsVisble;
-			chiTrajectOptions.sameType.visible = crimeTrajectoriesVisible;
-			chiTrajectOptions.allType.visible = false;
-			chiCentroidOptions.sameType.visible = centroidsVisble;
-			chiCentroidOptions.allType.visible = false;
+			chiTrajectOptions.sameType.visible = STVisble ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisble ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisble ? centroidsVisble: false;
+			chiCentroidOptions.allType.visible = ATVisble ? centroidsVisble : false;
 			renderCrimeTypeLegend();
 			break;
 		case "both":
@@ -479,10 +483,10 @@ const renderLayers = () => {
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = tweetsVisble;
 			chiTrajectOptions.points.visible = crimePointsVisble;
-			chiTrajectOptions.sameType.visible = crimeTrajectoriesVisible;
-			chiTrajectOptions.allType.visible = false;
-			chiCentroidOptions.sameType.visible = centroidsVisble;
-			chiCentroidOptions.allType.visible = false;
+			chiTrajectOptions.sameType.visible = STVisble ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisble ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisble ? centroidsVisble: false;
+			chiCentroidOptions.allType.visible = ATVisble ? centroidsVisble : false;
 			renderCrimeTypeLegend();
 			break;
 		default:
@@ -632,7 +636,7 @@ const renderLayers = () => {
 
 	// add the data layers to the main deckgl object
 	deckgl.setProps({
-		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer],
+		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
 		// layers: [tweetLayer],
 	});
 	// $(".loader").hide()

@@ -13,7 +13,12 @@ mixin statsPanel
 				#display-options-panel.collapsible-body
 					.container(style="margin: 0; width: 100%;")
 						.row(style="margin: 0;")
-							.col.s12.crime-display
+							.col.s12.tweet-display
+								p
+									label
+										input(type="checkbox" id="tweets-visble" checked onClick="renderLayers()")
+										span Show Tweets
+							.col.s12.crime-display(style="display: none;")
 								p
 									label
 										input(type="checkbox" id="trajectories-visble" checked onClick="renderLayers()")
@@ -26,11 +31,16 @@ mixin statsPanel
 									label
 										input(type="checkbox" id="centroids-visble" checked onClick="renderLayers()")
 										span Show Centroids
-							.col.s12.tweet-display
+								br
+								p Trajectories based on
+									label
+										input(type="radio" name="trajectory-crime-type" value="same-trajectories" checked onClick="renderLayers()")
+										span Crime Type
 								p
 									label
-										input(type="checkbox" id="tweets-visble" checked onClick="renderLayers()")
-										span Show Tweets
+										input(type="radio" name="trajectory-crime-type" value="all-trajectories" onClick="renderLayers()")
+										span  Not Restriced 
+							
 			li.active
 				.collapsible-header
 					.container(style="margin: 0; width: 100%;")
