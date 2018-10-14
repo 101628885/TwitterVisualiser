@@ -90,7 +90,7 @@ exports.saveCrimeData = async () =>
 
 				if (!(result.features[feature].properties.latitude == null)) //Don't bother saving if there is no location data
 				{
-					console.log("Valid entry, storing ID", result.features[feature].properties.id);
+					//console.log("Valid entry, storing ID", result.features[feature].properties.id);
 					chicagoCrime.findOne({ID: result.features[feature].properties.id}).lean().exec().then(async function (res) {
 
 						if (!res)
@@ -257,6 +257,8 @@ exports.fixMapData  = async(req, res) =>
 
 		.catch((err) => {console.log(err)});
 	}
+	res.status(200);
+	res.send();
 }
 
 

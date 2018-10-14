@@ -12,12 +12,8 @@ const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
 const reactController         = require("../controllers/reactController");
 const historicCrimeController = require("../controllers/historicCrimeController");
-const visualisationController = require("../controllers/visualisationController");
 const cacheController 		  = require("../controllers/cacheController");
-// const mongoController      = require("../controllers/mongoController");
-// const cacheController      = require("../controllers/cacheController");
 const chicagoDataFactory      = require("../controllers/chicagoDataFactory");
-const chicago_data_factory    = require("../controllers/chicagoDataFactory");
 
 // get homepage
 router.get('/', function(req, res) {
@@ -35,8 +31,8 @@ router.get('/deckmap', function(req, res) {
 });
 
 // twitter controller
-router.get('/browseTwitter', twitterController.browseTwitter);
-router.get('/getTweets', twitterController.browseTwitter);
+//router.get('/browseTwitter', twitterController.browseTwitter);
+//router.get('/getTweets', twitterController.browseTwitter); Shouldn't need a GET for this endpoint anymore
 router.post('/getTweets', dbpediaController.getCombination, twitterController.getTweets);
 
 /**
@@ -77,15 +73,6 @@ router.get('/getCrimeWordCount', reactController.getCrimeWordCount);
 router.get('/getPredictedData', reactController.getPredictedData);
 
 /**
- * visualisation controller routes
- * handles the supply of d3 data
- * i don't think we're using these anymore? we should delete :)
- */
-router.get('/visualisation', visualisationController.getVisualisation);
-router.get('/visualisationData', visualisationController.getVisualisationData);
-router.get('/nlpData', visualisationController.getNLPData);
-
-/**
  * tweetmap controller routes
  * handles the generation of trajectories to be displayed on the layered map
  */
@@ -104,12 +91,10 @@ router.get('/chicago', historicCrimeController.chicagoHandler);
 router.get('/seattle', historicCrimeController.seattleHandler); 
 router.get('/baltimore', historicCrimeController.baltimoreHandler); 
 
-router.get('/checkData', chicago_data_factory.checkLocalData); 
-router.get('/fixMapData', chicago_data_factory.fixMapData); 
+router.get('/checkData', chicagoDataFactory.checkLocalData); 
 
 // test dummy data
 router.post('/trajectoryData', chicagoDataFactory.getDummyData);
 router.get('/tweetsChicagoWithLocation', chicagoDataFactory.getChicagoTweetsWithLocation);
-router.get('/saveDummy', chicagoDataFactory.saveCrimeData);
 
 module.exports = router;
