@@ -56,30 +56,9 @@ exports.returnAllData = async (req, res) => {
     res.send(result)
 }
 
-// exports.runNLP = function(next) {
-//     var options = {
-//         mode: 'binary',
-//         // This is server use
-//         // pythonPath: '/usr/bin/python3',
-//         pythonPath: '/usr/local/bin/python3',
-//         //pythonPath: '/usr/local/bin/python3',
-//         pythonOptions: ['-u'],
-//         // make sure you use an absolute path for scriptPath
-//         // This is for server use
-//         scriptPath: process.cwd() + '/spaCy_NLP'
-//     };
-
-//     pythonShell.run('TwitterNLP.py', options, function(err, jsonRes) {
-//         if (err) throw next(err);
-//         // next(jsonRes);
-//         console.log(jsonRes, "yess");
-//     }).receive((res) => next(res));
-// };
-
 exports.runNLP = async (req, res) => {
-    const pyProcess = pty.spawn("/usr/local/bin/python3", [process.cwd() + '/spaCy_NLP/TwitterNLP.py']);
+    const pyProcess = pty.spawn("/usr/bin/python3", [process.cwd() + '/spaCy_NLP/TwitterNLP.py']);
     var dataToSend = "";
-    console.log("less go.. pls");
 
     pyProcess.on("data", (data) => {
         dataToSend += data;
