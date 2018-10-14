@@ -33,4 +33,6 @@ const server = app.listen(app.get('port'), "0.0.0.0", () => {
 	
 });
 
+server.timeout = 300000;
+
 module.exports = app;
