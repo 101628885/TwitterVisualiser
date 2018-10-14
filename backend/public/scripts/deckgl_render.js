@@ -50,7 +50,7 @@ const DATA_URL = {
 const DATA_COLOURS = {
 	pointHighlight: [0, 255, 162, 255],
 	trajectoryLine: [255, 221, 51, 150],
-	trajectoryHighlight: [51, 187, 255, 255],
+	trajectoryHighlight: [255, 255, 66, 255],
 };
 
 // data objects
@@ -575,6 +575,8 @@ const renderLayers = () => {
 		pickable: true,
 		stroked: false,
 		lineWidthScale: 20,
+		autoHighlight: true,
+		highlightColor: DATA_COLOURS.trajectoryHighlight,
 		lineWidthMinPixels: 2,
 		lineWidthMaxPixels: 10,
 		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
@@ -590,6 +592,8 @@ const renderLayers = () => {
 		lineWidthScale: 20,
 		lineWidthMinPixels: 2,
 		lineWidthMaxPixels: 10,
+		autoHighlight: true,
+		highlightColor: DATA_COLOURS.trajectoryHighlight,
 		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
 		onHover: updateTrajectoryLayerTooltip,
 		...chiTrajectOptions.allType,
