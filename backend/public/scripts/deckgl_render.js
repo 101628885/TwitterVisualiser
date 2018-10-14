@@ -430,6 +430,7 @@ const renderLayers = () => {
 	selectedPresetValue = document.querySelector("input[name='preset-select']:checked").value;
 	tweetDensityStatistics = document.querySelector("#statistics-tweet-density");
 	crimeTrajectoriesStatistics = document.querySelector("#statistics-crime-trajectories");
+	bothStatistics = document.querySelector("#statistics-both");
 
 	// set the new values into the options objects so we can feed them into the data layers
 
@@ -453,6 +454,17 @@ const renderLayers = () => {
 			chiTrajectOptions.allType.visible = false;
 			chiCentroidOptions.sameType.visible = true;
 			chiCentroidOptions.allType.visible = false;
+			renderCrimeTypeLegend();
+			break;
+		case "both":
+			tweetDensityStatistics.style.display = "block";
+			crimeTrajectoriesStatistics.style.display = "block";
+			chiTweetOptions.points.visible = true;
+			chiTrajectOptions.points.visible = true;
+			chiTrajectOptions.sameType.visible = true;
+			chiTrajectOptions.allType.visible = true;
+			chiCentroidOptions.sameType.visible = true;
+			chiCentroidOptions.allType.visible = true;
 			renderCrimeTypeLegend();
 			break;
 		default:
