@@ -1,7 +1,7 @@
 ############################
 # Created by Shane Joachim #
 # Software Engineering A   #
-# VisCrime                   #
+# VisCrime                 #
 ############################
 
 # spaCy essentials

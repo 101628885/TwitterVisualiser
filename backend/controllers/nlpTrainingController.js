@@ -47,7 +47,7 @@ exports.runNLP = function(next) {
         pythonOptions: ['-u'],
         // make sure you use an absolute path for scriptPath
         // This is for server use
-        scriptPath: process.cwd() + '/spaCy_NLP'
+        scriptPath: process.cwd() + '/nlp'
     };
 
     pythonShell.run('TwitterNLP.py', options, function(err, jsonRes) {
