@@ -46,16 +46,6 @@ describe('Test all routes', function(){
 			expect(res).to.have.status(200);
 		});
 
-		chai.request(app).get('/getCrimeWordCount').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
-		chai.request(app).get('/getPredictedData').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
 		chai.request(app).get('/tweetMap').end((err, res) => {
 			expect(err).to.be.null;
 			expect(res).to.have.status(200);
