@@ -1,65 +1,57 @@
 const mongoose = require('mongoose');
-var schemas = require('./mongoController');
-var tweetMelb = schemas.tweetMelb;
-var tweetChicago = schemas.tweetChicago;
+var db = require('./mongoController');
 const pythonShell = require('python-shell');
-const db = mongoose.connection;
 
-// Returns all checked: true
-exports.returnNLPDataSet = async (req,res) => {
-    var tweet = db.model('tweets', tweet);
-
+exports.returnNLPData = async (req, res) => {
+    let result = [];
     let query = {};
+    let count = 0;
 
-    if (req.params.crime)
-    {
-        query.crime = req.params.crime;
-        query.checked = true;
+    if (req.params.checked) {
+        query.checked = req.params.checked;
     }
 
-    tweetMelb.find(query).sort({'date': -1}).limit(parseInt(req.params.count)).lean().exec(function(err, posts)
-    {
-        if(!err)
-        {
-            let post;
-            let result = [];
-            let count = 0;
-            for (let i in posts)
-            {
-                post = {
-                    "full_text": posts[count].full_text,
-                    "crime": posts[count].crime,
-                    "type_of_crime" : posts[count].type_of_crime,
-                    "location" : posts[count].location
-                };
-                count += 1;
-                result.push(post);
-            }
-            res.send(result);
-        }
-        else
-        {
-            console.log(err);
-        }
+    if (req.params.crime) {
+        query.crime = req.params.crime;
+    }
+
+    if (req.params.count) {
+        count = parseInt(req.params.count);
+    } else {
+        count = 100000000;
+    }
+
+    await db.getStoredTweets("chicago", query, count, 0).then((res) => {
+        res.map((i) => {
+            result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
+        })
+    })
+
+    await db.getStoredTweets("melbourne", query, count, 0).then((res) => {
+        res.map((i) => {
+            result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
+        })
+    })
+
+    res.send(result)
+
+};
+
+
+exports.runNLP = function(next) {
+    var options = {
+        mode: 'text',
+        // This is server use
+        pythonPath: '/usr/bin/python3',
+        //pythonPath: '/usr/local/bin/python3',
+        pythonOptions: ['-u'],
+        // make sure you use an absolute path for scriptPath
+        // This is for server use
+        scriptPath: process.cwd() + '/spaCy_NLP'
+    };
+
+    pythonShell.run('TwitterNLP.py', options, function(err, jsonRes) {
+        if (err) throw err;
+        next(jsonRes);
     });
 };
-
-exports.runNLP = function(next)
-{
-	var options = {
-		mode: 'text',
-		// This is server use
-		pythonPath: '/usr/bin/python3',
-		//pythonPath: '/usr/local/bin/python3',
-		pythonOptions: ['-u'],
-		// make sure you use an absolute path for scriptPath
-		// This is for server use
-		scriptPath: process.cwd() + '/spaCy_NLP'
-	};
-
-	pythonShell.run('TwitterNLP.py', options, function (err, jsonRes) {
-		if (err) throw err;
-		next(jsonRes);
-	});
-};
-

@@ -5,66 +5,64 @@ const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
 const connectionTimeout = 1500;
 
-const databaseMelb = { url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
+const databaseMelb = {location: "Melbourne", url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
 
-const databaseChicago = { url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
+const databaseChicago = {location: "Chicago", url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
 
-const databaseChicagoCrime = { url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
+const databaseChicagoCrime = {location:"Chicago Crime", url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
+
 const connectFailure = function() {console.log("This will abort the NodeJS process."); process.exit(1);}
 
 init();
 
-
-//Create DB connection handles and export them
-//Please don't try and refactor this init function to make it async or more concise.
-//If you do, please increment the following counter:
-//Amount of hours wasted here: 3
-//:(
 function init()
 {
-	let dbMelb = mongoose.createConnection(databaseMelb.url, {connectTimeoutMS: connectionTimeout});
-	let tweetMelb = dbMelb.model('tweets');
-	
-	dbMelb.on('error', ()=>{
-		console.log("\nFailed to connect to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url);
-		connectFailure();
-	});
+	let tweetMelb = createDBConnectionObject(databaseMelb).model('tweets');
 
-	dbMelb.on('open', ()=>{
-		console.log("Connected to the", databaseMelb.type,"Melbourne DB at", databaseMelb.url)
-	});
-	
+	let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
 
-	let dbChicago = mongoose.createConnection(databaseChicago.url, {connectTimeoutMS: connectionTimeout});
-	let tweetChicago = dbChicago.model('tweets');
+	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
 
-	dbChicago.on('error', ()=>{
-		console.log("\nFailed to connect to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
-		connectFailure();
-	});
-
-	dbChicago.on('open', ()=>{
-		console.log("Connected to the", databaseChicago.type,"Chicago DB at", databaseChicago.url)
-	});
-
-	let dbChicagoCrime = mongoose.createConnection(databaseChicagoCrime.url, {connectTimeoutMS: connectionTimeout});
-	let chicagoCrime = dbChicagoCrime.model('crime');
-
-	dbChicagoCrime.on('error', ()=>{
-		console.log("\nFailed to connect to the Chicago Crime DB at", databaseChicagoCrime.url)
-		connectFailure();
-	});
-
-	dbChicagoCrime.on('open', ()=>{
-		console.log("Connected to the Chicago Crime DB at", databaseChicagoCrime.url)
-	});
-
-
+	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
 
 	module.exports.tweetMelb = tweetMelb;
 	module.exports.tweetChicago = tweetChicago;
 	module.exports.chicagoCrime = chicagoCrime;
+	module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
+}
 
+function createDBConnectionObject(database)
+{
+	let conn = mongoose.createConnection(database.url, {connectTimeoutMS: connectionTimeout, useNewUrlParser: true});
+
+	conn.on('error', ()=>{
+		console.log("\nFailed to connect to the", database.type, database.location, "DB at", databaseMelb.url);
+		connectFailure();
+	});
+
+	conn.on('open', ()=>{
+		console.log("Connected to the", database.type, database.location,"DB at", databaseMelb.url)
+	});
+
+	return conn;
+}
+
+exports.getStoredTweets = async (location, query, count, skip) =>
+{
+
+	let result = [];
+	if (location.toLowerCase() === "melbourne")
+	{
+		await this.tweetMelb.find(query).skip(skip).limit(parseInt(count)).lean().exec().then((res) => {result = res;});
+	}
+	else if (location.toLowerCase() === "chicago")
+	{
+		await this.tweetChicago.find(query).skip(skip).limit(parseInt(count)).lean().exec().then((res) => {result = res;});
+	}
+
+
+	return result;
+	
 }
 
 exports.storeTweets = function(tweetsToStore, geo)
@@ -81,7 +79,7 @@ exports.storeTweets = function(tweetsToStore, geo)
 			const mongoose = require('mongoose');
 			const tweet = require(process.cwd() + "/models/tweet_schema");
 
-			mongoose.connect(input.database.url);
+			mongoose.connect(input.database.url, { useNewUrlParser: true });
 
 			let writeConnection = mongoose.connection;
 
@@ -156,7 +154,7 @@ exports.storeTweets = function(tweetsToStore, geo)
 		if (geo === "melbourne")
 		{
 			thread.send({tweetsToStore: tweetsToStore, database: databaseMelb})
-				.on('progress', function(progress){//console.log("Processing storage request ID ", id, ": ", progress, "% complete.")
+				.on('progress', function(progress){
 			})
 				.on('message', function(){thread.kill()});
 
@@ -164,14 +162,18 @@ exports.storeTweets = function(tweetsToStore, geo)
 		else if (geo === "chicago")
 		{
 			thread.send({tweetsToStore: tweetsToStore, database: databaseChicago})
-				.on('progress', function(progress){//console.log("Processing storage request ID ", id, ": ", progress, "% complete.")
+				.on('progress', function(progress){
 			})
 				.on('message', function(){thread.kill()});
 		}
 	}
+	else
+	{
+		console.log("Preventing database updates: developer mode enabled")
+	}
 };
 
-exports.removeDuplicates = async function(db) //deprecated
+async function removeDuplicates(db) //deprecated
 {
 	let tweets = {};
 	let dupsRemoved = 0;

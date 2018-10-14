@@ -1,0 +1,79 @@
+mixin statsPanel
+	#right-panel.map-panel
+		ul.collapsible.expandable
+			li.active 
+				.collapsible-header
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s10
+								span #[strong Display Options]
+							.col.s2
+								span
+									i.fas.fa-angle-down.collapsible-header-icon
+				#display-options-panel.collapsible-body
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s12.tweet-display
+								p
+									label
+										input(type="checkbox" id="tweets-visble" checked onClick="renderLayers()")
+										span Show Tweets
+							.col.s12.crime-display(style="display: none;")
+								p
+									label
+										input(type="checkbox" id="trajectories-visble" checked onClick="renderLayers()")
+										span Show Trajectories
+								p
+									label
+										input(type="checkbox" id="crimes-visble" checked onClick="renderLayers()")
+										span Show Crime Points
+								p
+									label
+										input(type="checkbox" id="centroids-visble" checked onClick="renderLayers()")
+										span Show Centroids
+								br
+								p Trajectories based on
+									label
+										input(type="radio" name="trajectory-crime-type" value="same-trajectories" checked onClick="renderLayers()")
+										span Crime Type
+								p
+									label
+										input(type="radio" name="trajectory-crime-type" value="all-trajectories" onClick="renderLayers()")
+										span  Not Restriced 
+							
+			li.active
+				.collapsible-header
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s10
+								span #[strong Statistics]
+							.col.s2
+								span
+									i.fas.fa-angle-down.collapsible-header-icon
+				#statistics-panel.collapsible-body
+					#statistics-tweet-density
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									.legend(style="background: rgb(29, 161, 242) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(73, 227, 255) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(216, 254, 181) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(254, 237, 177) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(254, 173, 84) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(209, 55, 78) none repeat scroll 0% 0%;")
+							.row(style="margin: 0;")
+								.col.s6
+									p.left-align
+										label Less Tweets
+								.col.s6
+									p.right-align
+										label More Tweets
+					#statistics-crime-trajectories
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									canvas#crimeTrajectoriesTimeline
+							.row(style="margin: 0;")
+								.col.s12
+									#crime-type-legend
+							

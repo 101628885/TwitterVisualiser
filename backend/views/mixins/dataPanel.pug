@@ -1,0 +1,57 @@
+include ./queryFilter
+
+mixin dataPanel
+	#control-panel.map-panel
+		ul.collapsible.expandable
+			li.active 
+				.collapsible-header
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s10
+								span #[strong Select Visualisation]
+							.col.s2
+								span
+									i.fas.fa-angle-down.collapsible-header-icon
+				#preset-selection-panel.collapsible-body
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s12
+								p
+									label
+										input(type="radio" name="preset-select" value="tweet-density" checked onClick="renderLayers()")
+										span Tweet Density
+								p
+									label
+										input(type="radio" name="preset-select" value="crime-trajectories" onClick="renderLayers()")
+										span Crime Trajectories
+								p
+									label
+										input(type="radio" name="preset-select" value="both" onClick="renderLayers()")
+										span Both
+			li.active#menu-tweet-density
+				.collapsible-header
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s10
+								span #[strong Tweet Density]
+							.col.s2
+								span
+									i.fas.fa-angle-down.collapsible-header-icon
+				#tweet-density-data-panel.collapsible-body
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							input-field.col.s12
+								button.btn.waves-effect.waves-light(type="submit" onclick="renderLayers()") Update Map
+			li.active#menu-crime-trajectories
+				.collapsible-header
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s10
+								span #[strong Crime Trajectories]
+							.col.s2
+								span
+									i.fas.fa-angle-down.collapsible-header-icon
+				#crime-trajectories-data-panel.collapsible-body
+					.container(style="margin: 0; width: 100%;")
+						.row
+							+queryFilter

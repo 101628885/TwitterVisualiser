@@ -1,78 +1,25 @@
 extends layout
 
-include ./mixins/queryFilter
+append head
+	title VisCrime - Explore
+	link(type="text/css" rel="stylesheet" href="/stylesheets/extras/noUiSlider/nouislider.css" media="screen,projection")
+	script(type="text/javascript" src="/stylesheets/extras/noUiSlider/nouislider.js")
+
+include ./mixins/dataPanel
+include ./mixins/statsPanel
 
 block content
-	#container
+	#map-container
 		#deckmap
-		.loader
-		#stats-panel(style="display: none;")
-			#stats-container
-				.row
-					.col-sm-12
-						.row
-							h3 Crime Stats
-						.row
-							hr
-						.row
-							#stats-date-range
-						.row
-							#stats-total 
-						.row
-							#stats-crimes 
-						.row
-							h3 Tweets
-						.row
-							hr
-						.row
-							#stats-tweets
-
+		+dataPanel
+		+statsPanel
 		#tooltip(style="visibility: hidden")
-		#control-panel
-			.container-fluid
-				.row.my-1
-					.col-md-12
-						p.h2 30.0K
-							span(style="font-size: 12px; margin-left: 0.5em") tweets aggregated
-						hr
-						p.h6 Tweet Layer
-						#radius-control.form-group(style="display: flex;")
-							span(for="radius-tweet-handle") Radius
-							input#radius-tweet-handle.custom-range(type="range" min="100" max="800" step="10" value="200" style="margin: 0 1em 0 1em;")
-							span#radius-tweet-value 200
-							span m
-						.custom-control.custom-checkbox.mb-2
-							input#visible-tweet-handle.custom-control-input(checked name="visible-tweet-handle", type="checkbox")
-							label.custom-control-label(for="visible-tweet-handle", hidden = isHidden) Visible
-						.custom-control.custom-checkbox.mb-2
-							input#extruded-tweet-handle.custom-control-input(checked name="extruded-tweet-handle", type="checkbox")
-							label.custom-control-label(for="extruded-tweet-handle", hidden = isHidden) Extruded
-				.row.my-3
-					.col-md-12
-						p.h6 Trajectory Layer
-						.custom-control.custom-checkbox.mb-2
-							input#visible-trajectory-handle.custom-control-input(checked name="visible-trajectory-handle", type="checkbox")
-							label.custom-control-label(for="visible-trajectory-handle", hidden = isHidden) Visible
-						.custom-control.custom-checkbox.mb-2
-							input#visible-type-trajectory-handle.custom-control-input(checked name="visible-type-trajectory-handle", type="checkbox")
-							label.custom-control-label(for="visible-type-trajectory-handle", hidden = isHidden) Restrict Trajectory to Crime Type
-
-				.row.my-3
-					.col-md-12
-						p.h6 Centroid Layer
-						.custom-control.custom-checkbox.mb-2
-							input#visible-centroid-handle.custom-control-input(checked name="visible-centroid-handle", type="checkbox")
-							label.custom-control-label(for="visible-centroid-handle", hidden = isHidden) Visible
-
-
-				.row
-					.col-md-12
-						+queryFilter
-					br
-					br
-		#footnote
-			span Hold down shift to rotate
-	script(src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
-	script(src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
-	script(src="./scripts/deckgl_render.js")
+			
+	script(type="text/javascript" src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
+	script(type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
+	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js")
+	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js")
+	script(type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js")
+	
+	script(type="text/javascript" src="./scripts/deckgl_render.js")
 	link(rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css")

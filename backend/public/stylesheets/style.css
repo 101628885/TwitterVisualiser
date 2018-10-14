@@ -27,10 +27,6 @@ h1:not(#map h1) {
 	border-width: 0.2em;
 }
 
-img:not(#map img){
-	border-radius: 100%;
-}
-
 .card-body{
 	padding: 10px;
 

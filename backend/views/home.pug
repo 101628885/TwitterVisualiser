@@ -1,10 +1,80 @@
 extends layout
 
+append head
+	title VisCrime
+
 block content
-  .container-fluid
-    .row.mx-5#hometext
-      .col-md-12.my-5
-        p#jumbotext VISION
-        //- TODO css animate the logo
-        p.h4 Real-time crime trajectory visualisation
-        p Developed for the Final-Year Software Engineering Project at Swinburne University of Technology
+	#index-banner.section.grey.darken-4
+		.container
+			.section
+				.row.valign-wrapper
+					.col.s12.m6.l6
+						h5.white-text Real-time crime trajectory visualisation using Twitter and historical data
+						p.white-text Developed for the Final-Year Software Engineering Project at Swinburne University of Technology
+						.row
+							input-field.col.s12
+								a(href="/deckmap")
+									button.btn.waves-effect.waves-light Open Map
+					.col.s12.m6.l6
+						.video-container
+							iframe(width="560" height="315" src="https://www.youtube.com/embed/nf51g-dgyxI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+						//- .video-container
+						//-   iframe(width="560" height="315" src="https://www.youtube.com/embed/6n3pFFPSlW4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+	.container
+		.section
+			.row.valign-wrapper
+				.col.s12.m8.l8
+					h5 Making Sense of Social Media
+					p First, we need some data to work with. One of the sources that we use is a dataset of tweets that we compile and aggregate. The VisCrime system periodically pulls real tweets from the public Twitter API, fetching only tweets related to topics based on a set of dynamic keywords related to crime. This way, we're able to achieve maximum coverage of all the tweets relevant to us. 
+					p The next step is to figure out which of the tweets we pulled are actually meaningful - is a tweet talking about a crime happening down the street, or is it just talking about the user's favourite crime movie? To solve this we use Natural Language Processing techniques - or NLP - and train it on a massive set of tweets to determine if the tweets should continue onwards to the next procedures - generating trajectories. 
+				.col.s12.m4.l4.center-align
+					img.responsive-img(src="stylesheets/img/twitter.png") 
+			.divider
+			.row.valign-wrapper
+				.col.s12.m8.l8
+					h5 Visualising Movement 
+					p Plotting the data we have on a map as a simple set of points is fine and all, but what we really want to do is to investigate the relationship between these points and construct a sort of 'trajectory' that tracks the movement of crime across time and space. 
+					p We take multiple factors into account to help us establish relationships; spatial and temporal distances, the type of crime and even the nature of the environment in which the crime has occured.
+					p We do this process on our whole data set and contain it within an interactive map for you to play around with and get insights from.
+				.col.s12.m4.l4.center-align
+					img.responsive-img(src="stylesheets/img/network.png")
+			.divider
+			.row.valign-wrapper
+				.col.s12.m8.l8
+					h5 Cutting-Edge Technologies
+					p To achieve everything we're doing, the team makes use of a whole slew of cutting-edge, modern software technologies.
+					p The main powerhouse running the whole show is our backend system. This is where we run our scripts for communicating with the public Twitter API, processing this data and turning this data into meaningful trajectories. We store everything in a NoSQL MongoDB instance. To handle NLP, we use the spaCy javascript library which specialises in creating rich models of the English language.
+					p To provide meaningful insights, we plot our data on an interactive map powered by deck.gl - a robust WebGL-based visualisation framework that renders highly performant geospatial data layers.
+				.col.s12.m4.l4.center-align
+					img.responsive-img(src="stylesheets/img/node.png")
+			.divider
+	.container
+		.section
+			.row.valign-wrapper
+				.col.s12.m12.l12.center-align
+					h4 Meet the Team
+			.row
+				.col.s6.m4.l3.center-align
+					h6 Sam Burke
+					img.circle(src="stylesheets/img/sam.jpg" width="160" height="160")
+					p Team Leader
+				.col.s6.m4.l3.center-align
+					h6 Shane Joachim
+					img.circle(src="stylesheets/img/shane.jpg" width="160" height="160")
+					p Development Manager
+				.col.s6.m4.l3.center-align
+					h6 Jason Liew
+					img.circle(src="stylesheets/img/jason.jpg" width="160" height="160")
+					p Support Manager
+				.col.s6.m4.l3.center-align
+					h6 Stefan Tsvetkov
+					img.circle(src="stylesheets/img/stefan.jpg" width="160" height="160")
+					p Client Liaision
+				.col.s6.m4.l3.center-align
+					h6 Corey Jenkins
+					img.circle(src="stylesheets/img/corey.jpg" width="160" height="160")
+					p Planning Manager
+				.col.s6.m4.l3.center-align
+					h6 Ming Sheng Quah
+					img.circle(src="stylesheets/img/master.jpg" width="160" height="160")
+					p Quality Manager

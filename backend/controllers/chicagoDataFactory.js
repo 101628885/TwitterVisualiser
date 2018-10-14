@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 var schemas = require('./mongoController');
 var chicagoCrime = schemas.chicagoCrime;
 var tweetChicago = schemas.tweetChicago;
+var chicagoCrimeTrajectory = schemas.chicagoCrimeTrajectory;
 
 const gCurrentDataDir = `../vision-map/src/data/`;
 
@@ -89,7 +90,7 @@ exports.saveCrimeData = async () =>
 
 				if (!(result.features[feature].properties.latitude == null)) //Don't bother saving if there is no location data
 				{
-					console.log("Valid entry, storing ID", result.features[feature].properties.id);
+					//console.log("Valid entry, storing ID", result.features[feature].properties.id);
 					chicagoCrime.findOne({ID: result.features[feature].properties.id}).lean().exec().then(async function (res) {
 
 						if (!res)
@@ -135,54 +136,13 @@ exports.saveCrimeData = async () =>
 
 		});
 	}
+	else
+	{
+		console.log("Preventing database updates: developer mode enabled")
+	}
 
 };
 
-
-
-/*
-Endpoint for kepler trajectory modelling.
-
-Example requests that it can process (send it as an AJAX request)
-
-Example 1:
-
-Query by type of crime and the year it occurred. Year parameter is optional.
-{
-	"crimes": [{
-			"crime": "BATTERY", //If year is not specified it won't be included in the search
-			"count": 50
-		},
-		{
-			"crime": "BURGLARY",
-			"year": "2014", //specifying year
-			"count": 20
-		}
-	]
-}
-
-Example 2:
-
-Simplest query, search just by year. (year:count)
-
-{
-  "2007": 400,
-  "2008": 200
-}
-
-TODO: Move this to the docs...
-
-*/
-
-
-exports.testEndpoint = async(req, res) =>
-{
-	let result = await exports.getDummyData({
-		"2007": 50,
-		"2008": 50
-	});
-	res.send(result);
-};
 
 //Get map data based on query if no query then just gets 2018
 exports.getMapData = async(query) =>
@@ -194,13 +154,18 @@ exports.getMapData = async(query) =>
 
 	if(query.Date != undefined)
 	{
-		query.Date.$gte = moment(query.Date.$gte, "DD/MM/YYYY")
-		query.Date.$lt = query.Date.$lt == "" ?  moment(query.Date.$gte, "DD/MM/YYYY").add(1, "days") : moment(query.Date.$lt, "DD/MM/YYYY")
+		query.Date.$gte = moment(query.Date.$gte, "MMM DD, YYYY")
+		query.Date.$lt = query.Date.$lt == "" ?  moment(query.Date.$gte, "MMM DD, YYYY").add(1, "days") : moment(query.Date.$lt, "MMM DD, YYYY")
+	} else 
+	{
+		query.Date = {};
+		query.Date.$gte = moment().subtract(1, "months");
+		query.Date.$lt = moment();
 	}
 	console.log(query) 
 
 	var limit = query.limit || 1000
-
+	
 	delete query.limit;
 
 	//Checking if empty, if empty set query {Year: 2018}
@@ -210,6 +175,10 @@ exports.getMapData = async(query) =>
 
 	if (limit > baseLimit)
 	{
+		console.log("For loops running:", Math.ceil(limit / baseLimit));
+		console.log("Limit:", limit);
+		console.log("Base Limit", baseLimit);
+		console.log("Query", query);
 		for(let i =0; i < Math.ceil(limit / baseLimit); i++)
 		{
 			let newLimit = baseLimit
@@ -221,7 +190,8 @@ exports.getMapData = async(query) =>
 
 			promises.push(new Promise((resolve, reject) => 
 			{
-				var pChicagoCrime = schemas.chicagoCrime;
+				console.log("Query", query)
+				var pChicagoCrime = schemas.chicagoCrimeTrajectory;
 				pChicagoCrime.find(query)
 				.lean()
 				.limit(parseInt(newLimit))
@@ -238,7 +208,8 @@ exports.getMapData = async(query) =>
 		}
 	}else
 	{
-		await chicagoCrime.find(query)
+		console.log("Query", query)
+		await chicagoCrimeTrajectory.find(query)
 		.lean()
 		.limit(parseInt(limit))
 		.sort({Date: 1})
@@ -246,7 +217,6 @@ exports.getMapData = async(query) =>
 		.then((res) => {result = result.concat(res);})
 		.catch((err) => {console.log(err)});
 	}
-	
 
 	if(promises.length == 0)
 	{
@@ -287,6 +257,8 @@ exports.fixMapData  = async(req, res) =>
 
 		.catch((err) => {console.log(err)});
 	}
+	res.status(200);
+	res.send();
 }
 
 

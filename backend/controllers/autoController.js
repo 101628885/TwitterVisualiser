@@ -10,24 +10,19 @@ var geo = "melbourne";
 
 
 
-if (fs.existsSync(fs.existsSync(process.cwd() + "/preferences"))) {
-
+if (fs.existsSync(process.cwd() + "/preferences")) {
+    
+    if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
+    {
+        let data = JSON.parse(fs.readFileSync(process.cwd() + "/preferences/auto.json", 'utf-8'));
+        query = data.query;
+        shouldRun = data.shouldResume;
+        autoCollect = data.shouldResume;
+        shouldResume = data.shouldResume;
+    }
 }
 
-if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
-{
 
-
-	let data = JSON.parse(fs.readFileSync(process.cwd() + "/preferences/auto.json", 'utf-8'));
-
-
-	query = data.query;
-
-
-	shouldRun = data.shouldResume;
-	autoCollect = data.shouldResume;
-    shouldResume = data.shouldResume;
-}
 
 setInterval(function(){
 
@@ -86,7 +81,7 @@ function collect(query, geo)
     {
 	    request.post({
 		    headers: {'content-type' : 'application/x-www-form-urlencoded'},
-		    url:     'http://localhost:3000/getTweets',
+		    url:     'http://localhost:3000/lookup/api',
 		    form:    { word: query, shouldStoreTweets: true, location: geo }
 	    }, function(error, response, body){
 		    //console.log(err);
@@ -103,11 +98,11 @@ exports.autoGet = function(req, res)
         let resumeText = "";
         if (shouldResume)
         {
-            resumeText = "VISION will automatically resume data collection if it restarts.";
+            resumeText = "VisCrime will automatically resume data collection if it restarts.";
         }
         else
         {
-            resumeText = "Data collection will be stopped if VISION restarts."
+            resumeText = "Data collection will be stopped if VisCrime restarts."
         }
 
         res.render('auto', {toggle: 'Stop', status: 'Data Collection in Progress...', isHidden: true, monitoredWord: "Monitored word: " + query.join(', '), shouldResume: resumeText});

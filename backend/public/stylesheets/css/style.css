@@ -1,28 +1,45 @@
+/* containers */
 html, body, #outer {
   height: 100%;
   width: 100%;
 }
 
+#map-container {
+  width: 100vw;
+  position: absolute;
+}
+
 body:not(#map body) {
-	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-family: "Roboto", sans-serif;
 	font-weight: 300;
 }
 
-h1:not(#map h1) {
-	color: white;
+#filterform {
+  position: absolute;
+  z-index: 1;
 }
+
+nav {
+  height: 9vh;
+}
+
+/* tweet card */
 
 .card {
 	background-color: white;
 	border-width: 0.2em;
 }
 
-img:not(#map img) {
-	border-radius: 100%;
-}
-
 .card-body {
 	padding: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'tweetdp tweetheader'
+    'tweetdp tweetbody'
 }
 
 #tweetdp {
@@ -39,29 +56,23 @@ img:not(#map img) {
   grid-area: tweetbody
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    'tweetdp tweetheader'
-    'tweetdp tweetbody'
+p {
+  margin: 0;
 }
 
-#filterform {
-  position: absolute;
-  z-index: 1;
-}
+/* typography */
 
-#map {
-  position: absolute;
-  z-index: 0;
-	height: 100%;
-	width: 100%;
+h1:not(#map h1) {
+	color: white;
 }
 
 #hometext {
   margin-top: 8em;
   animation: fadein 2s;
+}
+
+.jumbotext {
+  font-size: 56px;
 }
 
 @keyframes fadein {
@@ -75,50 +86,118 @@ img:not(#map img) {
   }
 }
 
-#jumbotext {
-  font-size: 7em;
+.viscrime-navicon {
+  font-size: 17px;
+  margin: 0 5px 0 5px;
 }
 
-#container {
-  width: 100vw; 
-  height: 92.5vh;
-  position: absolute;
+.collapsible-header-icon {
+  font-size: 10px;
+  margin: 0px;
 }
+
+/* google maps module */
+
+#map {
+  position: absolute;
+  z-index: 0;
+	height: 100%;
+	width: 100%;
+}
+
+/* deckgl module */
 
 #deckmap {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 91vh;
   position: absolute;
+}
+
+.collapsible-body {
+  background-color: white;
+  overflow-y: scroll;
+  padding: 1em;
+}
+
+#preset-selection-panel {
+  max-height: 15vh;
+}
+
+#tweet-density-data-panel {
+  max-height: 55vh;
+}
+
+#crime-trajectories-data-panel {
+  max-height: 55vh;
+}
+
+#display-options-panel {
+  max-height: 30vh;
+}
+
+#statistics-panel {
+  max-height: 55vh;
+}
+
+#right-panel {
+  right: 8px;
+}
+
+.map-panel {
+  position: absolute;
+}
+
+/* large desktop devices */
+@media(min-width: 1200px) {
+  .map-panel { width: 20%; }
+}
+
+/* desktop devices */
+@media(max-width: 1200px) {
+  .map-panel { width: 25%; }
+}
+
+/* mobile devices and tablets */
+@media(max-width: 992px) {
+  .map-panel { width: 90%; }
 }
 
 #control-panel {
-  position: absolute;
-  margin-top: 2em;
-  padding: 1em 1em 0 1em;
-  background-color: white;
-  height: 85%;
-  max-width: 350px;
-  overflow: scroll;
+  left: 8px;
 }
 
-#stats-panel {
+/* #stats-panel {
   position: absolute;
-  left: 80%;
-  padding: 1rem;
-  margin-top: 4em;
+  right: 0;
+  padding: 1em 1em 0 1em;
+  margin-top: 0.8rem;
   background-color: white;
-}
+  max-height: 500px;
+  height: auti;
+  max-width: 250px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-radius:  0.825rem 0 0 0.8rem;
+  font-size: 0.825rem;
+} */
 
 #stats-container {
   position: relative;
-  padding: 1rem;
+  padding: 1em 1em 0 1em;
 }
 
 #footnote {
   position: absolute;
   margin: 2em;
   color: lightslategray;
+  top: 0;
   right: 0;
+}
+
+.legend {
+  display: inline-block;
+  height: 12px; 
+  width: 16.667%;
 }
 
 #tooltip {
@@ -146,6 +225,24 @@ img:not(#map img) {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.crime-color {
+  position: relative;
+  width: 1em;
+  height: 1em;
+  margin: 5px 5px 5px 0;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0);
+}
+
+.dot {
+  height: 1rem;
+  width: 1rem;
+  margin-right: 0.5rem;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
 }

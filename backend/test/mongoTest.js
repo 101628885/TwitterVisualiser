@@ -1,3 +1,5 @@
+/*
+process.env.DISABLE_DEVELOPER_MODE = true;
 const expect = require('chai').expect;
 var mongo = require('../controllers/mongoController');
 var tweetMelb = mongo.tweetMelb;
@@ -219,42 +221,78 @@ describe('storeTweets()', function(){
 	})
 });
 
-/*
-describe('getDummyData()', function(){
+describe('getStoredTweets()', function(){
 
-	it('should return only chicago crime documents that match the query', async function(){
+	it('should return tweets with the right parameters', async() =>
+	{
+		const count = 5;
 
-		//SETUP, create a sample simple and complex query
-		let simpleRes = {};
-		let complexRes = {};
+		//SETUP
+		let query1 = {checked: true};
+		let query2 = {crime: false};
+		let query3 = {checked: false};
+		let query4 = {crime: true};
 
-		let simpleQuery = {"2007": 4, "2014": 2};
-		let complexQuery = {
-			"crimes": [{
-				"crime": "BATTERY", //If year is not specified it won't be included in the search
-				"count": 50
-			},
-				{
-					"crime": "BURGLARY",
-					"year": "2014", //specifying year
-					"count": 20
-				}
-			]
-		};
+		let resultMelb1 = await mongo.getStoredTweets("melbourne", query1, count, false);//5 tweets from Melb all with checked = true
+		let resultMelb2 = await mongo.getStoredTweets("melbourne", query2, count, false);//5 tweets from Melb all with crime = false
+		let resultMelb3 = await mongo.getStoredTweets("melbourne", query3, count, false);//5 tweets from Melb all with checked = false
+		let resultMelb4 = await mongo.getStoredTweets("melbourne", query4, count, false);//5 tweets from Melb all with checked = false
 
-		//ACTION
-		await chicagoCrimeFactory.getDummyData(simpleQuery).then((res) => {simpleRes = res});
-		await chicagoCrimeFactory.getDummyData(complexQuery).then((res) => {complexRes = res});
+		let resultChicago1 = await mongo.getStoredTweets("chicago", query1, count, false);//5 tweets from Chicago all with checked = true
+		let resultChicago2= await mongo.getStoredTweets("chicago", query2, count, false);//5 tweets from Chicago all with crime = false
+		let resultChicago3 = await mongo.getStoredTweets("chicago", query3, count, false);//5 tweets from Chicago all with checked = false
+		let resultChicago4 = await mongo.getStoredTweets("chicago", query4, count, false);//5 tweets from Chicago all with checked = false
 
-
-		for(let i in simpleRes)
+		resultMelb1.map((i) =>
 		{
-			expect
-		}
+			expect(i.checked).to.be.equal(true);
+		});
+
+		resultMelb2.map((i) =>
+		{
+			expect(i.crime).to.be.equal(false);
+		});
+
+		resultMelb3.map((i) =>
+		{
+			expect(i.checked).to.be.equal(false);
+		});
 
 
+		resultMelb4.map((i) =>
+		{
+			expect(i.crime).to.be.equal(true);
+		});
+		expect(resultMelb1.length).to.be.equal(count);
+		expect(resultMelb2.length).to.be.equal(count);
+		expect(resultMelb3.length).to.be.equal(count);
+
+		resultChicago1.map((i) =>
+		{
+			expect(i.checked).to.be.equal(true);
+		});
+
+		resultChicago2.map((i) =>
+		{
+			expect(i.crime).to.be.equal(false);
+		});
+
+		resultChicago3.map((i) =>
+		{
+			expect(i.checked).to.be.equal(false);
+		});
+
+		resultChicago4.map((i) =>
+		{
+			expect(i.crime).to.be.equal(true);
+		});
+
+		expect(resultChicago1.length).to.be.equal(count);
+		expect(resultChicago2.length).to.be.equal(count);
+		expect(resultChicago3.length).to.be.equal(count);
 
 	})
-});
+
+})
 */
 

@@ -46,7 +46,7 @@ exports.getUncheckedTweets = async (req,res, next) =>
 	{
 		if(!err)
 		{
-			res.render('verify', {data: posts, title : "VISION: Check Tweets"});
+			res.render('verify', {data: posts, title : "VisCrime: Check Tweets"});
 		}
 	});
 };

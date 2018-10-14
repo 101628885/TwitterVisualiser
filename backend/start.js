@@ -1,77 +1,36 @@
 require('dotenv').config({ path: 'variables.env' });
+const fs = require('fs');
 const app = require('./app');
 app.set('port', process.env.PORT || 3000);
 
 var options = {
-    fit:    'box',
-    width:  40,
-    height: 40
+	fit:    'box',
+	width:  40,
+	height: 40
 };
 
 const server = app.listen(app.get('port'), "0.0.0.0", () => {
+	console.log(
+		" _    ___      ______     _\n" +              
+		"| |  / (_)____/ ____/____(_)___ ___  ___\n"+ 
+		"| | / / / ___/ /   / ___/ / __ `__ \\/ _ \\\n" + 
+		"| |/ / (__  ) /___/ /  / / / / / / /  __/\n" + 
+		"|___/_/____/\\____/_/  /_/_/ /_/ /_/\\___/\n");
 
-    console.log(
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMmNMMMdNMmNdNNNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMNNmNNMNhdmdmhyhsssmNNmNNMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMmdmmmhyydhhyNmhodhyoossdmNNMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMNms/+hdhhyydhyhysshmhhdydmNMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMNNdsoyhyhhysoyyddhyydddmmNMNmMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMNNNyshmmyhmdysoydmmdmNmNMNMMMmmNNMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMmmd+ohdmNmhddmdyhmdNNNNNmNNMMNmmNMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMNmNy/+ydddmNMMMNNNNNMNNNNmNNNNNMNmNNMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMNNmsyhyhhdmMNMNNMMNNNmNMMMNNmmddhhNMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMNNNshhymdmNmNMNmNNNmNNmmmddNNNdmdydMNMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMNmmysdddhhmdmNNNNMMNNmNmmmdmNNMmhydNNMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMNMNshdhhhssyhhdmmmddmNmmmNNmNmyohNmMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMmmh+/syssssyhyhhyhdmddddhdmmhy+/mMmMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMy......./NMMMMMMMdNd+/shoyyhdyyyhdmmmNNhhhhyys+dmNNMMMMMMMN/.......yMMMMMM\n" +
-        "       MMMMMMMo       :NMMMMMMNNddyosohdyhhhhyddmmddhhmddoshNmNMMMMMMMN:       oMMMMMMM\n" +
-        "       MMMMMMMMo       :NMMMMMMMNMNmdhyysosyhyhhdhhso+oosdmmmNMMMMMMMN:       oMMMMMMMM\n" +
-        "       MMMMMMMMMo       :NMMMMMMMMMmNNmNhyoshyyooosssyhmdNmNMMMMMMMMN:       oMMMMMMMMM\n" +
-        "       MMMMMMMMMMo       :NMMMMMMMMMMMNNNNmNMmdmdhmNdMMNNMMMMMMMMMMN-       oMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMo       :NMMMMMMMMMMMMMMNMMNNNNMNMMMMMMMMMMMMMMMm-       sMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMo       :NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm-       sMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMo       :NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm-       sMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMo       :NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm.      `sMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMo       -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm.      `yMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMs       -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMm.      `yMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMs       -NMMMMMMMMMMMMMMMMMMMMMMMMMMd.      `yMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMs       -NMMMMMMMMMMMMMMMMMMMMMMMMd.      `yMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMs       -NMMMMMMMMMMMMMMMMMMMMMMd.      `hMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMs       -mMMMMMMMMMMMMMMMMMMMMd`      `hMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMs       -mMMMMMMMMMMMMMMMMMMd`      `hMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMs       -mMMMMMMMMMMMMMMMMh`      `hMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMs       -mMMMMMMMMMMMMMMh`      `dMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMs       -mMMMMMMMMMMMMh`      `dMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMs`      -mMMMMMMMMMMh`      .dMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMs`      -mMMMMMMMMy`      .dMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMy`      .mMMMMMMy`      .dMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMy`      .mMMMMy`      .mMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`      .mMMy       .mMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`      .my       .mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`      .       .mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`            -mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`          -mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`        -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`      -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`    -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`  -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh:/NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" +
-        "       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+	console.log("Starting Up...");
 
-    console.log("\n                                     Welcome to VISION.\n\n");
-
-    if (!process.env.DISABLE_DEVELOPER_MODE)
-    {
-        console.log("\x1b[31m", "\x1b[1m", "\nVISION is running in Developer Mode. Some database features are unavailable.\n", "\x1b[0m");
-    }
-    console.log("System output:");
-    console.log(`\nVISION now running on port: ${server.address().port}`);
-    //console.log(process.env.DEVELOPER_MODE);
-    
+	if (!fs.existsSync(process.cwd() + "/.disable_developer_mode"))
+	{
+		console.log("\x1b[31m", "\x1b[1m", "\nVisCrime is running in Developer Mode. Some database features are unavailable.\n", "\x1b[0m");
+	}
+	else
+	{
+		process.env.DISABLE_DEVELOPER_MODE = true;
+	}
+	console.log("System output:");
+	console.log(`\nVisCrime now running on port: ${server.address().port}`);
+	//console.log(process.env.DEVELOPER_MODE);
+	
 });
+
+module.exports = app;
