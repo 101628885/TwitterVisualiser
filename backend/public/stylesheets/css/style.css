@@ -132,7 +132,7 @@ h1:not(#map h1) {
 }
 
 #display-options-panel {
-  max-height: 30vh;
+  max-height: 15vh;
 }
 
 #statistics-panel {
