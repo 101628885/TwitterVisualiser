@@ -21,17 +21,14 @@ Basic features include:
 
 The system uses `nodejs` for the backend.
 > You will need to download `npm@4` or below. *Might have to downgrade NPM post-install.*
-> Feel free to install `yarn` if you do not wish to use `npm@4`.
 
 Installing `nodejs` on Windows using Chocolatey and OSX using Brew.
 ```powershell
 # For Windows setup
 choco install nodejs -y
-choco install yarn # optional
 
 # For OSX setup
 brew install node
-brew install yarn # optional
 ```
 
 ## Opening (Backend)
@@ -41,8 +38,7 @@ The VisCrime backend forms the main part of VisCrime, which hosts the web app, D
 1. To install dependencies for the backend, run the `npm install` command in the backend folder.
 2. If you're making changes, please make sure `mongoController` isn't writing to our production MongoDB on Nectar:
 `const url = 'mongodb://team:swinburne@43.240.97.166/tweets';`
-3. When deploying the backend system on the production server instance, add `DISABLE_DEVELOPER_MODE = true` to `variables.env`, which will allow VisCrime to perform dynamic updates of its database with the latest datasets from the Internet.
 
 ## Running the application
 
-To now run the application we can simply run an `npm start` command in the backend and it will fire up locally on port `3000`.
+To now run the application we can simply do an `npm start` command in the backend folder and it will fire up locally on port `3000`.

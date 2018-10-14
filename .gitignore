@@ -49,6 +49,9 @@ jspm_packages/
 # IDE settings directory
 .idea/
 
+# Yarn Lock file
+yarn.lock
+
 # VSCode settings directory
 .vscode/
 
