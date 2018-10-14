@@ -53,7 +53,7 @@ typings/
 .npm
 
 # Node Modules
-**/backend/node_modules/
+backend/node_modules/
 
 # Optional eslint cache
 .eslintcache
