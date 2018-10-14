@@ -432,6 +432,14 @@ const renderLayers = () => {
 	crimeTrajectoriesStatistics = document.querySelector("#statistics-crime-trajectories");
 	bothStatistics = document.querySelector("#statistics-both");
 
+
+	crimeTrajectoriesVisible = document.getElementById("trajectories-visble").checked ;
+	crimePointsVisble = document.getElementById("crimes-visble").checked;
+	centroidsVisble = document.getElementById("centroids-visble").checked;
+
+	console.log(crimeTrajectoriesVisible)
+	console.log(crimePointsVisble)
+
 	// set the new values into the options objects so we can feed them into the data layers
 
 	switch(selectedPresetValue) {
@@ -449,10 +457,10 @@ const renderLayers = () => {
 			tweetDensityStatistics.style.display = "none";
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
-			chiTrajectOptions.points.visible = true;
-			chiTrajectOptions.sameType.visible = true;
+			chiTrajectOptions.points.visible = crimePointsVisble;
+			chiTrajectOptions.sameType.visible = crimeTrajectoriesVisible;
 			chiTrajectOptions.allType.visible = false;
-			chiCentroidOptions.sameType.visible = true;
+			chiCentroidOptions.sameType.visible = centroidsVisble;
 			chiCentroidOptions.allType.visible = false;
 			renderCrimeTypeLegend();
 			break;
@@ -460,11 +468,11 @@ const renderLayers = () => {
 			tweetDensityStatistics.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = true;
-			chiTrajectOptions.points.visible = true;
-			chiTrajectOptions.sameType.visible = true;
-			chiTrajectOptions.allType.visible = true;
-			chiCentroidOptions.sameType.visible = true;
-			chiCentroidOptions.allType.visible = true;
+			chiTrajectOptions.points.visible = crimePointsVisble;
+			chiTrajectOptions.sameType.visible = crimeTrajectoriesVisible;
+			chiTrajectOptions.allType.visible = false;
+			chiCentroidOptions.sameType.visible = centroidsVisble;
+			chiCentroidOptions.allType.visible = false;
 			renderCrimeTypeLegend();
 			break;
 		default:

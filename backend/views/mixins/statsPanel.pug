@@ -12,45 +12,20 @@ mixin statsPanel
 									i.fas.fa-angle-down.collapsible-header-icon
 				#display-options-panel.collapsible-body
 					.container(style="margin: 0; width: 100%;")
-						.row.valign-wrapper(style="margin: 0;")
-							.col.s3
-								p.left-align
-									label(for="radius-tweet-handle") Radius
-							.col.s6
-								input-field
-									p
-										#radius-tweet-handle
-							.col.s3
+						.row(style="margin: 0;")
+							.col.s12
 								p
-									label 
-										span#radius-tweet-value
-										span m
-						.row.valign-wrapper(style="margin: 0;")
-							.col.s3
-								p.left-align
-									label(for="radius-tweet-handle") Radius
-							.col.s6
-								input-field
-									p
-										#radius-tweet-handle
-							.col.s3
+									label
+										input(type="checkbox" id="trajectories-visble" checked onClick="renderLayers()")
+										span Show Trajectories
 								p
-									label 
-										span#radius-tweet-value
-										span m
-						.row.valign-wrapper(style="margin: 0;")
-							.col.s3
-								p.left-align
-									label(for="radius-tweet-handle") Radius
-							.col.s6
-								input-field
-									p
-										#radius-tweet-handle
-							.col.s3
+									label
+										input(type="checkbox" id="crimes-visble" checked onClick="renderLayers()")
+										span Show Crime Points
 								p
-									label 
-										span#radius-tweet-value
-										span m
+									label
+										input(type="checkbox" id="centroids-visble" checked onClick="renderLayers()")
+										span Show Centroids
 			li.active
 				.collapsible-header
 					.container(style="margin: 0; width: 100%;")
