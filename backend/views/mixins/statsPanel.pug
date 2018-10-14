@@ -1,0 +1,63 @@
+mixin statsPanel
+	#right-panel.map-panel
+		ul.collapsible.expandable
+			li.active 
+				.collapsible-header
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s10
+								span #[strong Display Options]
+							.col.s2
+								span
+									i.fas.fa-angle-down.collapsible-header-icon
+				#display-options-panel.collapsible-body
+					.container(style="margin: 0; width: 100%;")
+						.row.valign-wrapper(style="margin: 0;")
+							.col.s3
+								p.left-align
+									label(for="radius-tweet-handle") Radius
+							.col.s6
+								input-field
+									p
+										#radius-tweet-handle
+							.col.s3
+								p
+									label 
+										span#radius-tweet-value
+										span m
+			li.active
+				.collapsible-header
+					.container(style="margin: 0; width: 100%;")
+						.row(style="margin: 0;")
+							.col.s10
+								span #[strong Statistics]
+							.col.s2
+								span
+									i.fas.fa-angle-down.collapsible-header-icon
+				#statistics-panel.collapsible-body
+					#statistics-tweet-density
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									.legend(style="background: rgb(29, 161, 242) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(73, 227, 255) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(216, 254, 181) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(254, 237, 177) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(254, 173, 84) none repeat scroll 0% 0%;")
+									.legend(style="background: rgb(209, 55, 78) none repeat scroll 0% 0%;")
+							.row(style="margin: 0;")
+								.col.s6
+									p.left-align
+										label Less Tweets
+								.col.s6
+									p.right-align
+										label More Tweets
+					#statistics-crime-trajectories
+						.container(style="margin: 0; width: 100%;")
+							.row(style="margin: 0;")
+								.col.s12
+									canvas#crimeTrajectoriesTimeline
+							.row(style="margin: 0;")
+								.col.s12
+									#crime-type-legend
+							
