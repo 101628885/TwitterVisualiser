@@ -32,3 +32,5 @@ const server = app.listen(app.get('port'), "0.0.0.0", () => {
 	//console.log(process.env.DEVELOPER_MODE);
 	
 });
+
+module.exports = app;

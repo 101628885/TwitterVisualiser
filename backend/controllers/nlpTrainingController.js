@@ -35,7 +35,6 @@ exports.returnNLPData = async (req, res) => {
 
     res.send(result)
 
-
 };
 
 

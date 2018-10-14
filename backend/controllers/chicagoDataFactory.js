@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 var schemas = require('./mongoController');
 var chicagoCrime = schemas.chicagoCrime;
 var tweetChicago = schemas.tweetChicago;
+var chicagoCrimeTrajectory = schemas.chicagoCrimeTrajectory;
 
 exports.saveCrimeData = async () =>
 {
@@ -31,7 +32,7 @@ exports.saveCrimeData = async () =>
 
 				if (!(result.features[feature].properties.latitude == null)) //Don't bother saving if there is no location data
 				{
-					console.log("Valid entry, storing ID", result.features[feature].properties.id);
+					//console.log("Valid entry, storing ID", result.features[feature].properties.id);
 					chicagoCrime.findOne({ID: result.features[feature].properties.id}).lean().exec().then(async function (res) {
 
 						if (!res)
@@ -115,7 +116,6 @@ exports.getMapData = async(query) =>
 
 	if (limit > baseLimit)
 	{
-		//why are we querying the DB in a for loop reeeeeeeeeeeeeeeeeeeee
 		console.log("For loops running:", Math.ceil(limit / baseLimit));
 		console.log("Limit:", limit);
 		console.log("Base Limit", baseLimit);
@@ -132,7 +132,7 @@ exports.getMapData = async(query) =>
 			promises.push(new Promise((resolve, reject) => 
 			{
 				console.log("Query", query)
-				var pChicagoCrime = schemas.chicagoCrime;
+				var pChicagoCrime = schemas.chicagoCrimeTrajectory;
 				pChicagoCrime.find(query)
 				.lean()
 				.limit(parseInt(newLimit))
@@ -150,7 +150,7 @@ exports.getMapData = async(query) =>
 	}else
 	{
 		console.log("Query", query)
-		await chicagoCrime.find(query)
+		await chicagoCrimeTrajectory.find(query)
 		.lean()
 		.limit(parseInt(limit))
 		.sort({Date: 1})
