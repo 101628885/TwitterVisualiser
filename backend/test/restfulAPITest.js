@@ -16,16 +16,6 @@ describe('Test all routes', function(){
 			expect(res).to.have.status(200);
 		})
 
-		chai.request(app).get('/tweetMap').end((err, res) => {
-			console.log(res);
-			expect(res.statusCode).to.equal(200);
-		});
-
-		chai.request(app).get('/about').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
 		chai.request(app).get('/deckmap').end((err, res) => {
 			expect(err).to.be.null;
 			expect(res).to.have.status(200);
@@ -71,72 +61,6 @@ describe('Test all routes', function(){
 			expect(res).to.have.status(200);
 		});
 
-		chai.request(app).get('/list').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
-		chai.request(app).get('/chicago').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
-		chai.request(app).get('/seattle').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
-		chai.request(app).get('/baltimore').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
-		chai.request(app).get('/checkData').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
-		chai.request(app).get('/tweetsChicagoWithLocation').end((err, res) => {
-			expect(err).to.be.null;
-			expect(res).to.have.status(200);
-		});
-
-
-
-		await timeout(2000);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
+		await timeout(2000);	
 	})
 })
