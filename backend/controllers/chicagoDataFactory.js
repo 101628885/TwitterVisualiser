@@ -1,3 +1,4 @@
+// gets all required controllers and modules
 const fs = require('fs');
 const request = require('request');
 var moment = require('moment');
@@ -7,6 +8,7 @@ var chicagoCrime = schemas.chicagoCrime;
 var tweetChicago = schemas.tweetChicago;
 var chicagoCrimeTrajectory = schemas.chicagoCrimeTrajectory;
 
+// pulls data from chicago crime data endpoint and saves it in our database
 exports.saveCrimeData = async () =>
 {
 	if (process.env.DISABLE_DEVELOPER_MODE)
@@ -172,6 +174,7 @@ exports.getMapData = async(query) =>
 	}
 }
 
+// gets all chicago tweets that also contain geolocation data
 exports.getChicagoTweetsWithLocation = async () =>
 {
 	let result = [];

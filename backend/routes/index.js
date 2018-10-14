@@ -1,6 +1,8 @@
+// gets express module and its router
 var express = require('express');
 var router = express.Router();
 
+// getting all controllers
 const listviewController      = require("../controllers/listViewController");
 const datamuseController      = require("../controllers/datamuseController");
 const lookupController        = require("../controllers/lookupController");
@@ -56,4 +58,5 @@ router.post('/tweetMap', cacheController.getTrajectories);
 router.get('/list', listviewController.listTweets);
 router.post('/list', listviewController.findTweets);
 
+// exports the controllers
 module.exports = router;

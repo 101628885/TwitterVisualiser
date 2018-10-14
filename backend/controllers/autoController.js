@@ -144,11 +144,12 @@ exports.autoPost = function(req, res)
 
     if (query.length === 0)
     {
+        //default search term if no entry is specified
         query.push("crime");
         query.push("assault");
         query.push("murder");
         query.push("rape");
-        query.push("theft");//default search term if no entry is specified
+        query.push("theft");
     }
 
 	//Write a preference file to disk if asked to resume
