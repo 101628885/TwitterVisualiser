@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 var db = require('./mongoController');
 const pythonShell = require('python-shell');
+const pty = require('node-pty');
 
 exports.returnNLPData = async (req, res) => {
     let result = [];
@@ -37,21 +38,35 @@ exports.returnNLPData = async (req, res) => {
 
 };
 
+exports.returnAllData = async (req, res) => {
+    let result = [];
 
-exports.runNLP = function(next) {
-    var options = {
-        mode: 'text',
-        // This is server use
-        pythonPath: '/usr/bin/python3',
-        //pythonPath: '/usr/local/bin/python3',
-        pythonOptions: ['-u'],
-        // make sure you use an absolute path for scriptPath
-        // This is for server use
-        scriptPath: process.cwd() + '/spaCy_NLP'
-    };
+    await db.getStoredTweets("chicago", {}, 0, 0).then((res) => {
+        res.map((i) => {
+            result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
+        })
+    })
+    
+    await db.getStoredTweets("melbourne", {}, 0, 0).then((res) => {
+        res.map((i) => {
+            result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
+        })
+    })
+    
+    res.send(result)
+}
 
-    pythonShell.run('TwitterNLP.py', options, function(err, jsonRes) {
-        if (err) throw err;
-        next(jsonRes);
+exports.runNLP = async (req, res) => {
+    const pyProcess = pty.spawn("/usr/bin/python3", [process.cwd() + '/spaCy_NLP/TwitterNLP.py']);
+    var dataToSend = "";
+
+    pyProcess.on("data", (data) => {
+        dataToSend += data;
+        console.log(data);
     });
-};
+
+    pyProcess.on("exit", (exitCode) => {
+        console.log("TwitterNLP.py exiting with code " + exitCode);
+        res.send(dataToSend);
+    });
+}
