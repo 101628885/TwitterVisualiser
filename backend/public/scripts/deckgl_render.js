@@ -412,10 +412,6 @@ const renderCrimeTypeLegend = () => {
 	legendDiv.innerHTML = htmlString;
 };
 
-const logDate = date => {
-	console.log(date);
-};
-
 /**
  * Update the data layer(s) according to changes in the options and updates
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
@@ -532,8 +528,6 @@ renderLayers = (currentDate) => {
 		onHover: updateTweetLayerTooltip,
 		...chiTweetOptions.points,
 	});
-
-	// console.log(`the current date is ${(currentDate) ? currentDate: "undefined"}`);
 	
 	var historicCrimeLayer = new deck.IconLayer({
 		id: "historic-crime-layer",
@@ -695,8 +689,6 @@ const loadData = (data, mode) => {
 
 		// array of dates represented in crimesByDate
 		dataDateRange = Object.keys(crimesByDate);
-
-		console.log(chiTrajectoryData.sameType = data.crime.trajectorySameTypeGeoJSON[0]);
 	} catch(e) {
 		console.log("Error: Could not load data");
 	};
