@@ -132,7 +132,7 @@ h1:not(#map h1) {
 }
 
 #display-options-panel {
-  max-height: 30vh;
+  max-height: 20vh;
 }
 
 #statistics-panel {
@@ -140,11 +140,17 @@ h1:not(#map h1) {
 }
 
 #right-panel {
+  top: 2rem;
   right: 8px;
 }
 
 .map-panel {
   position: absolute;
+}
+
+#toggle-panels
+{
+   position: absolute;
 }
 
 /* large desktop devices */
@@ -163,6 +169,7 @@ h1:not(#map h1) {
 }
 
 #control-panel {
+  top: 2rem;
   left: 8px;
 }
 
