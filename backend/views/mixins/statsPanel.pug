@@ -33,6 +33,7 @@ mixin statsPanel
 										span Show Centroids
 								br
 								p Trajectories based on
+								p
 									label
 										input(type="radio" name="trajectory-crime-type" value="same-trajectories" checked onClick="renderLayers()")
 										span Crime Type
@@ -73,6 +74,9 @@ mixin statsPanel
 							.row(style="margin: 0;")
 								.col.s12
 									canvas#crimeTrajectoriesTimeline
+							.row(style="margin: 10px;")
+								.col.s12
+									button.btn.waves-effect.waves-light(type="submit" onclick="stepThroughTimeline()") Step Through
 							.row(style="margin: 0;")
 								.col.s12
 									#crime-type-legend
