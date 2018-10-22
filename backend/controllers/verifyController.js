@@ -2,15 +2,12 @@ var schemas = require('./mongoController');
 var tweetMelb = schemas.tweetMelb;
 var tweetChicago = schemas.tweetChicago;
 const tweet = require('../models/tweet_schema');
-
 var NodeGeocoder = require('node-geocoder');
-
 var options = {
 	httpAdapter: 'https',
 	provider: 'google',
 	apiKey: process.env.GOOGLE_PLACES_API
 };
-
 var geocoder = NodeGeocoder(options);
 
 // Using callback

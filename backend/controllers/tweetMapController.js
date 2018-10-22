@@ -10,6 +10,8 @@ exports.getTweetMap = function(req, res) {
     })
 };
 
+//Converts crime types to less but broader categories.
+//If using for purposes other than crime, don't use.
 convertPrimaryType = (type) => 
 {
     switch (type) {

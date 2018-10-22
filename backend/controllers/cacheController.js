@@ -85,6 +85,4 @@ exports.getTrajectories = async (req, res) => {
     }
 
     res.send(result.data);
-
-
 }

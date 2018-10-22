@@ -8,8 +8,7 @@ var shouldResume = false;
 var querySelect = 0;
 var geo = "melbourne";
 
-
-
+//Checks for preferences file and then updates whether the autocollector should be running
 if (fs.existsSync(process.cwd() + "/preferences")) {
     
     if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
@@ -21,8 +20,6 @@ if (fs.existsSync(process.cwd() + "/preferences")) {
         shouldResume = data.shouldResume;
     }
 }
-
-
 
 setInterval(function(){
 
@@ -60,11 +57,6 @@ setInterval(function(){
 
 }, 7200000); //call once every 2 hours
 
-
-
-
-
-
 exports.updateState = function(autoCollect)
 {
 	shouldRun = autoCollect;
@@ -89,7 +81,6 @@ function collect(query, geo)
     }
 
 }
-
 
 exports.autoGet = function(req, res)
 {
@@ -156,9 +147,7 @@ exports.autoPost = function(req, res)
 	if (req.body.resume)
 	{
 		//handle writing params to disk
-
         shouldResume = true;
-
 
 		let data = {shouldResume: true, query: query};
 
@@ -182,10 +171,7 @@ exports.autoPost = function(req, res)
 			}
 		})
 	}
-
-
     exports.updateState(autoCollect);
 
     res.redirect('/auto');
-
 };

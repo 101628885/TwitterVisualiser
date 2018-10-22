@@ -4,13 +4,9 @@ const crime = require('../models/crime_schema');
 const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
 const connectionTimeout = 1500;
-
 const databaseMelb = {location: "Melbourne", url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
-
 const databaseChicago = {location: "Chicago", url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
-
 const databaseChicagoCrime = {location:"Chicago Crime", url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
-
 const connectFailure = function() {console.log("This will abort the NodeJS process."); process.exit(1);}
 
 init();
@@ -210,10 +206,5 @@ async function removeDuplicates(db) //deprecated
 	}
 
 	process.stdout.write("Done!\n")
-
-
 	console.log("Removed " + dupsRemoved + " duplicates.");
-
 };
-
-

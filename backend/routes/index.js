@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 
 // getting all controllers
-const listviewController      = require("../controllers/listViewController");
 const datamuseController      = require("../controllers/datamuseController");
 const lookupController        = require("../controllers/lookupController");
 const verifyController        = require("../controllers/verifyController");
@@ -46,8 +45,7 @@ router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTwee
 router.get('/nlpTraining/:count/checked/:checked', nlpTrainingController.returnNLPData);
 router.get('/nlpTraining/:count/crime/:crime', nlpTrainingController.returnNLPData);
 router.get('/nlpTraining', nlpTrainingController.returnAllData);
-router.get('/getPredictedData', nlpTrainingController.runNLP);
-//concat melb and chicago
+router.get('/nlpRun', nlpTrainingController.runNLP);
 
 /**
  * tweetmap controller routes
@@ -55,10 +53,6 @@ router.get('/getPredictedData', nlpTrainingController.runNLP);
  */
 router.get('/tweetMap', cacheController.getTrajectories);
 router.post('/tweetMap', cacheController.getTrajectories);
-
-// listview Controller
-router.get('/list', listviewController.listTweets);
-router.post('/list', listviewController.findTweets);
 
 // exports the controllers
 module.exports = router;

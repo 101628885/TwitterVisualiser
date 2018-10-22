@@ -3,6 +3,7 @@ const request = require('request');
 const test = require('./cacheController');
 
 //https://www.datamuse.com/api/
+//Gets related keywords form DataMuse
 exports.getDataMuse = async(req, res, callback) =>
 {
     let wordQuery = req.body.word;
@@ -54,6 +55,7 @@ exports.getDataMuse = async(req, res, callback) =>
 }
 
 //Gets results from DataMuse, creates an array and build the query to Twitter
+//If more than Datamuse is used, call in here.
 exports.getCombination = async (req, res, next) =>
 {
     let result;
