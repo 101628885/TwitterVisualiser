@@ -21,11 +21,10 @@ if (fs.existsSync(process.cwd() + "/preferences")) {
     }
 }
 
+//Sets a collection interval for Twitter data to run every 12 seconds.
 setInterval(function(){
-
     if (shouldRun)
     {
-
         //console.log("Checking word: ", query[querySelect], " in location ", geo);
         collect(query[querySelect], geo);
 
@@ -51,18 +50,18 @@ setInterval(function(){
     }
 }, 12000);
 
+//Sets a collection interval for Chicago data to run every 2 hours.
 setInterval(function(){
-
 	chicagoAuto.saveCrimeData().catch((err) => console.log(err));
-
 }, 7200000); //call once every 2 hours
 
+//Changes state of whether we should be collecting.
 exports.updateState = function(autoCollect)
 {
 	shouldRun = autoCollect;
-
 };
 
+//Collects data from Twitter API.
 function collect(query, geo)
 {
     if (!query)
@@ -79,9 +78,9 @@ function collect(query, geo)
 		    //console.log(err);
 	    });
     }
-
 }
 
+//Changes state of web page based on whether we are collecting data or not.
 exports.autoGet = function(req, res)
 {
     if (autoCollect)
@@ -103,6 +102,7 @@ exports.autoGet = function(req, res)
     }
 };
 
+//Sets keywords to be used for Twitter API.
 exports.autoPost = function(req, res)
 {
 	//hold value in between POSTs
@@ -148,7 +148,6 @@ exports.autoPost = function(req, res)
 	{
 		//handle writing params to disk
         shouldResume = true;
-
 		let data = {shouldResume: true, query: query};
 
 		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){
@@ -161,7 +160,6 @@ exports.autoPost = function(req, res)
 	else
 	{
 	    shouldResume = false;
-
 		let data = {shouldResume: false, query: []};
 
 		fs.writeFile(process.cwd()+"/preferences/auto.json", JSON.stringify(data), function(err){

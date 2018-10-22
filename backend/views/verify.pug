@@ -1,10 +1,7 @@
+//-Verify page to check each Tweet.
+//-Used to train NLP
 extends layout
 
-//- md bootstrap (deprecated)
-//- will delete soon, i'm only leaving this here because the deckgl map control panel uses 
-//- styles from this template
-//- i don't like the template tbh (md bootstrap)
-//- too many paid options
 append head
 	title VisCrime - Verify
 	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
@@ -29,6 +26,8 @@ block content
 						select#location.custom-select.mb-4(name="location", onchange=`skip()`)
 							option(value="melbourne") Melbourne
 							option(value="chicago") Chicago
+		//-Displays tweet information.
+		//-Gives users form to submit with information on the tweet.
 		.row.mx-5
 			.col-md-12
 				each tweet, index in data

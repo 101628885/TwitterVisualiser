@@ -3,6 +3,7 @@ var db = require('./mongoController');
 const pythonShell = require('python-shell');
 const pty = require('node-pty');
 
+//Checks parameters and then returns data from the database based on this.
 exports.returnNLPData = async (req, res) => {
     let result = [];
     let query = {};
@@ -38,6 +39,7 @@ exports.returnNLPData = async (req, res) => {
 
 };
 
+//Returns all data located in the database (no parameters).
 exports.returnAllData = async (req, res) => {
     let result = [];
 
@@ -56,8 +58,9 @@ exports.returnAllData = async (req, res) => {
     res.send(result)
 }
 
+//Runs the NLP using python process.
 exports.runNLP = async (req, res) => {
-    const pyProcess = pty.spawn("/usr/bin/python3", [process.cwd() + '/spaCy_NLP/TwitterNLP.py']);
+    const pyProcess = pty.spawn("/usr/bin/python3", [process.cwd() + '/nlp/TwitterNLP.py']);
     var dataToSend = "";
 
     pyProcess.on("data", (data) => {

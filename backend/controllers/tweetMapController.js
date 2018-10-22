@@ -92,6 +92,7 @@ convertPrimaryType = (type) =>
     }
 }
 
+//Calculates trajectories with the same primary_type
 calculatetrajectorySameTypeGeoJSON = (data) => {
     let timeStart = new Date();
     let tTimeThreshold = 180;
@@ -162,6 +163,7 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
                 }
             });
 
+            //Calculates trajectories
             otherData.forEach((othertrajectory) => {
                 othertrajectory.Primary_Type = convertPrimaryType(othertrajectory.Primary_Type);
                 if (othertrajectory.Primary_Type == trajectory.Primary_Type &&
@@ -259,6 +261,7 @@ calculatetrajectorySameTypeGeoJSON = (data) => {
     }; //return final GeoJSON with trajectories and centroid data
 }
 
+//Calculates centroid points using skmeans algorithm
 calculateCentroid = (trajectories) => {
     let result = { type: "FeatureCollection", features: [], properties: "Centroid" };
     trajectories.map((i) => {
@@ -274,6 +277,7 @@ calculateCentroid = (trajectories) => {
     return result;
 }
 
+//Generates the GeoJSON for all the twitter data from the database.
 generateTwitterGEOJSON = (data) => {
     let tweettrajectorySameTypeGeoJSON = [{
         "type": "FeatureCollection",
@@ -313,6 +317,7 @@ exports.queryMapData = async(req, res) => {
     res.send({ crime: crimeGeoJSON });
 }
 
+//Finds distance between two points taking into account curviture of the earth.
 getDistanceBetweenPoints = (point1, point2) => {
     let lat1 = point1.Latitude;
     let lon1 = point1.Longitude;
@@ -331,6 +336,7 @@ getDistanceBetweenPoints = (point1, point2) => {
     return R * c;
 }
 
+//Calculates time difference between two points.
 getTimeDifferenceBetweenPoints = (a, b) => {
     let time1 = new Date(a.Date);
     let time2 = new Date(b.Date);

@@ -1,6 +1,6 @@
 ############################
 # Team VISION              #
-# Software Engineering A   #
+# Software Engineering A/B #
 # VisCrime                 #
 ############################
 

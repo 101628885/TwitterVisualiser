@@ -4,6 +4,7 @@ const mongoController = require('./mongoController');
 var tweetMelb = mongoController.tweetMelb;
 var tweetChicago = mongoController.tweetChicago;
 
+//Creates a connection to the Twitter API
 var client = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -11,12 +12,15 @@ var client = new Twitter({
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
+//Renders the page
 exports.renderView = async (req, res) => {
     tweets = "";
     res.render('lookup', { data: tweets });
 };
 
+//Pulls tweets from the public Twitter API.
 exports.getAPITweetsView = async (req, res) => {
+    //To be used by auto controller to store Tweets from TwitterAPI
     function storeTweets(tweets, geo) {
         let results = [];
         for (let i in tweets.statuses) {
@@ -52,6 +56,7 @@ exports.getAPITweetsView = async (req, res) => {
         geo = `-37.8136,144.9631,${req.body.dist || 40}km`;
     }
 
+    //Sets parameters for the query.
     var params = {
         q: req.body.dbResults,
         geocode: geo,
@@ -60,6 +65,7 @@ exports.getAPITweetsView = async (req, res) => {
         tweet_mode: 'extended',
     };
 
+    //Calls Twitter API
     client.get('search/tweets', params, function(error, tweets, response) {
         if (!error) {
             if (!req.body.shouldStoreTweets) {
@@ -92,6 +98,8 @@ exports.getAPITweetsView = async (req, res) => {
     });
 };
 
+//Gets all tweets from the database with a given set of parameters.
+//If no parameters default values are set.
 exports.getDBTweetsView = async (req, res) => {
     let query = {};
     let limit = 0;

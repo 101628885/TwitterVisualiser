@@ -1,4 +1,3 @@
-// gets all required controllers and modules
 const fs = require('fs');
 const request = require('request');
 var moment = require('moment');

@@ -1,3 +1,5 @@
+//Sets up List for lookup page to load all content from database/Twitter API
+
 var apiFormElement = document.querySelector("#apiform");
 var dbFormElement = document.querySelector("#dbform");
 

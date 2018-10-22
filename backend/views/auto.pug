@@ -1,10 +1,5 @@
 extends layout
 
-//- md bootstrap (deprecated)
-//- will delete soon, i'm only leaving this here because the deckgl map control panel uses 
-//- styles from this template
-//- i don't like the template tbh (md bootstrap)
-//- too many paid options
 append head
 	title VisCrime - Config
 	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
@@ -25,6 +20,7 @@ block content
 					p
 						br
 						label(hidden = !isHidden) #{shouldResume}
+					//-Form for auto controller word inputs
 					.row
 						.col-md-4
 							input.form-control.mb-2(name='word1', type='text', hidden = isHidden)

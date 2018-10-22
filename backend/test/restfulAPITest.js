@@ -7,7 +7,6 @@ const timeout = ms => new Promise(res => setTimeout(res, ms));
 chai.use(chaiHttp);
 
 describe('Test all routes', function(){
-
 	it('should return 200 or another valid response code', async function()
 	{
 

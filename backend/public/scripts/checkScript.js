@@ -1,3 +1,4 @@
+//Sends validated data and pulls next tweet to display.
 function sendData(bool, tweetid) {
 	var http = new XMLHttpRequest();
 	var geo = document.getElementById('location').value;
@@ -21,6 +22,7 @@ function sendData(bool, tweetid) {
 	http.send();
 }
 
+//Skips the tweet when db is changed from melbourne to chicago
 function skip() {
 	console.log("Skipping...");
 	var http = new XMLHttpRequest();
@@ -52,11 +54,11 @@ function initAutocomplete() {
     // Create the autocomplete object, restricting the search to geographical
     // location types.
     var input = document.getElementById('pac-input');
-    console.log("hello")
     autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', fillInAddress);
 }
 
+//Fills in the address in the map section of the verify page.
 function fillInAddress() {
 	var place = autocomplete.getPlace();
 	for (var component in componentForm) {

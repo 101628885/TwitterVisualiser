@@ -11,14 +11,12 @@ const connectFailure = function() {console.log("This will abort the NodeJS proce
 
 init();
 
+//Initialises the variables by calling database connection function.
 function init()
 {
 	let tweetMelb = createDBConnectionObject(databaseMelb).model('tweets');
-
 	let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
-
 	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
-
 	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
 
 	module.exports.tweetMelb = tweetMelb;
@@ -27,6 +25,7 @@ function init()
 	module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
 }
 
+//Creates a connection to the database based on a URL and some extra parameters.
 function createDBConnectionObject(database)
 {
 	let conn = mongoose.createConnection(database.url, {connectTimeoutMS: connectionTimeout, useNewUrlParser: true});
@@ -43,9 +42,9 @@ function createDBConnectionObject(database)
 	return conn;
 }
 
+//Pulls all tweets based on the parameters given to it.
 exports.getStoredTweets = async (location, query, count, skip) =>
 {
-
 	let result = [];
 	if (location.toLowerCase() === "melbourne")
 	{
@@ -56,11 +55,10 @@ exports.getStoredTweets = async (location, query, count, skip) =>
 		await this.tweetChicago.find(query).skip(skip).limit(parseInt(count)).lean().exec().then((res) => {result = res;});
 	}
 
-
-	return result;
-	
+	return result;	
 }
 
+//Checks if in developer mode and then stores tweets.
 exports.storeTweets = function(tweetsToStore, geo)
 {
 	if (process.env.DISABLE_DEVELOPER_MODE)
@@ -88,12 +86,10 @@ exports.storeTweets = function(tweetsToStore, geo)
 			writeConnection.on('open', async () =>
 			{
 				let writeModel = writeConnection.model('tweets');
-
 				let alreadyInArray;
 
 				for (let post in input.tweetsToStore) //This nested for loop checks that we don't have any duplicates in the array we get from Twitter
 				{
-
 					for (let j in filteredArray)
 					{
 						alreadyInArray = (input.tweetsToStore[post].full_text === input.tweetsToStore[j].full_text);
@@ -104,6 +100,7 @@ exports.storeTweets = function(tweetsToStore, geo)
 						}
 
 					}
+
 					if (!alreadyInArray)
 					{
 						filteredArray.push(input.tweetsToStore[post]);
@@ -167,44 +164,4 @@ exports.storeTweets = function(tweetsToStore, geo)
 	{
 		console.log("Preventing database updates: developer mode enabled")
 	}
-};
-
-async function removeDuplicates(db) //deprecated
-{
-	let tweets = {};
-	let dupsRemoved = 0;
-	process.stdout.write("Retrieving DB... ");
-	await db.find().lean().exec().then(function(result){tweets = result});
-
-	process.stdout.write("Done!\n");
-	process.stdout.write("Checking DB for duplicates... ");
-
-	let count_outer = 0;
-	for (let i in tweets)
-	{
-		let count_inner = 0;
-		let first_instance = true;
-		for (let j in tweets)
-		{
-			if (tweets[count_outer].full_text === tweets[count_inner].full_text)
-			{
-				if (!first_instance)
-				{
-					dupsRemoved += 1;
-					db.remove({_id: ObjectId(tweets[count_inner]._id)}).exec();
-				}
-				else
-				{
-					first_instance = false;
-				}
-
-			}
-			count_inner += 1;
-		}
-
-		count_outer += 1;
-	}
-
-	process.stdout.write("Done!\n")
-	console.log("Removed " + dupsRemoved + " duplicates.");
 };

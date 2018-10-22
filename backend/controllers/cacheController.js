@@ -5,6 +5,8 @@ let cachedRequestList = []; //members: url, contents{}, expiry
 const cacheExpiryTime = 3600000; //1 hour
 let trajectoryCacheState = { cachedTrajectories: [], isBuilding: false };
 
+//Checks if cached trajectory exists.
+//If yes it is outputted if not it adds it.
 exports.getJSON = async (options) => {
     let result = {};
     let entryFound = false;
@@ -28,20 +30,17 @@ exports.getJSON = async (options) => {
     return result;
 };
 
-
+//
 exports.getTrajectories = async (req, res) => {
-    
     let query = JSON.stringify(req.body);
     let result;
 
     let refreshTrajectoryData = async function() {
         trajectoryCacheState.isBuilding = true;
-
         let objectToCache = {}
         objectToCache.data = await factory.initMapData(req, res)
         objectToCache.refreshedTime = new Date();
         objectToCache.query = query;
-
         trajectoryCacheState.isBuilding = false;
 
         return objectToCache;
@@ -52,7 +51,6 @@ exports.getTrajectories = async (req, res) => {
         await timeout(2000);
     }
 
-
     for (let i = 0; i < trajectoryCacheState.cachedTrajectories.length; i++) {
         if (trajectoryCacheState.cachedTrajectories[i].query == query) //found item
         {
@@ -61,7 +59,6 @@ exports.getTrajectories = async (req, res) => {
                 result = await refreshTrajectoryData();
                 trajectoryCacheState.cachedTrajectories.splice(i, 1); //delete expired element
                 trajectoryCacheState.cachedTrajectories.push(result);
-
             }
             else
             {
@@ -69,7 +66,6 @@ exports.getTrajectories = async (req, res) => {
             	result = trajectoryCacheState.cachedTrajectories[i];
             	console.log("Object refresh in:", Math.floor((cacheExpiryTime - (new Date() - trajectoryCacheState.cachedTrajectories[i].refreshedTime)) / 1000), "seconds");
             }
-
             
             break;
         }
@@ -78,9 +74,7 @@ exports.getTrajectories = async (req, res) => {
     if (!result) //no match found
     {
     	console.log("Building trajectory cache...");
-
     	result = await refreshTrajectoryData();
-
     	trajectoryCacheState.cachedTrajectories.push(result);
     }
 

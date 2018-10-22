@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
-//Tweet schema
+//Crime schema
+//All labels with associated types.
 
 var crimeSchema = mongoose.Schema({
 

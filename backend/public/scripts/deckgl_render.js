@@ -1,15 +1,4 @@
 /**
- * TODO:
- * - Add crime legend on to stats panel ✅
- * - Fix timeline chart scaling ✅
- * - Fix CSS on data panel
- * - Create endpoint to get # of tweets
- * - Add display options to topright panel
- * - Data points highlighting on hover (and also add a brush?)
- * - Use more opaque icons (maybe just do a dot)
- */
-
-/**
  * CONSTANT VALUES AND OBJECTS
  */ 
 
@@ -102,6 +91,7 @@ const deckgl = new deck.DeckGL({
 	...INITIAL_VIEW_STATE
 });
 
+//Updates tool tips when user hovers over on deck.gl map
 const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.querySelector("#tooltip");
@@ -121,11 +111,6 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 				<div>Description: ${object.properties.description}</div>
 				<div>Location: ${object.properties.location_description}</div>`
 			} else {
-				// tooltip.innerHTML = "<div>Trajectory Points -></div>";
-				// object.geometry.coordinates[0].forEach(item => {
-				// tooltip.innerHTML += `
-				// 	<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
-				// `;
 				tooltip.innerHTML = `<div>${object.properties.trajectory_description.length} Crimes in Trajectory:</div>`;
 				object.properties.trajectory_description.forEach((item, i, array) => {
 					tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
@@ -136,10 +121,11 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// kaksoispiste dededede
+		// Error
 	}
 };
 
+//Updates tooltip for centroids when hovered over by user.
 const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.getElementById("tooltip");
@@ -153,10 +139,11 @@ const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// kaksoispiste dededede
+		// Error
 	}
 };
 
+//Updates tooltip for Tweets when hovered over by user.
 const updateTweetLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.querySelector("#tooltip");
@@ -173,10 +160,11 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// kaksoispite dededede
+		// Error
 	}
 };
 
+//Updates tooltip for Chicago Crime points when hovered over by user.
 const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
 	try {
 		const tooltip = document.querySelector("#tooltip");
@@ -195,10 +183,11 @@ const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// kaksoispiste dededede
+		// Error
 	}
 };
 
+//Gets colour for chicago data based on crime type
 const getCrimeTypeColor = (type, pointDate, currentDate) => {
 	// default opacity for all points
 	var opacity = 255;
@@ -241,10 +230,10 @@ const getCrimeTypeColor = (type, pointDate, currentDate) => {
 	};
 };
 
-const filterMap = () => {
-	// $(".loader").show()
-	
+//Filters the map based on users parameters.
+const filterMap = () => {	
 	let query = {}
+
 	if($('#type').val().toUpperCase() != "ALL") {
 		query.Primary_Type = $('#type').val().toUpperCase();
 	}
@@ -269,9 +258,7 @@ const filterMap = () => {
 	});
 };
 
-/**
- * Initialise the timeline chart object, the chart should not be rendered to the screen at this point
- */
+//Sets up a timeline for trajecroties.
 setupTimeline = () => {
 	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
 	timeline = new Chart(ctx, {
@@ -315,8 +302,6 @@ updateTimeline = (currentDate) => {
 	timeline.data.datasets[0].label = selectedCrimeType;
 	timeline.data.datasets[0].borderColor = rgbString;
 	timeline.data.datasets[0].data = crimeCountArray;
-
-	// timeline.data.datasets[0].pointBackgroundColor = ["rgb(0, 0, 0)"];
 
 	var activeColorArray = []
 
@@ -376,6 +361,7 @@ const toTitleCase = (string) => {
 	return string.join(" ");
 };
 
+//Toggles the panels when button is clicked.
 const togglePanels = () =>
 {
 	dataPanel = document.querySelector("#control-panel");
@@ -386,6 +372,7 @@ const togglePanels = () =>
 	document.getElementById("toggle-panels").innerText = document.getElementById("toggle-panels").innerText == "HIDE PANELS" ? "Show Panels" : "Hide Panels";
 }
 
+//Shows a crime type legend with each crime types colour.
 const renderCrimeTypeLegend = () => {
 	legendDiv = document.querySelector("#crime-type-legend");
 	htmlString = ``;
@@ -650,7 +637,6 @@ renderLayers = (currentDate) => {
 		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
 		// layers: [tweetLayer],
 	});
-	// $(".loader").hide()
 };
 
 /**
@@ -765,7 +751,7 @@ const setupInterface = () => {
 };
 
 /**
- * initialise the everything
+ * initialise everything
  */
 const runScript = () => {
 	setupInterface();

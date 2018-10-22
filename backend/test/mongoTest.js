@@ -1,4 +1,3 @@
-/*
 process.env.DISABLE_DEVELOPER_MODE = true;
 const expect = require('chai').expect;
 var mongo = require('../controllers/mongoController');
@@ -8,7 +7,6 @@ const chicagoCrime = mongo.chicagoCrime;
 const timeout = ms => new Promise(res => setTimeout(res, ms));
 const should = require('chai').should();
 const chicagoCrimeFactory = require('../controllers/chicagoDataFactory');
-
 
 describe('storeTweets()', function(){
 	it('both tweet objects in the JSON array should be stored and retrieved correctly from the DB.', async() => {
@@ -49,13 +47,11 @@ describe('storeTweets()', function(){
 		testArray.push(sampleTweet2);
 
 		//ACTION, ask mongoController to store the array.
-
 		mongo.storeTweets(testArray, "melbourne");
 
 		await timeout(2800); //Bit hacky but we have to give the DB a moment to save the test items
 
 		//ACTION, ask mongoController to return items from DB.
-
 		let sample1FromDB = {};
 		let sample2FromDB = {};
 
@@ -63,11 +59,8 @@ describe('storeTweets()', function(){
 		await tweetMelb.findOne({id: "99999"}).lean().exec().then(function(res){sample2FromDB = res});
 
 		//CLEANUP
-
 		await tweetMelb.remove({id: "9999"}).exec();
 		await tweetMelb.remove({id: "99999"}).exec();
-
-
 
 		//ASSERTION
 		expect(sample1FromDB.full_text).to.be.equal(sampleTweet1.full_text);
@@ -78,18 +71,12 @@ describe('storeTweets()', function(){
 
 		expect(sample1FromDB.created_at.toISOString()).to.be.equal(sampleTweet1.created_at.toISOString());
 		expect(sample2FromDB.created_at.toISOString()).to.be.equal(sampleTweet2.created_at.toISOString());
-
 	})
 });
 
-
-
 describe('storeTweets()', function(){
-
 	it('duplicate objects in the array should not be saved to the DB.', async() =>{
-
 		//SETUP, create 2 of the same item
-
 		let sampleTweet1 = {
 			"created_at": new Date("2018-03-24 15:15:06.000"),
 			"id": "9999",
@@ -120,15 +107,12 @@ describe('storeTweets()', function(){
 			"crime": null
 		};
 
-
 		let testArray = [];
 
 		testArray.push(sampleTweet1);
 		testArray.push(sampleTweet2);
 
-
 		//ACTION
-
 		mongo.storeTweets(testArray, "melbourne");
 
 		await timeout(2500);
@@ -138,17 +122,13 @@ describe('storeTweets()', function(){
 		await tweetMelb.find({id: "9999"}).lean().exec().then(function(res){result = res});
 		await tweetMelb.remove({id: "9999"}).exec();
 
-
-
 		//ASSERT
 		expect(result.length).to.be.equal(1);
-	});
+	})
 });
-
 
 describe('storeTweets()', function(){
 	it('should write a tweet to the DB specified', async()=>{
-
 		//SETUP, create 2 separate tweets
 		let sampleTweetMelb = {
 			"created_at": new Date("2017-03-24 15:15:06.000"),
@@ -180,14 +160,11 @@ describe('storeTweets()', function(){
 			"crime": null
 		};
 
-
-
 		let melbArray = [];
 		let chicagoArray = [];
 
 		melbArray.push(sampleTweetMelb);
 		chicagoArray.push(sampleTweetChicago);
-
 
 		//ACTION
 		mongo.storeTweets(melbArray, "melbourne");
@@ -209,15 +186,12 @@ describe('storeTweets()', function(){
 
 		await tweetChicago.remove({id: "2222"}).exec();
 
-
 		//ASSERT
 		expect(melbTweetFromMelbDB.full_text).to.be.equal(sampleTweetMelb.full_text); //should return
 		should.not.exist(chicagoTweetFromMelbDB);
 
 		expect(chicagoTweetFromChicagoDB.full_text).to.be.equal(sampleTweetChicago.full_text);
 		should.not.exist(chicagoTweetFromMelbDB);
-
-
 	})
 });
 
@@ -258,7 +232,6 @@ describe('getStoredTweets()', function(){
 			expect(i.checked).to.be.equal(false);
 		});
 
-
 		resultMelb4.map((i) =>
 		{
 			expect(i.crime).to.be.equal(true);
@@ -290,9 +263,5 @@ describe('getStoredTweets()', function(){
 		expect(resultChicago1.length).to.be.equal(count);
 		expect(resultChicago2.length).to.be.equal(count);
 		expect(resultChicago3.length).to.be.equal(count);
-
 	})
-
-})
-*/
-
+});
