@@ -69,6 +69,13 @@ let chiCentroidData = {
 	allType: null,
 };
 
+let currentDate = "";
+
+let timeline = null;
+
+// the dates currently covered by the data stored in the main data objects
+let dataDateRange = [];
+
 // hex layer color range
 const TWEET_COLOR_RANGE = [
 	[29, 161, 242],
@@ -95,89 +102,9 @@ const deckgl = new deck.DeckGL({
 	...INITIAL_VIEW_STATE
 });
 
-// statsBuilder = () =>
-// {
-// 	let crimeCount = chicago_crime_data.features.length;
-// 	let crimeDateRange = `${chicago_crime_data.features[0].properties.date_stats_text} - ${chicago_crime_data.features[crimeCount - 1].properties.date_stats_text}`
-// 	let crimeTypeObject = {}
-	
-// 	chicago_crime_data.features.forEach((crime) => 
-// 	{
-// 		if(crimeTypeObject.hasOwnProperty(`${crime.properties.primary_type}`))
-// 		{
-// 			crimeTypeObject[`${crime.properties.primary_type}`] += 1  
-// 		} else
-// 		{
-// 			crimeTypeObject[`${crime.properties.primary_type}`] = 1  
-// 		}
-// 	})
-// 	$("#stats-date-range p").empty()
-// 	$("#stats-total p").empty()
-// 	$( "#stats-crimes p").empty()
-// 	$("#stats-panel p").empty()
-
-// 	$("#stats-date-range").append("<p><strong>Range: " + crimeDateRange + "</strong>")
-// 	$("#stats-total").append("<p><strong>Total Found:</strong> " + crimeCount)
-	
-// 	let ordered = {};
-// 	Object.keys(crimeTypeObject).sort().forEach(function(key) {
-// 	  ordered[key] = crimeTypeObject[key];
-// 	});
-// 	crimeTypeObject = ordered;
-// 	Object.keys(crimeTypeObject).forEach(function(crime)
-// 	{
-// 		//This is really really bad, to be fixed
-// 		let dotColour = function(dotCrime){
-// 			switch(dotCrime) 
-// 			{
-// 				case "ASSAULT":
-// 					return CRIME_COLOR_RANGE[0];
-// 					break;
-// 				case "THEFT":
-// 					return CRIME_COLOR_RANGE[1];
-// 					break;
-// 				case "SEX OFFENSE":
-// 					return CRIME_COLOR_RANGE[2];
-// 					break;
-// 				case "OTHER OFFENSE":
-// 					return CRIME_COLOR_RANGE[3];
-// 					break;
-// 				case "DOMESTIC VIOLENCE":
-// 					return CRIME_COLOR_RANGE[4];
-// 					break;
-// 				case "NARCOTICS":
-// 					return CRIME_COLOR_RANGE[5];
-// 					break;
-// 				case "CRIMINAL DAMAGE":
-// 					return CRIME_COLOR_RANGE[6];
-// 					break;
-// 				case "HOMICIDE":
-// 					return CRIME_COLOR_RANGE[7];
-// 					break;
-// 				case "GAMBLING":
-// 					return CRIME_COLOR_RANGE[8];
-// 					break;
-// 				case "KIDNAPPING":
-// 					return CRIME_COLOR_RANGE[9];
-// 					break;
-// 				case "NON-CRIMINAL":
-// 					return CRIME_COLOR_RANGE[10];
-// 					break;
-// 				default: 	
-// 					return CRIME_COLOR_RANGE[10];
-// 					break;
-// 		}}(crime);
-//     	$( "#stats-crimes" ).append( `<p><span class="dot" style="background-color: ${"rgba(" + dotColour.join(", ") + "1"}"></span><strong>${toTitleCase(crime) + ':</strong> ' + crimeTypeObject[crime]}</p>` );
-// 	});
-
-// 	$("#stats-tweets").append("<p><strong>Total Found:</strong> " + "30.0K")
-
-// 	$("#stats-panel").show()
-// }
-
-const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
+const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 	try {
-		const tooltip = document.getElementById("tooltip");
+		const tooltip = document.querySelector("#tooltip");
 
 		if (object) {
 			tooltip.style.visibility = "visible";
@@ -201,17 +128,15 @@ const updateTrajectoryLayerTooltip = ({x, y, object, layer}) => {
 				// `;
 				tooltip.innerHTML = `<div>${object.properties.trajectory_description.length} Crimes in Trajectory:</div>`;
 				object.properties.trajectory_description.forEach((item, i, array) => {
-				tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
+					tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
 				});
-				
-				renderLayers();
 			}
 		} else {
 			tooltip.innerHTML = "";
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// kaksoispite dededede
+		// kaksoispiste dededede
 	}
 };
 
@@ -228,7 +153,7 @@ const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// kaksoispite dededede
+		// kaksoispiste dededede
 	}
 };
 
@@ -274,37 +199,45 @@ const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
 	}
 };
 
-const getCrimeTypeColor = (type) => {
+const getCrimeTypeColor = (type, pointDate, currentDate) => {
+	// default opacity for all points
+	var opacity = 255;
+
+	// only go through this statement if pointDate and currentDate are defined otherwise we just go with opacity = 255
+	if (pointDate && currentDate) { 
+		opacity = (pointDate === currentDate) ? 255 : 0;
+	}
+	
 	switch(type.toUpperCase()) {
 		case "ASSAULT":
 		case "BATTERY":
-			return [65, 244, 113];
+			return [65, 244, 113, opacity];
 		case "THEFT":
-			return [66, 244, 244];
+			return [66, 244, 244, opacity];
 		case "BURGLARY":
-			return [66, 134, 244];
+			return [66, 134, 244, opacity];
 		case "SEX OFFENSE":
-			return [255, 165, 0];
+			return [255, 165, 0, opacity];
 		case "OTHER OFFENSE":
-			return [200, 200, 200];
+			return [200, 200, 200, opacity];
 		case "DOMESTIC VIOLENCE":
-			return [69, 66, 244];
+			return [69, 66, 244, opacity];
 		case "NARCOTICS":
-			return [244, 66, 244];
+			return [244, 66, 244, opacity];
 		case "CRIMINAL DAMAGE":
-			return [188, 66, 244];
+			return [188, 66, 244, opacity];
 		case "HOMICIDE":
-			return [244, 66, 66];
+			return [244, 66, 66, opacity];
 		case "GAMBLING":
-			return [66, 244, 170];
+			return [66, 244, 170, opacity];
 		case "KIDNAPPING":
-			return [247, 255, 114];
+			return [247, 255, 114, opacity];
 		case "NON-CRIMINAL":
-			return [255, 205, 113];
+			return [255, 205, 113, opacity];
 		case "ALL":
-			return [0, 0, 0];
+			return [0, 0, 0, opacity];
 		default:
-			return [255, 255, 255];
+			return [255, 255, 255, opacity];
 	};
 };
 
@@ -336,8 +269,37 @@ const filterMap = () => {
 	});
 };
 
-const setupTimeline = () => {
+/**
+ * Initialise the timeline chart object, the chart should not be rendered to the screen at this point
+ */
+setupTimeline = () => {
+	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
+	timeline = new Chart(ctx, {
+		type: "line",
+		data: {
+			labels: [],
+			datasets: [{
+				label: "",
+				fill: false,
+				borderColor: "rgb(0, 0, 0)",
+				pointRadius: 7,
+				data: []
+			}]
+		},
+		options: {
+			animation: false
+		}
+	});
+};
+
+/**
+ * Update the timeline chart object with data from the global data objects
+ */
+updateTimeline = (currentDate) => {
+	// the crime type currently selected by the input handles
 	var selectedCrimeType = document.querySelector("#type").value;
+
+	// the rgb value based on the selected crime type, in a format that chart.js likes
 	var rgbString = `rgb(${getCrimeTypeColor(selectedCrimeType)[0]}, ${getCrimeTypeColor(selectedCrimeType)[1]}, ${getCrimeTypeColor(selectedCrimeType)[2]})`;
 
 	// group the array of crime points by date
@@ -345,31 +307,70 @@ const setupTimeline = () => {
 		return point.properties.date.substring(0, 10);
 	});
 
-	// array of dates represented in crimesByDate, to be used for the chart's x values
-	var crimeDateArray = Object.keys(crimesByDate);
-
 	// array of total number of crimes per date, to be used for the chart's y values
 	var crimeCountArray = Object.values(crimesByDate).map(crimeArray => (crimeArray.length));
 
-	var ctx = document.querySelector("#crimeTrajectoriesTimeline").getContext("2d");
-	var chart = new Chart(ctx, {
-		type: "line",
-		data: {
-			labels: crimeDateArray,
-			datasets: [{
-				label: selectedCrimeType,
-				fill: false,
-				borderColor: rgbString,
-				data: crimeCountArray
-			}]
-		},
-		options: {}
-	});
+	// set the timeline chart object values
+	timeline.data.labels = dataDateRange;
+	timeline.data.datasets[0].label = selectedCrimeType;
+	timeline.data.datasets[0].borderColor = rgbString;
+	timeline.data.datasets[0].data = crimeCountArray;
+
+	// timeline.data.datasets[0].pointBackgroundColor = ["rgb(0, 0, 0)"];
+
+	var activeColorArray = []
+
+	if (currentDate) {
+		for (let i = 0; i < dataDateRange.length; i++) {
+			if (dataDateRange[i] === currentDate) {
+				activeColorArray.push(rgbString);
+			} else {
+				activeColorArray.push("rgba(0, 0, 0, 0)");
+			}
+		}
+	}
+
+	timeline.data.datasets[0].pointBackgroundColor = activeColorArray;
+
+	// update the timeline chart object
+	timeline.update();
 };
 
+/**
+ * Just a basic timer
+ * @param {int} ms: the number of milliseconds to wait (1s = 1000ms)
+ */
+sleep = ms => {
+	return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+/**
+ * Step through each day in the timeline and appropriately show/hide data points on the map
+ */
+stepThroughTimeline = async () => {
+
+	// step through each date in dataDateRange
+	for (let i = 0; i < dataDateRange.length; i++) {
+
+		// dataDateRange[i] controls the visibility of points
+		renderLayers(dataDateRange[i]);
+
+		// wait a while
+		await sleep(2000);
+
+		// revert to the original configuration and show all points when we've gone through all the dates
+		if (i === dataDateRange.length - 1) renderLayers();
+	}
+};
+
+/**
+ * Capitalises the first letter of each word...
+ * ...So You End Up With Something Like This
+ * @param {string} string 
+ */
 const toTitleCase = (string) => {
 	string = string.toLowerCase().split(" ");
-	for (var i = 0; i < string.length; i++) {
+	for (let i = 0; i < string.length; i++) {
 		string[i] = string[i].charAt(0).toUpperCase() + string[i].slice(1);
 	}
 	return string.join(" ");
@@ -412,10 +413,10 @@ const renderCrimeTypeLegend = () => {
 };
 
 /**
- * renderLayers() updates the data layer(s) according to changes in the options and updates
+ * Update the data layer(s) according to changes in the options and updates
  * the DOM accordingly. The new layer(s) are then passed into the deckgl instance.
  */
-const renderLayers = () => {
+renderLayers = (currentDate) => {
 
 	// declare configurable options for each data layer
 
@@ -503,26 +504,9 @@ const renderLayers = () => {
 			break;
 	};
 
-	setupTimeline();
+	// render the timeline
 
-	// update display options and statistics panels
-
-	// presetRadios.forEach(elem => {
-	// 	elem.addEventListener("click", () => {
-	// 		switch(elem.value) {
-	// 			case "tweet-density":
-	// 				tweetDensityMenu.style.display = "block";
-	// 				crimeTrajectoriesMenu.style.display = "none";
-	// 				break;
-	// 			case "crime-trajectories":
-	// 				tweetDensityMenu.style.display = "none";
-	// 				crimeTrajectoriesMenu.style.display = "block";
-	// 				break;
-	// 			default:
-	// 				break;
-	// 		}
-	// 	});
-	// });
+	updateTimeline(currentDate);
 
 	// declare data layers
 
@@ -544,8 +528,8 @@ const renderLayers = () => {
 		onHover: updateTweetLayerTooltip,
 		...chiTweetOptions.points,
 	});
-
-	const historicCrimeLayer = new deck.IconLayer({
+	
+	var historicCrimeLayer = new deck.IconLayer({
 		id: "historic-crime-layer",
 		data: chiTrajectoryData.points,
 		iconAtlas: "/images/icon-point.png",
@@ -564,12 +548,15 @@ const renderLayers = () => {
 		getPosition: d => d.coordinates,
 		getIcon: d => "marker",
 		getSize: d => 4,
-		getColor: d => getCrimeTypeColor(d.properties.primary_type),
+		getColor: d => getCrimeTypeColor(d.properties.primary_type, d.properties.date.substring(0, 10), currentDate),
+		updateTriggers: {
+			getColor: currentDate
+		},
 		onHover: updateHistoricCrimeLayerTooltip,
 		...chiTrajectOptions.points,
 	});
-
-	const historicTrajectorySTLayer = new deck.GeoJsonLayer({
+	
+	var historicTrajectorySTLayer = new deck.GeoJsonLayer({
 		id: "hitoric-trajectory-st-layer",
 		data: chiTrajectoryData.sameType,
 		pickable: true,
@@ -579,12 +566,15 @@ const renderLayers = () => {
 		highlightColor: DATA_COLOURS.trajectoryHighlight,
 		lineWidthMinPixels: 2,
 		lineWidthMaxPixels: 10,
-		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
+		getLineColor: d =>getCrimeTypeColor(d.properties.primary_type, d.properties.date.substring(0, 10), currentDate),
+		updateTriggers: {
+			getLineColor: currentDate
+		},
 		onHover: updateTrajectoryLayerTooltip,
 		...chiTrajectOptions.sameType,
 	});
 
-	const historicTrajectoryATLayer = new deck.GeoJsonLayer({
+	var historicTrajectoryATLayer = new deck.GeoJsonLayer({
 		id: "hitoric-trajectory-at-layer",
 		data: chiTrajectoryData.allType,
 		pickable: true,
@@ -594,12 +584,15 @@ const renderLayers = () => {
 		lineWidthMaxPixels: 10,
 		autoHighlight: true,
 		highlightColor: DATA_COLOURS.trajectoryHighlight,
-		getLineColor: d => getCrimeTypeColor(d.properties.primary_type),
+		getLineColor: d => getCrimeTypeColor(d.properties.primary_type, d.properties.date.substring(0, 10), currentDate),
+		updateTriggers: {
+			getLineColor: currentDate
+		},
 		onHover: updateTrajectoryLayerTooltip,
 		...chiTrajectOptions.allType,
 	});
 
-	const historicCentroidSTLayer = new deck.IconLayer({
+	var historicCentroidSTLayer = new deck.IconLayer({
 		id: "historic-centroid-st-layer",
 		data: chiCentroidData.sameType,
 		iconAtlas: "/images/icon-centroid.png",
@@ -620,10 +613,13 @@ const renderLayers = () => {
 		getSize: d => 4,
 		getColor: d => [255, 255, 0],
 		onHover: updatecentroidSameTypeLayerTooltip,
+		updateTriggers: {
+			getColor: currentDate
+		},
 		...chiCentroidOptions.sameType,
 	});
 
-	const historicCentroidATLayer = new deck.IconLayer({
+	var historicCentroidATLayer = new deck.IconLayer({
 		id: "historic-centroid-at-layer",
 		data: chiCentroidData.allType,
 		iconAtlas: "/images/icon-centroid.png",
@@ -643,7 +639,9 @@ const renderLayers = () => {
 		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => [255, 255, 0],
-		// onHover: (() => console.log("Got one!")),
+		updateTriggers: {
+			getColor: currentDate
+		},
 		...chiCentroidOptions.allType,
 	});
 
@@ -684,6 +682,13 @@ const loadData = (data, mode) => {
 			coordinates: centroid.geometry.coordinates
 		}));
 
+		// group the array of crime points by date
+		var crimesByDate = _.groupBy(chiTrajectoryData.points, point => {
+			return point.properties.date.substring(0, 10);
+		});
+
+		// array of dates represented in crimesByDate
+		dataDateRange = Object.keys(crimesByDate);
 	} catch(e) {
 		console.log("Error: Could not load data");
 	};
@@ -707,33 +712,8 @@ const initialiseData = async() => {
  * Assign the renderLayers() function as an event handler to each input control
  */
 const registerEventHandlers = (options) => {
-	// there"s probably a better way to do this
 	options.forEach(key => {
-		// let idSuffix = "";
-		// switch(options) {
-		// 	case OPTIONS.TRAJECTORY: 
-		// 		idSuffix = "-trajectory-handle";
-		// 		break;
-		// 	case OPTIONS.TWEET: 
-		// 		idSuffix = "-tweet-handle";
-		// 	default: 
-		// 		break;
-		// }
-
-		//Ask Jason about doing this automagically
-		//Bodge for now soz
-		// wachu mean homie 
-		//            - Jason
-		// document.getElementById("visible-centroid-handle").onclick = renderLayers;
-		// document.getElementById("visible-type-trajectory-handle").onclick = renderLayers;
-		// document.getElementById("visible-crime-point-handle").onclick = renderLayers;
-
-		// let inputType = document.getElementById(key + idSuffix).getAttribute("type");
-		
-		// if (inputType === "checkbox") {
-		// 	document.getElementById(key + idSuffix).onclick = renderLayers; }
-		// else
-		// 	document.getElementById(key + idSuffix).oninput = renderLayers;
+		// ...
 	});
 };
 
@@ -782,27 +762,6 @@ const setupInterface = () => {
 	document.querySelector("#statistics-crime-trajectories").style.display = "none";
 
 	setupTimeline();
-
-	// setup slider for radius of tweet hexes
-	// var tweetRadiusSlider = document.querySelector("#radius-tweet-handle");
-	// noUiSlider.create(tweetRadiusSlider, {
-	// 	range: {
-	// 		"min": 100,
-	// 		"max": 800
-	// 	},
-	// 	step: 10,
-	// 	start: [200],
-	// 	tooltips: false,
-	// 	format: wNumb({
-	// 		decimals: 0
-	// 	}),
-	// });
-
-	// tweetRadiusSlider.noUiSlider.on("update", function (values, handle) {
-	//   dateValues[handle].innerHTML = formatDate(new Date(+values[handle]));
-	// });
-
-	// document.querySelector("#radius-tweet-value").innerHTML = radiusTweetValue;
 };
 
 /**
