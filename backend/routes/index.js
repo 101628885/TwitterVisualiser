@@ -100,6 +100,5 @@ router.get('/checkData', chicagoDataFactory.checkLocalData);
 
 // test dummy data
 router.post('/trajectoryData', chicagoDataFactory.getDummyData);
-router.get('/tweetsChicagoWithLocation', chicagoDataFactory.getChicagoTweetsWithLocation);
 
 module.exports = router;

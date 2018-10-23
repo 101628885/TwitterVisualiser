@@ -1,4 +1,3 @@
-/*
 process.env.DISABLE_DEVELOPER_MODE = true;
 const expect = require('chai').expect;
 var mongo = require('../controllers/mongoController');
@@ -294,5 +293,5 @@ describe('getStoredTweets()', function(){
 	})
 
 })
-*/
+
 
