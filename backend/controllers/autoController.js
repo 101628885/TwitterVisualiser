@@ -9,7 +9,7 @@ var querySelect = 0;
 var geo = "melbourne";
 
 
-
+//Try loading the preferences file from disk
 if (fs.existsSync(process.cwd() + "/preferences")) {
     
     if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
@@ -22,14 +22,11 @@ if (fs.existsSync(process.cwd() + "/preferences")) {
     }
 }
 
-
-
+//If file loaded or collector started from web interface start firing on a 12 second timer
 setInterval(function(){
 
     if (shouldRun)
     {
-
-        //console.log("Checking word: ", query[querySelect], " in location ", geo);
         collect(query[querySelect], geo);
 
         if (querySelect < query.length - 1)
@@ -54,11 +51,12 @@ setInterval(function(){
     }
 }, 12000);
 
+//Fire the query to City of Chicago Crime DB every 2 hours to update our local dataset
 setInterval(function(){
 
 	chicagoAuto.saveCrimeData().catch((err) => console.log(err));
 
-}, 7200000); //call once every 2 hours
+}, 7200000);
 
 
 
@@ -68,9 +66,9 @@ setInterval(function(){
 exports.updateState = function(autoCollect)
 {
 	shouldRun = autoCollect;
-
 };
 
+//Do a POST on the lookup page with shouldStoreTweets set to true to store the data in a DB
 function collect(query, geo)
 {
     if (!query)
@@ -90,7 +88,7 @@ function collect(query, geo)
 
 }
 
-
+//Handles drawing the auto page
 exports.autoGet = function(req, res)
 {
     if (autoCollect)
@@ -112,6 +110,8 @@ exports.autoGet = function(req, res)
     }
 };
 
+
+//Handle receiving auto form query and writing pref file to disk if needed
 exports.autoPost = function(req, res)
 {
 	//hold value in between POSTs
@@ -142,13 +142,14 @@ exports.autoPost = function(req, res)
         query.push(req.body.word5);
     }
 
+    //Use default set of words if form is empty
     if (query.length === 0)
     {
         query.push("crime");
         query.push("assault");
         query.push("murder");
         query.push("rape");
-        query.push("theft");//default search term if no entry is specified
+        query.push("theft");
     }
 
 	//Write a preference file to disk if asked to resume

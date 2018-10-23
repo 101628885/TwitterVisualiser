@@ -14,6 +14,7 @@ exports.browseTwitter = async(req, res) => {
 	res.render('twitterbrowser', {data: tweets});
 }
 
+//Queries tweets from the Twitter API based on keywords
 exports.getTweets = async(req,res) => {
 	console.log("a turtle made it to the water");
 	function storeTweets(tweets, geo) {

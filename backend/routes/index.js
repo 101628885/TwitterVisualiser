@@ -14,6 +14,10 @@ const reactController         = require("../controllers/reactController");
 const historicCrimeController = require("../controllers/historicCrimeController");
 const cacheController 		  = require("../controllers/cacheController");
 const chicagoDataFactory      = require("../controllers/chicagoDataFactory");
+const db 					  = require("../controllers/mongoController");
+
+router.get('/testNLP', nlpTrainingController.test);
+router.get('/all/:location', db.getAll);
 
 // get homepage
 router.get('/', function(req, res) {

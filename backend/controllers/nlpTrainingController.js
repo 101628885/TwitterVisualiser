@@ -56,17 +56,28 @@ exports.returnAllData = async (req, res) => {
     res.send(result)
 }
 
+exports.test = async(req, res) =>{
+    this.runNLP(null, null);
+}
+
 exports.runNLP = async (req, res) => {
-    const pyProcess = pty.spawn("/usr/bin/python3", [process.cwd() + '/spaCy_NLP/TwitterNLP.py']);
+    const pyProcess = pty.spawn("/usr/local/bin/python3", [process.cwd() + '/spaCy_NLP/TwitterNLP.py']);
     var dataToSend = "";
 
     pyProcess.on("data", (data) => {
         dataToSend += data;
-        console.log(data);
     });
 
     pyProcess.on("exit", (exitCode) => {
         console.log("TwitterNLP.py exiting with code " + exitCode);
-        res.send(dataToSend);
+
+        try {
+            res.send(dataToSend);
+        } catch(e) {
+            console.log("Res failed, this function was called internally. Calling DB update");
+            db.insertNLPData(dataToSend);
+        }
+        
+
     });
 }

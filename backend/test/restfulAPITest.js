@@ -106,37 +106,6 @@ describe('Test all routes', function(){
 		await timeout(2000);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		
 	})
 })

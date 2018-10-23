@@ -3,7 +3,7 @@
  * - Add crime legend on to stats panel ✅
  * - Fix timeline chart scaling ✅
  * - Fix CSS on data panel
- * - Create endpoint to get # of tweets
+ * - Create endpoint to get # of tweets 
  * - Add display options to topright panel
  * - Data points highlighting on hover (and also add a brush?)
  * - Use more opaque icons (maybe just do a dot)
