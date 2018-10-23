@@ -16,6 +16,47 @@ const server = app.listen(app.get('port'), "0.0.0.0", () => {
 		"| | / / / ___/ /   / ___/ / __ `__ \\/ _ \\\n" + 
 		"| |/ / (__  ) /___/ /  / / / / / / /  __/\n" + 
 		"|___/_/____/\\____/_/  /_/_/ /_/ /_/\\___/\n");
+// 	console.log(
+// `		   .:+oyhhhhhhhhhhhhhs/::'                                     \n` +
+// `                 ./yhhyyhhhhhhhhhhhhyhhhyhh/'                                   \n` +
+// `               '+hhhhhhhhhhhhhhhhhhhhhhhhhhhs+-                                 \n` +
+// `              '+hhhyhhhhhhhhhhhhhhhhhhhhhhhhhhho'                               \n` +
+// `             'ohhhhyhhhhhhhhhhhhhhhhhhhhhhhhhhhh:                               \n` +
+// `             .yyhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh+.'                            \n` +
+// `            'shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhs'                           \n` +
+// `           .ohhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh/                           \n` +
+// `          'sdddddhyo+/:::-:::::::::::://////:///+osy-                           \n` +
+// `          '+syddy//:------:--:------:-:::::::----::.                            \n` +
+// `          .::::++-//::-----::://////////////////::-                             \n` +
+// `          '/+oo+:---:::----:/+yhdhsso/://yddh//:::-                             \n` +
+// `           ./+o+/:---::---:::/oyhhso+////oyhy+/:---'                            \n` +
+// `            ./+///--::::::::::::::////////::://::--.                            \n` +
+// `             .::/o/-:/::::::::::-:://///:::::::::--.                            \n` +
+// `             '-/+:::::/::::::::::::///:::::::::::-:-                            \n` +
+// `              '/o/::::::/:::::::://+++///////:::--:-'                           \n` +
+// `             ':ym+:::::::/::::::::::///+++/::-----::.                           \n` +
+// `           .odNNm+:::::::::::://///oossoooo+/::--:::.                           \n` +
+// `         .ymNmmmmh::::::::::://////++++++o+/-----:::-                           \n` +
+// `       'smmNNNmmmmo-:::::::::::::////////:::::::---:.                           \n` +
+// `     '+dNNNNNNNmmmmy/:-::----:::::::::::::::::::----'                           \n` +
+// `    -hNNNNNNNNNmmmmmd+::----------------------------+-' '''.'                   \n` +
+// `   ommmNNNNNNNNmmmmmmm+----------------------------+NNmdmmmmmy'                 \n` +
+// `  :dddmmNNNNNNNmmmmmmmd/--------------------:-----omNNNmmmmmmmo'    ''..'       \n` +
+// ` 'ymdmmdmNNNNNNNmmmmmmmmd/--:--------------------odNNNNmmmdso//:::://///+o+/:.' \n` +
+// `-hmmdhmmmmNNNNNNmmmmmmmmmdyyo/:-------------.---+mNNNNNNmmho+///////++/++oooo++.\n` +
+// `dmNds++oydmNmddmmmmmmmmmmmmmmmdhhhy+:------/+hhhmmNNNNNmmmdo/////////+osoo+++++/\n` +
+// `mmNy///////++++++++++hNmmmmmmmmmmmmmmdddddmmmmmmmmNNNNNmmmNNmdo-:////////++/////\n` +
+// `hmmh/://///////+oyhyhmmmmmmmmmmmmmmmmmmmmmmmmmmmmmdmNNNNNNNNNy'  .://.'..--:/- '\n` +
+// `oNmd////////++++//oshdmmmmmmmmmmmmmmmmmmmmmmmmmmmN-.+sydmmmh.      -//'     ''  \n` +
+// `+NNms:///////osyyyoo//+dmmmmmmmmmmmmmmmmmmmmmmmmmm.     '''         '-/:'       \n` +
+// `'sddy-/////+++//+sdmmddmmmmmmmmmmmmmmmmmmmmmmmmmmo                    '-.       \n` +
+// `      '/////+oyys+/+++dNmmmmmmmmmmmmmmmmmmmmmmmd/                               \n` +
+// `       '-/+ssso+oyhdddNmmNNNNNmmmmmmmmmmmmmmmm/'                                \n` +
+// `          '//oshyo//smmmmmmmmmmmmmmmmmmmmmmmmmo                                 \n` +
+// `          ./'hh++ohydmmmmmmmmmmmmmmmmmmmmmmmmmh'                                \n` +
+// `          :'-mmmddmmmmmmmmmmmmmmmmmmmmmmmmmmmmm-                                \n` +
+// `          . :mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmh+'                                \n` +
+// `            '+dmmmmmmmmmmmmmmmmmmmmmmmmmmdddm/   `);
 
 	console.log("Starting Up...");
 
