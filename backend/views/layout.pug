@@ -18,6 +18,16 @@ html
       link(type="text/css" rel="stylesheet" href="/stylesheets/css/style.css" media="screen,projection")
 
   body
+    ul#dropdown1.dropdown-content
+      li
+        a(href='/auto') Data Collection
+      li
+        a(href='/check') Manual Checking
+    ul#dropdown2.dropdown-content
+      li
+        a(href='/auto') Data Collection
+      li
+        a(href='/check') Manual Checking
     nav.grey.darken-4(role="navigation")
       .nav-wrapper.container
         a#logo-container.brand-logo(href="/") VisCrime
@@ -33,9 +43,10 @@ html
               i.fas.fa-search.viscrime-navicon
               span Lookup  
           li
-            a.valign-wrapper(href="/auto")
+            a.dropdown-trigger-nav.valign-wrapper(href='#' data-target='dropdown1')
               i.fas.fa-cog.viscrime-navicon
-              span Config 
+              span Config
+              i.material-icons arrow_drop_down
     ul#mobile-menu.sidenav
       li
         a.valign-wrapper(href="/deckmap")
@@ -46,9 +57,10 @@ html
           i.fas.fa-search.viscrime-navicon
           span Lookup  
       li
-        a.valign-wrapper(href="/auto")
+        a.dropdown-trigger-sidenav.valign-wrapper(href='#' data-target='dropdown2')
           i.fas.fa-cog.viscrime-navicon
-          span Config 
+          span Config
+          i.material-icons.right arrow_drop_down
     //- header
     //-   nav.navbar.navbar-expand-lg.navbar-dark.elegant-color
     //-     a.navbar-brand(href='/') VisCrime
