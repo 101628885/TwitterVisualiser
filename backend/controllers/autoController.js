@@ -9,6 +9,7 @@ var querySelect = 0;
 var geo = "melbourne";
 
 //Checks for preferences file and then updates whether the autocollector should be running
+//Try loading the preferences file from disk
 if (fs.existsSync(process.cwd() + "/preferences")) {
     
     if (fs.existsSync(process.cwd() + "/preferences/auto.json")) //Check if resume file exists
@@ -22,10 +23,10 @@ if (fs.existsSync(process.cwd() + "/preferences")) {
 }
 
 //Sets a collection interval for Twitter data to run every 12 seconds.
+//If file loaded or collector started from web interface start firing on a 12 second timer
 setInterval(function(){
     if (shouldRun)
     {
-        //console.log("Checking word: ", query[querySelect], " in location ", geo);
         collect(query[querySelect], geo);
 
         if (querySelect < query.length - 1)
@@ -53,7 +54,7 @@ setInterval(function(){
 //Sets a collection interval for Chicago data to run every 2 hours.
 setInterval(function(){
 	chicagoAuto.saveCrimeData().catch((err) => console.log(err));
-}, 7200000); //call once every 2 hours
+}, 7200000);
 
 //Changes state of whether we should be collecting.
 exports.updateState = function(autoCollect)
@@ -62,6 +63,7 @@ exports.updateState = function(autoCollect)
 };
 
 //Collects data from Twitter API.
+//Do a POST on the lookup page with shouldStoreTweets set to true to store the data in a DB
 function collect(query, geo)
 {
     if (!query)
@@ -81,6 +83,7 @@ function collect(query, geo)
 }
 
 //Changes state of web page based on whether we are collecting data or not.
+//Handles drawing the auto page
 exports.autoGet = function(req, res)
 {
     if (autoCollect)
@@ -102,7 +105,8 @@ exports.autoGet = function(req, res)
     }
 };
 
-//Sets keywords to be used for Twitter API.
+//Sets keywords to be used for Twitter API calling.
+//Handle receiving auto form query and writing pref file to disk if needed
 exports.autoPost = function(req, res)
 {
 	//hold value in between POSTs
@@ -133,6 +137,7 @@ exports.autoPost = function(req, res)
         query.push(req.body.word5);
     }
 
+    //Use default set of words if form is empty
     if (query.length === 0)
     {
         //default search term if no entry is specified

@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 //All labels with associated types.
 
 var tweetSchema = mongoose.Schema({
-
     created_at: {type: Date},
     id: {type: String},
     full_text: {type: String},

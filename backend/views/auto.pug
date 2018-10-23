@@ -2,34 +2,40 @@ extends layout
 
 append head
 	title VisCrime - Config
-	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
-	link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
-	script(type='text/javascript' src="/stylesheets/js/popper.min.js")
-	script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
-	script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
 
 block content
-	.container-fluid
-		.row
-			.col-md-12.p-5
-				form(method='POST', action='/auto')
-					p.h4.mb-4 Data Collection
-					p.h6.my-4 Status: #{status}
-					p(hidden = isHidden) Enter a set of keyword(s) for the app to query the public Twitter API.
-					label #{monitoredWord}
-					p
-						br
-						label(hidden = !isHidden) #{shouldResume}
-					//-Form for auto controller word inputs
-					.row
-						.col-md-4
-							input.form-control.mb-2(name='word1', type='text', hidden = isHidden)
-							input.form-control.mb-2(name='word2', type='text', hidden = isHidden)
-							input.form-control.mb-2(name='word3', type='text', hidden = isHidden)
-							input.form-control.mb-2(name='word4', type='text', hidden = isHidden)
-							input.form-control.mb-2(name='word5', type='text', hidden = isHidden)
-					.custom-control.custom-checkbox.my-4
-						input#resume.custom-control-input(name='resume', type='checkbox', hidden = isHidden)
-						label.custom-control-label(for='resume', hidden = isHidden) Automatically resume collection if the app restarts
-					button.btn.btn-primary(type='submit') #{toggle}
+	.container
+		.section
+			.row
+				.col.s12.m6.l6
+					form(method='POST', action='/auto')
+						h4 Data Collection
+						h6 Status: #{status}
+						p(hidden = isHidden) Enter a set of keyword(s) for the app to query the public Twitter API.
+						label #{monitoredWord}
+						p
+							br
+							label(hidden = !isHidden) #{shouldResume}
+						.row
+							input-field.col.s12
+									input#word1(type="text", name="word1", placeholder="e.g. crime", hidden=isHidden)
+						.row
+							input-field.col.s12
+									input#word2(type="text", name="word2", placeholder="e.g. assault", hidden=isHidden)
+						.row
+							input-field.col.s12
+									input#word3(type="text", name="word3", placeholder="e.g. theft", hidden=isHidden)
+						.row
+							input-field.col.s12
+									input#word4(type="text", name="word4", placeholder="e.g. murder", hidden=isHidden)
+						.row
+							input-field.col.s12
+									input#word5(type="text", name="word5", placeholder="e.g. robbery", hidden=isHidden)
+						.row
+							input-field.col.s12
+									p
+										label
+											input#resume(type="checkbox", hidden = isHidden)
+											span Automatically resume collection if the app restarts
+						button.btn.waves-effect.waves-light(type="submit") #{toggle}
 					

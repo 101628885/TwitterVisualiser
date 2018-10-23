@@ -264,4 +264,4 @@ describe('getStoredTweets()', function(){
 		expect(resultChicago2.length).to.be.equal(count);
 		expect(resultChicago3.length).to.be.equal(count);
 	})
-});
+})

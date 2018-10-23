@@ -19,27 +19,26 @@ function init()
 	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
 	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
 
-	module.exports.tweetMelb = tweetMelb;
-	module.exports.tweetChicago = tweetChicago;
-	module.exports.chicagoCrime = chicagoCrime;
-	module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
+    module.exports.tweetMelb = tweetMelb;
+    module.exports.tweetChicago = tweetChicago;
+    module.exports.chicagoCrime = chicagoCrime;
+    module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
 }
 
-//Creates a connection to the database based on a URL and some extra parameters.
-function createDBConnectionObject(database)
-{
-	let conn = mongoose.createConnection(database.url, {connectTimeoutMS: connectionTimeout, useNewUrlParser: true});
+//Returns DB connection object and model
+function createDBConnectionObject(database) {
+    let conn = mongoose.createConnection(database.url, { connectTimeoutMS: connectionTimeout, useNewUrlParser: true });
 
-	conn.on('error', ()=>{
-		console.log("\nFailed to connect to the", database.type, database.location, "DB at", databaseMelb.url);
-		connectFailure();
-	});
+    conn.on('error', () => {
+        console.log("\nFailed to connect to the", database.type, database.location, "DB at", databaseMelb.url);
+        connectFailure();
+    });
 
-	conn.on('open', ()=>{
-		console.log("Connected to the", database.type, database.location,"DB at", databaseMelb.url)
-	});
+    conn.on('open', () => {
+        console.log("Connected to the", database.type, database.location, "DB at", databaseMelb.url)
+    });
 
-	return conn;
+    return conn;
 }
 
 //Pulls all tweets based on the parameters given to it.
@@ -58,7 +57,10 @@ exports.getStoredTweets = async (location, query, count, skip) =>
 	return result;	
 }
 
-//Checks if in developer mode and then stores tweets.
+//Pretty large function, handles storing tweets
+//Creates a new thread, checks the the tweet array we're about to store to see if there are any duplicate entries in the array itself.
+//Then checks the DB to see if any of the tweets that are about to be stored already exist
+//Finally it creates the new document and saves in in the DB then terminates the thread.
 exports.storeTweets = function(tweetsToStore, geo)
 {
 	if (process.env.DISABLE_DEVELOPER_MODE)
@@ -164,4 +166,44 @@ exports.storeTweets = function(tweetsToStore, geo)
 	{
 		console.log("Preventing database updates: developer mode enabled")
 	}
+};
+
+//Receive all the NLP data from the Python script, sort it into seperate arrays depending on which DB the entry is form, then
+//update the entries in the DB.
+exports.insertNLPData = async (data) => {
+    let countMelb = 0;
+    let countChicago = 0;
+
+    let melbNLPTweets = [];
+    let chicagoNLPTweets = [];
+
+    nlpResponse = JSON.parse(data)
+
+    for (let nlpItem of nlpResponse.predData) {
+        await this.tweetMelb.find({ full_text: nlpItem.Tweet }).lean().exec().then((res_melb) => {
+            if (!res_melb.length)
+            {
+                chicagoNLPTweets.push(nlpItem);
+                countChicago++;
+            } else {
+                melbNLPTweets.push(nlpItem);
+                countMelb++
+            }
+        })
+    }
+
+    for (let nlpItem of melbNLPTweets) {
+        this.tweetMelb.update({ full_text: nlpItem.Tweet }, { $set: { nlp_checked: true, pred_crime: nlpItem.Predicted, pred_crime_type: nlpItem.KeywordPred, pred_crime_location: nlpItem.LocationPred.Location } }, function(err, doc) {
+            if (err) {console.log(err)}
+        })
+    }
+
+    for (let nlpItem of chicagoNLPTweets) {
+        this.tweetChicago.update({ full_text: nlpItem.Tweet }, { $set: { nlp_checked: true, pred_crime: nlpItem.Predicted, pred_crime_type: nlpItem.KeywordPred, pred_crime_location: nlpItem.LocationPred.Location } }, function(err, doc) {
+            if (err) {console.log(err)}
+        })
+    }
+
+    console.log("NLP has updated", countChicago, "tweets from Chicago.")
+    console.log("NLP has updated", countMelb, "tweets from Melbourne.")
 };

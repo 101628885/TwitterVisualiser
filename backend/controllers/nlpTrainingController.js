@@ -65,11 +65,16 @@ exports.runNLP = async (req, res) => {
 
     pyProcess.on("data", (data) => {
         dataToSend += data;
-        console.log(data);
     });
 
     pyProcess.on("exit", (exitCode) => {
         console.log("TwitterNLP.py exiting with code " + exitCode);
-        res.send(dataToSend);
+
+        try {
+            res.send(dataToSend);
+        } catch(e) {
+            console.log("Res failed, this function was called internally. Calling DB update");
+            db.insertNLPData(dataToSend);
+        }
     });
 }
