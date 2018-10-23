@@ -3,65 +3,70 @@
 extends layout
 
 append head
-	title VisCrime - Verify
-	link(rel='stylesheet' href='/stylesheets/css/bootstrap.min.css')
-	link(rel='stylesheet' href='/stylesheets/css/mdb.min.css')
-	script(type='text/javascript' src="/stylesheets/js/popper.min.js")
-	script(type='text/javascript' src="/stylesheets/js/bootstrap.min.js")
-	script(type='text/javascript' src="/stylesheets/js/mdb.min.js")
+	title VisCrime - Config
 
 block content
-	.container-fluid
-		.row.mx-5
-			.col-md-12.mt-5
-				p.h4.mb-4 Manual Checking
-				p Your input will aid the NLP model in learning how to recognise tweets.
-				p 
-					| You have checked a total of 
-					span#counter 0
-					|  tweet(s) so far.
-				label(for="location") Select Database
+	.container
+		.section
+			.row
+				.col.s12
+					h4 Manual Checking
+					p Your input will aid the NLP model in learning how to recognise tweets.
+					p
+						| You have checked a total of 
+						span#counter 0
+						|  tweet(s) so far.
+			.row
+				input-field.col.s6
+					label(for="location") Select Database
+					select#location(name="location", onchange="skip()")
+						option(value="melbourne") Melbourne
+						option(value="chicago") Chicago
+			each tweet, index in data
 				.row
-					.col-md-4
-						select#location.custom-select.mb-4(name="location", onchange=`skip()`)
-							option(value="melbourne") Melbourne
-							option(value="chicago") Chicago
-		//-Displays tweet information.
-		//-Gives users form to submit with information on the tweet.
-		.row.mx-5
-			.col-md-12
-				each tweet, index in data
-					.card.mb-3
-						.card-body
-							.grid-container
-								img#tweetdp.mx-2(src=`${tweet.user_profile_image_url}`)
-								p#tweetheader(class="card-title")
-									span
-										strong#tweetusername #{tweet.user_name} 
-									span#tweetmetadata #{tweet.created_at} - #{tweet.geo}
-								p#tweetbody #{tweet.full_text}
-							.row
-								.col-md-4.mx-auto
-									label(for="crime-type") Select Category
-									select#crime-type.custom-select.mb-4(name="crime-type")
-										option(value="ASSAULT") Assault
-										option(value="THEFT") Theft
-										option(value="SEX OFFENSE") Sex Offense
-										option(value="DOMESTIC VIOLENCE") Domestic Violence
-										option(value="NARCOTICS") Narcotics
-										option(value="CRIMINAL DAMAGE") Criminal Damage
-										option(value="HOMICIDE") Homicide
-										option(value="GAMBLING") Gambling
-										option(value="KIDNAPPING") Kidnapping
-										option(value="NON-CRIMINAL") Non Criminal
-										option(value="OTHER OFFENSE") Other Offense
-							.row
-								.col-md-4.mx-auto
-									label(for="pac-input") Location (approximate)
-									input.form-control.mb-4(id="pac-input" name="pac-input", type="text", placeholder="Enter a location")
-							.row
-								.col-md-4.mx-auto.text-center
-									button.btn.btn-success#tweetTrue(onclick=`sendData('true',${tweet.id})`) True
-									button.btn.btn-danger#tweetFalse(onclick=`sendData('false',${tweet.id})`) False
-	script(src="./scripts/checkScript.js")
+					//-Displays tweet information.
+					//-Gives users form to submit with information on the tweet.
+					.col.s12
+							.card
+								.card-content(style="padding: 3em 3em 0 3em;")
+									.row.valign-wrapper
+										.col.s7
+											.row
+												.col.s1
+													img#tweetdp.circle(src=`${tweet.user_profile_image_url}` width="48" height="48")
+												.col.s11(style="padding-left: 20px;")
+													p 
+														span#tweetusername.thicc #{tweet.user_name + ` `}
+														span#tweetmetadata #{tweet.created_at} - #{tweet.geo}
+													p#tweetbody #{tweet.full_text}
+										.col.s5
+											.row
+												input-field.col.s12
+													label(for="crime-type") Select Category
+													select#crime-type(name="crime-type")
+														option(value="ASSAULT") Assault
+														option(value="THEFT") Theft
+														option(value="SEX OFFENSE") Sex Offense
+														option(value="DOMESTIC VIOLENCE") Domestic Violence
+														option(value="NARCOTICS") Narcotics
+														option(value="CRIMINAL DAMAGE") Criminal Damage
+														option(value="HOMICIDE") Homicide
+														option(value="GAMBLING") Gambling
+														option(value="KIDNAPPING") Kidnapping
+														option(value="NON-CRIMINAL") Non Criminal
+														option(value="OTHER OFFENSE") Other Offense
+											.row
+												input-field.col.s12
+													label(for="pac-input") Location (approximate)
+													input#pac-input(type="text", name="pac-input", placeholder="Enter a location")
+											.row
+												.col.s3
+												.col.s3
+													button#tweetTrue.btn.waves-effect.waves-light.green(onclick=`sendData('true',${tweet.id})`) True
+												.col.s3
+													button#tweetFalse.btn.waves-effect.waves-light.red(onclick=`sendData('false',${tweet.id})`) False
+												.col.s3
+
+	script(type="text/javascript" src="/scripts/checkScript.js")
+	script(type="text/javascript" src="/scripts/setupVerify.js")
 	script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-PIPhjfg5Cm1f8eTaJ9jPsACSuZ7gViU&libraries=places&callback=initAutocomplete" async defer)
