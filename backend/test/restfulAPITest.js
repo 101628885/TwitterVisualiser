@@ -42,19 +42,6 @@ describe('Test /tweetMap route', function() {
     });
 });
 
-describe('Test /about route', function() {
-    it("Should return 200", function(done) {
-        request(app).get('/about')
-            .end(function(err, res) {
-                expect(err).to.be.null;
-                expect(res.statusCode).to.equal(200);
-                done();
-            });
-    });
-});
-
-
-
 describe('Test /deckmap route', function() {
     it("Should return 200", function(done) {
         request(app).get('/deckmap')
@@ -113,40 +100,6 @@ describe('Test /auto route', function() {
 describe('Test /check route', function() {
     it("Should return 200", function(done) {
         request(app).get('/check')
-            .end(function(err, res) {
-                expect(err).to.be.null;
-                expect(res.statusCode).to.equal(200);
-                done();
-            });
-    });
-});
-
-
-describe('Test /getCrimeWordCount route', function() {
-    it("Should return 200", function(done) {
-        request(app).get('/getCrimeWordCount')
-            .end(function(err, res) {
-                expect(err).to.be.null;
-                expect(res.statusCode).to.equal(200);
-                done();
-            });
-    });
-});
-
-describe('Test /list route', function() {
-    it("Should return 200", function(done) {
-        request(app).get('/list')
-            .end(function(err, res) {
-                expect(err).to.be.null;
-                expect(res.statusCode).to.equal(200);
-                done();
-            });
-    });
-});
-
-describe('Test /checkData route', function() {
-    it("Should return 200", function(done) {
-        request(app).get('/checkData')
             .end(function(err, res) {
                 expect(err).to.be.null;
                 expect(res.statusCode).to.equal(200);
