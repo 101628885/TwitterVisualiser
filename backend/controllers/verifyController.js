@@ -12,7 +12,7 @@ var geocoder = NodeGeocoder(options);
 
 // Using callback
 
-
+//Gets a random tweet from the database and sends it to the webpage.
 function sendNextTweet(req, res)
 {
 	if (req.params.geo === "chicago")
@@ -37,6 +37,8 @@ function sendNextTweet(req, res)
 	}
 }
 
+//Gets one random tweet from the database that hasn't been checked.
+//It then renders the webpage using this tweet.
 exports.getUncheckedTweets = async (req,res, next) =>
 {
 	tweetMelb.find({checked: false}).sort({'date': -1}).limit(1).skip(Math.floor((Math.random() * 50) + 1)).exec(function(err, posts)
@@ -47,6 +49,9 @@ exports.getUncheckedTweets = async (req,res, next) =>
 		}
 	});
 };
+
+//Uses the input data given by the user to update the database.
+//This makes the tweet crime or not crime.
 exports.checkTweets = async (req,res, next) =>
 {
 	let tweetid= req.params.id;
@@ -74,11 +79,13 @@ exports.checkTweets = async (req,res, next) =>
 
 					if (req.params.geo === "chicago")
 					{
+						//Updates the tweet.
 						tweetChicago.update(query, {checked: true, crime: value, type_of_crime: type, location: place}, function(err, doc)
 						{
 							if(!err)
 							{
 								console.log("Successfully updated: Chicago");
+								//Sends next tweet to be updated.
 								sendNextTweet(req, res);
 							}
 						});
