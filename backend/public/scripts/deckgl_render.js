@@ -129,7 +129,7 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 };
 
 //Updates tooltip for centroids when hovered over by user.
-const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
+const updateCentroidSameTypeLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.querySelector("#tooltip");
 		if (object) {
