@@ -52,7 +52,6 @@ function initAutocomplete() {
     // Create the autocomplete object, restricting the search to geographical
     // location types.
     var input = document.getElementById('pac-input');
-    console.log("hello")
     autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', fillInAddress);
 }

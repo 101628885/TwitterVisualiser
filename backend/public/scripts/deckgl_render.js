@@ -25,13 +25,6 @@ const INITIAL_VIEW_STATE = {
 	bearing: 0,
 };
 
-// options available to the user
-const OPTIONS = {
-	TWEET: ["radius", "visible", "extruded"],
-	TRAJECTORY: ["visible"],
-	CENTROID: ["visible"],
-};
-
 // hard-coded crime types
 const CRIME_TYPES = ["ASSAULT", "THEFT", "BURGLARY", "SEX OFFENSE", "OTHER OFFENSE", "DOMESTIC VIOLENCE", "NARCOTICS", "CRIMINAL DAMAGE", "HOMICIDE", "GAMBLING", "KIDNAPPING", "NON-CRIMINAL"];
 
@@ -117,18 +110,23 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 				<div>Date: ${object.properties.date_text}</div>
 				<div>Latitude: ${object.geometry.coordinates[1]}</div>
 				<div>Longitude: ${object.geometry.coordinates[0]}</div>
-				<div>Crime Type: ${object.properties.primary_type}</div>
+				<div>Type: ${object.properties.primary_type}</div>
 				<div>Description: ${object.properties.description}</div>
 				<div>Location: ${object.properties.location_description}</div>`
 			} else {
-				// tooltip.innerHTML = "<div>Trajectory Points -></div>";
-				// object.geometry.coordinates[0].forEach(item => {
-				// tooltip.innerHTML += `
-				// 	<div>Point ${object.geometry.coordinates[0].indexOf(item) + 1}: ${item}</div>
-				// `;
-				tooltip.innerHTML = `<div>${object.properties.trajectory_description.length} Crimes in Trajectory:</div>`;
+				tooltip.innerHTML = `<div>Trajectory Path:</div>`;
 				object.properties.trajectory_description.forEach((item, i, array) => {
-					tooltip.innerHTML += `<div> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
+					trajectoryPointType = item.split(" on ")[0];
+					colourArray = getCrimeTypeColor(trajectoryPointType);
+					colourString = `${colourArray[0]}, ${colourArray[1]}, ${colourArray[2]}`;
+					return tooltip.innerHTML += `<div><span>
+						<div 
+							class="tooltip-legend" 
+							style="
+								background: rgb(${colourString}) none repeat scroll 0% 0%;
+							"
+						></div>
+					</span> ${item} ${i + 1 < array.length ? "then" : ""}</div>`;
 				});
 			}
 		} else {
@@ -140,9 +138,9 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 	}
 };
 
-const updatecentroidSameTypeLayerTooltip = ({x, y, object}) => {
+const updateCentroidSameTypeLayerTooltip = ({x, y, object}) => {
 	try {
-		const tooltip = document.getElementById("tooltip");
+		const tooltip = document.querySelector("#tooltip");
 		if (object) {
 			tooltip.style.visibility = "visible";
 			tooltip.style.top = `${y}px`;
@@ -165,8 +163,8 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
 			tooltip.innerHTML = `
-				<div>latitude: ${object.centroid[0]}</div>
-				<div>longitude: ${object.centroid[0]}</div>
+				<div>Latitude: ${object.centroid[0]}</div>
+				<div>Longitude: ${object.centroid[0]}</div>
 				<div>${object.points.length} tweet${(object.points.length === 1) ? "" : "s"}</div>`;
 		} else {
 			tooltip.innerHTML = "";
@@ -177,19 +175,32 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 	}
 };
 
-const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
+const updateHistoricCrimeLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.querySelector("#tooltip");
 		if (object) {
+			colourArray = getCrimeTypeColor(object.properties.primary_type);
+			colourString = `${colourArray[0]}, ${colourArray[1]}, ${colourArray[2]}`;
 			tooltip.style.visibility = "visible";
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
 			tooltip.innerHTML = `
-				<div>latitude: ${object.coordinates[0]}</div>
-				<div>longitude: ${object.coordinates[1]}</div>
-				<div>date: ${object.properties.date_text}</div>
-				<div>description: ${object.properties.description}</div>
-				<div>type: ${object.properties.primary_type}</div>`;
+				<div>
+					<span>
+						<div 
+							class="tooltip-legend" 
+							style="
+								background: rgb(${colourString}) none repeat scroll 0% 0%;
+							"
+						></div>
+					</span>
+					${object.properties.primary_type}
+				</div>
+				<div>Latitude: ${object.coordinates[0]}</div>
+				<div>Longitude: ${object.coordinates[1]}</div>
+				<div>Date: ${object.properties.date_text}</div>
+				<div>Description: ${object.properties.description}</div>
+			`;
 		} else {
 			tooltip.innerHTML = "";
 			tooltip.style.visibility = "hidden";
@@ -612,7 +623,7 @@ renderLayers = (currentDate) => {
 		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => [255, 255, 0],
-		onHover: updatecentroidSameTypeLayerTooltip,
+		onHover: updateCentroidSameTypeLayerTooltip,
 		updateTriggers: {
 			getColor: currentDate
 		},
@@ -639,6 +650,7 @@ renderLayers = (currentDate) => {
 		getIcon: d => "marker",
 		getSize: d => 4,
 		getColor: d => [255, 255, 0],
+		onHover: updateCentroidSameTypeLayerTooltip,
 		updateTriggers: {
 			getColor: currentDate
 		},
@@ -709,15 +721,6 @@ const initialiseData = async() => {
 };
 
 /**
- * Assign the renderLayers() function as an event handler to each input control
- */
-const registerEventHandlers = (options) => {
-	options.forEach(key => {
-		// ...
-	});
-};
-
-/**
  * Initialise the interactive JS components
  */
 const setupInterface = () => {
@@ -770,9 +773,6 @@ const setupInterface = () => {
 const runScript = () => {
 	setupInterface();
 	initialiseData();
-	for (var key in OPTIONS) {
-		registerEventHandlers(OPTIONS[key]);
-	}	
 }
 
 runScript();
