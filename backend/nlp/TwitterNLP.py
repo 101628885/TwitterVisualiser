@@ -121,6 +121,13 @@ def printOutput(arg):
             })
         else:
             cFalse += 1
+            JSONres['predData'].append({
+                "Tweet" : "{0}".format(td[0]),
+                "Expected" : "{0}".format(td[1]),
+                "Predicted" : "{0}".format(pred),
+                "KeywordPred" : "{0}".format(keyPred),
+                "LocationPred" : ""
+            })
     JSONres['stats'] = [{'False' : cFalse, 'True' : cTrue, 'Total' : cFalse + cTrue}]
     print(json.dumps(JSONres))
     # print("===========================")
