@@ -4,7 +4,6 @@ node_js:
 cache: yarn
 os: osx
 script:
-  - 'cd $TRAVIS_BUILD_DIR/frontend && yarn -appr'
   - 'cd $TRAVIS_BUILD_DIR/backend && chmod +x test.sh && ./test.sh'
   - 'cd $TRAVIS_BUILD_DIR/backend && npm install && npm install mocha -g && npm run test'
 after_success:

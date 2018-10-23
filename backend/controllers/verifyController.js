@@ -13,9 +13,6 @@ var options = {
 
 var geocoder = NodeGeocoder(options);
 
-// Using callback
-
-
 function sendNextTweet(req, res)
 {
 	if (req.params.geo === "chicago")

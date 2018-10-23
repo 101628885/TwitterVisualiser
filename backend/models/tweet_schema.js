@@ -45,7 +45,20 @@ var tweetSchema = mongoose.Schema({
     },
     location: {
         type: Object
+    },
+    nlp_checked: {
+        type: Boolean
+    },
+    pred_crime: {
+        type: String
+    },
+    pred_crime_type: {
+        type: String
+    },
+    pred_crime_location: {
+        type: String
     }
+
 });
 
 var tweet = module.exports = mongoose.model('tweets',tweetSchema);
