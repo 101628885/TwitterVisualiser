@@ -65,7 +65,7 @@ exports.test = async(req, res) =>
 
 //Runs the NLP using python process.
 exports.runNLP = async (req, res) => {
-    const pyProcess = pty.spawn("/usr/local/bin/python3", [process.cwd() + '/nlp/TwitterNLP.py']);
+    const pyProcess = pty.spawn("/usr/bin/python3", [process.cwd() + '/nlp/TwitterNLP.py']);
     var dataToSend = "";
 
     pyProcess.on("data", (data) => {
