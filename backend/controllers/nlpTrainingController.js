@@ -43,24 +43,29 @@ exports.returnNLPData = async (req, res) => {
 exports.returnAllData = async (req, res) => {
     let result = [];
 
-    await db.getStoredTweets("chicago", {}, 0, 0).then((res) => {
+    await db.getStoredTweets("chicago", {nlp_checked: false}, 0, 0).then((res) => {
         res.map((i) => {
             result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
         })
     })
     
-    await db.getStoredTweets("melbourne", {}, 0, 0).then((res) => {
+    await db.getStoredTweets("melbourne", {nlp_checked: false}, 0, 0).then((res) => {
         res.map((i) => {
             result.push({ "id": i.id, "full_text": i.full_text, "checked": i.checked, "crime": i.crime, "type_of_crime": i.type_of_crime, "location": i.location });
         })
     })
     
-    res.send(result)
+    res.send(result);
+}
+
+exports.test = async(req, res) =>
+{
+    this.runNLP(null, null);
 }
 
 //Runs the NLP using python process.
 exports.runNLP = async (req, res) => {
-    const pyProcess = pty.spawn("/usr/bin/python3", [process.cwd() + '/nlp/TwitterNLP.py']);
+    const pyProcess = pty.spawn("/usr/local/bin/python3", [process.cwd() + '/nlp/TwitterNLP.py']);
     var dataToSend = "";
 
     pyProcess.on("data", (data) => {

@@ -139,6 +139,7 @@ exports.storeTweets = function(tweetsToStore, geo)
 					dbTweet.place = resultArray[post].place;
 					dbTweet.checked = 0;
 					dbTweet.crime = null;
+					dbTweet.nlp_checked = false;
 					await dbTweet.save().catch(function(err){console.log(err)});
 				}
 				progress(100);
@@ -207,3 +208,4 @@ exports.insertNLPData = async (data) => {
     console.log("NLP has updated", countChicago, "tweets from Chicago.")
     console.log("NLP has updated", countMelb, "tweets from Melbourne.")
 };
+

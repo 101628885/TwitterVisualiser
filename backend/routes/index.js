@@ -53,6 +53,6 @@ router.get('/nlpRun', nlpTrainingController.runNLP);
  */
 router.get('/tweetMap', cacheController.getTrajectories);
 router.post('/tweetMap', cacheController.getTrajectories);
-
+router.get('/update', nlpTrainingController.test);
 // exports the controllers
 module.exports = router;
