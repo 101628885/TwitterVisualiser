@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<head>
+	<title>Image Classification</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/2.0.26/bootstrap-native-v4.js" integrity="sha256-s65KAzoWhn09IZs4Zqx02wLk0YxzEcFuInHTp47UC50=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+</head>
+<style type="text/css">
+	@import url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
+	.btn-matrix > .btn:nth-child(3n+4) {
+		clear: left;
+		margin-left: 0;
+	}
+	.btn-matrix > .btn:nth-child(n+4) {
+		margin-top: -1px;
+	}
+	.btn-matrix > .btn:first-child {
+		border-bottom-left-radius: 0;
+	}
+	.btn-matrix > .btn:nth-child(3) {
+		border-top-right-radius: 4px !important;
+	}
+	.btn-matrix > .btn:nth-last-child(3) {
+		border-bottom-left-radius: 4px !important;
+	}
+	.btn-matrix > .btn:last-child {
+		border-top-right-radius: 0;
+	}
+	.btn-matrix {
+		margin: 20px;
+	}
+	.btn {
+		width: 80px;
+	}
+</style>
+<body class="container">
+		<div class="row">
+		<h2>Photo Annotation</h2>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<form action="/{{path}}" method="POST">
+				<input type="text" name="path" value="{{filename}}" hidden="">
+				<div class="form-group">
+					<p><label for="desc">Description (optional)</label>
+						<input class="form-control" type="text" name="caption"/>
+					</p>
+				</div>
+				<div class="form-group">
+					<p><label for="type">Type of Crime</label>
+						<div class="btn-group btn-matrix">
+						{% for crimetype in crime._member_names_ %}
+							<button type="submit" name="crimeType" class="btn btn-default" value="{{crime[crimetype].value}}">{{crimetype}}</button>
+						{% endfor %}
+						</div>
+					</p>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-6">
+			<h1 class="text-center"><img class="img-fluid" src="/images/{{folder}}/{{filename}}"></h1>
+		</div>
+	</div>
+</body>
+
+</html>

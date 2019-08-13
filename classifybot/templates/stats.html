@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<head>
+	<title>Image Classification</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/2.0.26/bootstrap-native-v4.js" integrity="sha256-s65KAzoWhn09IZs4Zqx02wLk0YxzEcFuInHTp47UC50=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+</head>
+<style type="text/css">
+	@media (min-width: 768px) and (max-width: 991.98px) {
+		#images .col{
+			flex: 30%;
+		}
+		#images img {
+			width: auto;
+		}
+	}
+	.cd {
+		opacity: 0.3;
+	}
+	.cd:hover {
+		opacity: 1;
+	}
+</style>
+<body class="container">
+	<div>
+		<h1>Images</h1>
+		<div class="row">
+			{% for row in stats %}
+			<div class="col">{{crime._value2member_map_[row[0]].name}}: {{row[1]}}</div>
+			{% endfor %}
+		</div>
+		<div id="images" class="row">
+			<div class="col">
+				{% for i in range(0, (images | length), 5) %}
+				<div class="row">
+					{% for image in images[i:i + 5] %}
+					<div class="col img-box text-center {{'cd' if image[1] == 0}}"><a href="/edit/{{image[0]}}"><img src="/images/classifyBot/{{image[0]}}" class="img-thumbnail" title="{{image[2]}}"></a><b>{{crime._value2member_map_[image[1]].name}}</b></div>
+					{% endfor %}
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
