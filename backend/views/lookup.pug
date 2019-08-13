@@ -13,7 +13,7 @@ block content
 					form#selectsourceform
 						.row
 							input-field.col.s12
-								label Tweet Source
+								label Source
 								p
 									label 
 										input(type="radio" name="datasource" value="twitterapi" onchange="toggleForm(this)" checked)
@@ -21,7 +21,11 @@ block content
 								p
 									label
 										input(type="radio" name="datasource" value="database" onchange="toggleForm(this)")
-										span Local Database
+										span Local Twitter Database
+								p
+									label
+										input(type="radio" name="datasource" value="databaseimages" onchange="toggleForm(this)")
+										span Local Image Database
 					//- form for querying the twitter api
 					form#apiform(action="/lookup/api", method="POST")
 						.row
@@ -68,6 +72,23 @@ block content
 									label
 										input#db_crime(type="checkbox")
 										span Only get crime-related tweets
+								p
+									label
+										input#db_crime(type="checkbox")
+										span Get crime-related images
+						.row
+							input-field.col.s12
+								button.btn.waves-effect.waves-light(type="submit") Filter
+					//- form for querying the local database
+					form#dbimagesform(action="/lookup/db_images", method="POST")
+						.row
+							input-field.col.s12
+								label(for="db_count") Amount of Results
+								input#db_count(type="text", name="db_count", placeholder="Default: 20")
+						.row
+							input-field.col.s12
+								label(for="word") Enter Keyword (assualt/theft/murder/kidnap/scene/other)
+								input#word(type="text", name="word", placeholder="e.g. assualt")
 						.row
 							input-field.col.s12
 								button.btn.waves-effect.waves-light(type="submit") Filter
@@ -78,9 +99,9 @@ block content
 								.card
 									.card-content
 										.row(style="margin: 0;")
-											.col.s1
-												img.circle(src=`${tweet.user.profile_image_url}` width="48" height="48")
-											.col.s11(style="padding-left: 20px;")
+											.col.s4
+												img(src=`${tweet.user.profile_image_url}` width="100" height="100")
+											.col.s8
 												p #[strong #{tweet.user.name}] #{tweet.created_at} - #{tweet.geo}
 												p #{tweet.full_text}
 

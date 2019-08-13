@@ -4,6 +4,12 @@ const mongoController = require('./mongoController');
 var tweetMelb = mongoController.tweetMelb;
 var tweetChicago = mongoController.tweetChicago;
 
+const Promise = require('bluebird')
+const SqliteDAO = require('./sqliteController')
+const SqliteRepository = require('./sqliteRepo')
+
+
+
 //Creates a connection to the Twitter API
 var client = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -15,7 +21,9 @@ var client = new Twitter({
 //Renders the page
 exports.renderView = async (req, res) => {
     tweets = "";
-    res.render('lookup', { data: tweets });
+    res.render('lookup', {
+        data: tweets
+    });
 };
 
 //Pulls tweets from the public Twitter API.
@@ -66,7 +74,7 @@ exports.getAPITweetsView = async (req, res) => {
     };
 
     //Calls Twitter API
-    client.get('search/tweets', params, function(error, tweets, response) {
+    client.get('search/tweets', params, function (error, tweets, response) {
         if (!error) {
             if (!req.body.shouldStoreTweets) {
                 // dont format time if we're storing tweets in the DB
@@ -91,7 +99,11 @@ exports.getAPITweetsView = async (req, res) => {
             if (req.body.shouldStoreTweets) {
                 storeTweets(tweets, geo);
             }
-            res.render('lookup', { data: tweets.statuses, searchwords: req.body.dbResults, wordCount: wordCount });
+            res.render('lookup', {
+                data: tweets.statuses,
+                searchwords: req.body.dbResults,
+                wordCount: wordCount
+            });
         } else {
             res.send(error);
         }
@@ -135,5 +147,77 @@ exports.getDBTweetsView = async (req, res) => {
                 }))
             });
         })
-        .catch(function(err) { console.log(err) });
+        .catch(function (err) {
+            console.log(err)
+        });
+};
+
+
+//Gets images from the database with a given set of parameters.
+//If no parameters default values are set.
+exports.getDBImagesView = async (req, res) => {
+
+    const dao = new SqliteDAO('./../../../classifybot/imageClassified.db')
+    const SqliteRepo = new SqliteRepository(dao)
+
+        crimeNumTypesArr = {
+            '0': "No Crime",
+            '1': "Assault",
+            '2': "Murder",
+            '3': "Theft",
+            '4': "Kidnap",
+            '5': "Scene",
+            '99': "Other"
+        }
+
+    query = ""
+    query = `SELECT * FROM images`
+    switch (req.body.word) {
+        case 'assault':
+            query += " WHERE crimeType=1"
+            break;
+        case 'murder':
+            query += " WHERE crimeType=2"
+            break;
+        case 'theft':
+            query += " WHERE crimeType=3"
+            break;
+        case 'kidnap':
+            query += " WHERE crimeType=4"
+            break;
+        case 'scene':
+            query += " WHERE crimeType=5"
+            break;
+        case 'other':
+            query += " WHERE crimeType=99"
+            break;
+        default:
+            break;
+    }
+    if (typeof req.body.db_crime !== 'undefined'){
+        query += " LIMIT "+req.body.db_count
+    }else{
+        query += " LIMIT 30"
+    }
+
+    console.log(query)
+
+    dao.all(query)
+        .then(images => {
+            res.render('lookup', {
+                //first 30
+                data: images.map(image => ({
+                    geo: image.caption,
+                    full_text: (": " + image.caption),
+                    created_at: "",
+                    user: {
+                        name: (crimeNumTypesArr[image.crimeType]),
+                        profile_image_url: ("../" + image.filename)
+                    }
+                }))
+            });
+        })
+        .catch(function (err) {
+            console.log(err)
+        });
 };

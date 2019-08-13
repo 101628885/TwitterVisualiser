@@ -31,6 +31,8 @@ router.get('/lookup/api', lookupController.getAPITweetsView);
 router.post('/lookup/api', datamuseController.getCombination, lookupController.getAPITweetsView);
 router.get('/lookup/db', lookupController.getDBTweetsView);
 router.post('/lookup/db', datamuseController.getCombination, lookupController.getDBTweetsView);
+router.get('/lookup/db_images', lookupController.getDBImagesView);
+router.post('/lookup/db_images', lookupController.getDBImagesView);
 
 // auto controller
 router.get('/auto', autoController.autoGet);
