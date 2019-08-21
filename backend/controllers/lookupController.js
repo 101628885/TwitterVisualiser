@@ -156,8 +156,7 @@ exports.getDBTweetsView = async (req, res) => {
 //Gets images from the database with a given set of parameters.
 //If no parameters default values are set.
 exports.getDBImagesView = async (req, res) => {
-
-    const dao = new SqliteDAO('./../../../classifybot/imageClassified.db')
+    const dao = new SqliteDAO('./../../classifybot/imageClassified.db')
     const SqliteRepo = new SqliteRepository(dao)
 
         crimeNumTypesArr = {
