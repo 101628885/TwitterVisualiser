@@ -37,7 +37,6 @@ See https://pip.pypa.io/en/stable/installing/ for an installation guide.
 To install pipenv input the following command 
 ```
 pip install --user pipenv
-
 ```
 
 Or, If you have homebew or linuxbrew you can just use 
