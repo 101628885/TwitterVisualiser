@@ -1,7 +1,5 @@
 # VisCrime
 
-[![Build Status](https://travis-ci.org/101628885/TwitterVisualiser.svg?branch=dev)](https://travis-ci.org/101628885/TwitterVisualiser)
-
 > Modern cross-platform application with state of the art data visualisation
 
 ## What is VisCrime?
@@ -30,6 +28,36 @@ choco install nodejs -y
 # For OSX setup
 brew install node
 ```
+
+The system also uses `pip` and `pipenv` to manage python package packages
+
+If you installed python from python.org you should have pip by default if not
+See https://pip.pypa.io/en/stable/installing/ for an installation guide.
+
+To install pipenv input the following command 
+```
+pip install --user pipenv
+
+```
+
+Or, If you have homebew or linuxbrew you can just use 
+```
+brew install pipenv
+```
+
+Once you have both nodejs and pipenv, you can install the required packages for the project by doing the following:
+
+For node packages, run this in the directory with package.json: 
+```
+npm install 
+```
+
+For python packages, run this in the root directory of the project:
+```
+pipenv install
+```
+
+Using pipenv will require you to run the associated python scripts that contain libraries with `pipenv run`
 
 ## Opening (Backend)
 
