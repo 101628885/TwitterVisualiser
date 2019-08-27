@@ -1,0 +1,13 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+pytest = "==2.9.1"
+flask = "==1.1.1"
+
+[requires]
+python_version = "3.5"
