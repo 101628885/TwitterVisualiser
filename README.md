@@ -31,8 +31,8 @@ brew install node
 
 The system also uses `pip` and `pipenv` to manage python package packages
 
-If you installed python from python.org you should have pip by default if not
-See https://pip.pypa.io/en/stable/installing/ for an installation guide.
+If you installed python from python.org you should have pip by default if not,
+see https://pip.pypa.io/en/stable/installing/ for an installation guide.
 
 To install pipenv input the following command 
 ```
