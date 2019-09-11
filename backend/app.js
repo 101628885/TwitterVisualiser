@@ -4,14 +4,14 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const helmet = require('helmet')
+const helmet = require('helmet');
 const index = require('./routes/index');
-const cors = require('cors')
+const cors = require('cors');
 const fs = require('fs');
 
 var app = express();
-app.use(cors())
-app.use(helmet())
+app.use(cors());
+app.use(helmet());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
