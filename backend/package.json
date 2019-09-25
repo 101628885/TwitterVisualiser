@@ -40,6 +40,7 @@
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "cypress": "^3.4.1",
     "nodemon": "^1.19.2"
   }
 }
