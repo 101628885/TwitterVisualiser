@@ -69,3 +69,12 @@ The VisCrime backend forms the main part of VisCrime, which hosts the web app, D
 ## Running the application
 
 To now run the application we can simply do an `npm start` command in the backend folder and it will fire up locally on port `3000`.
+
+## Testing (Cypress)
+To run cypress, simply navigate to the `backend` directory and run: 
+`./start-cypress.sh`
+This script will open the cypress test window where you can choose what tests to run.
+
+### Creating Tests (Integration Tests)
+To create cypress tests navigate to `backend/cypress` directory and see all the examples in the `integration` folder.
+Here you can create integration tests that will be visible when you run the `./start-cypress.sh` script.
