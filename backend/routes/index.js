@@ -10,6 +10,7 @@ const nlpTrainingController   = require("../controllers/nlpTrainingController");
 const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
 const cacheController		  = require("../controllers/cacheController");
+const scanController		  = require("../controllers/scanController");
 
 // get homepage
 router.get('/', function(req, res) {
@@ -37,6 +38,9 @@ router.post('/lookup/db_images', lookupController.getDBImagesView);
 // auto controller
 router.get('/auto', autoController.autoGet);
 router.post('/auto', autoController.autoPost);
+
+router.get('/scan', scanController.scanGet);
+router.post('/scan', scanController.scanPost);
 
 // verify controller
 router.get('/check', verifyController.getUncheckedTweets);

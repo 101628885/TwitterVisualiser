@@ -1,0 +1,21 @@
+extends layout
+
+append head
+	title VisCrime - Scanner
+
+block content
+	.container
+		.section
+			.row
+				.col.s12.m6.l6
+					h4 Image Confidence Checking
+					p Send an image to check with our image processing system
+					
+					.row
+						input-field.col.s12
+							input(type="file", name="file")
+							button.btn.waves-effect.waves-light(onclick="scanImage()") Submit
+					.row
+						code
+							pre#result
+	script(type="text/javascript" src="./scripts/image_scanner.js")
