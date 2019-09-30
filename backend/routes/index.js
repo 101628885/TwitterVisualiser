@@ -9,7 +9,8 @@ const verifyController        = require("../controllers/verifyController");
 const nlpTrainingController   = require("../controllers/nlpTrainingController");
 const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
-const cacheController		  = require("../controllers/cacheController");
+const cacheController		      = require("../controllers/cacheController");
+const imageSearchController   = require("../controllers/imageSearchController");
 
 // get homepage
 router.get('/', function(req, res) {
@@ -31,8 +32,6 @@ router.get('/lookup/api', lookupController.getAPITweetsView);
 router.post('/lookup/api', datamuseController.getCombination, lookupController.getAPITweetsView);
 router.get('/lookup/db', lookupController.getDBTweetsView);
 router.post('/lookup/db', datamuseController.getCombination, lookupController.getDBTweetsView);
-router.get('/lookup/db_images', lookupController.getDBImagesView);
-router.post('/lookup/db_images', lookupController.getDBImagesView);
 
 // auto controller
 router.get('/auto', autoController.autoGet);
@@ -48,6 +47,10 @@ router.get('/nlpTraining/:count/checked/:checked', nlpTrainingController.returnN
 router.get('/nlpTraining/:count/crime/:crime', nlpTrainingController.returnNLPData);
 router.get('/nlpTraining', nlpTrainingController.returnAllData);
 router.get('/nlpRun', nlpTrainingController.runNLP);
+
+//searching image by tag
+router.get('/imagesearch', imageSearchController.showSearchForm);
+router.post('/imagesearch', imageSearchController.searchImages);
 
 /**
  * tweetmap controller routes

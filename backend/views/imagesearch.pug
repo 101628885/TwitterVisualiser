@@ -1,0 +1,26 @@
+//-Lookup page to view Tweets in the database and from the TwitterAPI
+extends layout
+
+append head
+	title VisCrime - Image Search
+
+block content
+	.container
+		.section
+			.row
+				.col.s12.m3
+					//- form for querying the local database
+					form#dbimagesform(action="/imagesearch", method="POST")
+						.row
+							input-field.col.s12
+								label(for="db_count") Amount of Results
+								input#db_count(type="text", name="db_count", placeholder="Default: 20")
+						.row
+							input-field.col.s12
+								label(for="word") Enter Keyword ('Assault', 'Drugs','Gun', 'Homicide', 'Hostage', 'PropertyDamage', 'SexOffence', 'Theft', 'Vehicular')
+								input#word(type="text", name="word", placeholder="e.g. assault")
+						.row
+							input-field.col.s12
+								button.btn.waves-effect.waves-light(type="submit") Filter
+				.col.s12.m9.l9
+					#{JSON.stringify(data)}

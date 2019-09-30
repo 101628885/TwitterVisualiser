@@ -22,10 +22,6 @@ block content
 									label
 										input(type="radio" name="datasource" value="database" onchange="toggleForm(this)")
 										span Local Twitter Database
-								p
-									label
-										input(type="radio" name="datasource" value="databaseimages" onchange="toggleForm(this)")
-										span Local Image Database
 					//- form for querying the twitter api
 					form#apiform(action="/lookup/api", method="POST")
 						.row
@@ -79,19 +75,6 @@ block content
 						.row
 							input-field.col.s12
 								button.btn.waves-effect.waves-light(type="submit") Filter
-					//- form for querying the local database
-					form#dbimagesform(action="/lookup/db_images", method="POST")
-						.row
-							input-field.col.s12
-								label(for="db_count") Amount of Results
-								input#db_count(type="text", name="db_count", placeholder="Default: 20")
-						.row
-							input-field.col.s12
-								label(for="word") Enter Keyword (assualt/theft/murder/kidnap/scene/other)
-								input#word(type="text", name="word", placeholder="e.g. assualt")
-						.row
-							input-field.col.s12
-								button.btn.waves-effect.waves-light(type="submit") Filter
 				.col.s12.m9.l9
 					each tweet, index in data
 						.row(style="margin: 0;")
@@ -100,7 +83,7 @@ block content
 									.card-content
 										.row(style="margin: 0;")
 											.col.s4
-												img(src=`${tweet.user.profile_image_url}` width="100" height="100")
+												img(src=`${tweet.user.profile_image_url_https.replace("normal", "400x400")}` width="100" height="100")
 											.col.s8
 												p #[strong #{tweet.user.name}] #{tweet.created_at} - #{tweet.geo}
 												p #{tweet.full_text}

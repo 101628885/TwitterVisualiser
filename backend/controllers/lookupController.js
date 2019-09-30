@@ -5,8 +5,6 @@ var tweetMelb = mongoController.tweetMelb;
 var tweetChicago = mongoController.tweetChicago;
 
 const Promise = require('bluebird')
-const SqliteDAO = require('./sqliteController')
-const SqliteRepository = require('./sqliteRepo')
 
 
 
@@ -155,6 +153,8 @@ exports.getDBTweetsView = async (req, res) => {
 
 //Gets images from the database with a given set of parameters.
 //If no parameters default values are set.
+//TODO: replace since it's using old SQL data
+/*
 exports.getDBImagesView = async (req, res) => {
     const dao = new SqliteDAO('./../../classifybot/imageClassified.db')
     const SqliteRepo = new SqliteRepository(dao)
@@ -219,4 +219,5 @@ exports.getDBImagesView = async (req, res) => {
         .catch(function (err) {
             console.log(err)
         });
-};
+}
+*/
