@@ -10,7 +10,7 @@ block content
 			.section
 				.row.valign-wrapper
 					.col.s12.m6.l6
-						h5.white-text Real-time crime trajectory visualisation using Twitter and historical data
+						h5.white-text Real-time crime trajectory visualisation using Twitter, machine learning and historical data.
 						p.white-text Developed for the Final-Year Software Engineering Project at Swinburne University of Technology
 						.row
 							input-field.col.s12
@@ -37,6 +37,15 @@ block content
 					p We do this process on our whole data set and contain it within an interactive map for you to play around with and get insights from.
 				.col.s12.m4.l4.center-align
 					img.responsive-img(src="stylesheets/img/network.png")
+			.divider
+			.row.valign-wrapper
+				.col.s12.m8.l8
+					h5 Finding Crimes from Images 
+					p In addition to getting crimes from databases, we also want to dynamically find crimes from Twitter and other sites. 
+					p This means that instead of having to feed data in to the application manually we can simply take the images automatically.
+					p After we've gotten the images, we feed them into Amazon Rekognition to find tags, and then use a co-training model from the images, captions and Rekognition data to determine whether crimes are occuring in the image.
+				.col.s12.m4.l4.center-align
+					img.responsive-img(src="stylesheets/img/rekognition.png" width="128" height="128")
 			.divider
 			.row.valign-wrapper
 				.col.s12.m8.l8
