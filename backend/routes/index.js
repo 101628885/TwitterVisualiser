@@ -49,7 +49,7 @@ router.get('/nlpTraining', nlpTrainingController.returnAllData);
 router.get('/nlpRun', nlpTrainingController.runNLP);
 
 //searching image by tag
-router.get('/imagesearch', imageSearchController.showSearchForm);
+router.get('/imagesearch', imageSearchController.searchImages);
 router.post('/imagesearch', imageSearchController.searchImages);
 
 /**

@@ -2,15 +2,11 @@ const mongoController = require('./mongoController');
 const SqliteDAO = require('./sqliteController')
 const SqliteRepository = require('./sqliteRepo')
 
-exports.showSearchForm = async (req, res) => {
-    res.render('imagesearch');
-};
-
 exports.searchImages = async (req, res) => {
     let keywords = req.body.words;
     let count = req.body.db_count;
 
-    const dao = new SqliteDAO('./../../classifybot/imageClassified.db')
+    const dao = new SqliteDAO('./../classifybot/imageClassified.db')
     const SqliteRepo = new SqliteRepository(dao)
 
         crimeNumTypesArr = {
@@ -24,7 +20,7 @@ exports.searchImages = async (req, res) => {
         }
 
     query = ""
-    query = `SELECT * FROM images`
+    query = `SELECT * FROM images WHERE crimeType!=0`
     switch (req.body.word) {
         case 'assault':
             query += " WHERE crimeType=1"
@@ -60,13 +56,8 @@ exports.searchImages = async (req, res) => {
             res.render('imagesearch', {
                 //first 30
                 data: images.map(image => ({
-                    geo: image.caption,
-                    full_text: (": " + image.caption),
-                    created_at: "",
-                    user: {
-                        name: (crimeNumTypesArr[image.crimeType]),
-                        profile_image_url: ("../" + image.filename)
-                    }
+                    full_text: (crimeNumTypesArr[image.crimeType] + ": " + image.caption),
+                    image_url: ("../" + image.filename)
                 }))
             });
         })
