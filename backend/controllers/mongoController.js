@@ -8,7 +8,7 @@ const connectionTimeout = 1500;
 const databaseMelb = {location: "Melbourne", url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
 const databaseChicago = {location: "Chicago", url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
 const databaseChicagoCrime = {location:"Chicago Crime", url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
-const databaseImages = {location: "Images", url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"}
+const databaseImages = {location: "Images", url : process.env.IMAGE_DATABASE_LOCATION, type: "Production"}
 const connectFailure = function() {console.log("This will abort the NodeJS process."); process.exit(1);}
 
 init();
