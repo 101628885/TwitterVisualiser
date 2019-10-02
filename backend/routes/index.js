@@ -11,6 +11,7 @@ const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
 const cacheController		      = require("../controllers/cacheController");
 const imageSearchController   = require("../controllers/imageSearchController");
+const visualisationController = require('../controllers/visualisationController');
 
 // get homepage
 router.get('/', function(req, res) {
@@ -59,5 +60,8 @@ router.post('/imagesearch', imageSearchController.searchImages);
 router.get('/tweetMap', cacheController.getTrajectories);
 router.post('/tweetMap', cacheController.getTrajectories);
 router.get('/update', nlpTrainingController.test);
+
+
+router.get('/visualisations', visualisationController.getVisualisationView);
 // exports the controllers
 module.exports = router;
