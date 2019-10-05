@@ -43,7 +43,7 @@ block content
 					h5 Finding Crimes from Images 
 					p In addition to getting crimes from databases, we also want to dynamically find crimes from Twitter and other sites. 
 					p This means that instead of having to feed data in to the application manually we can simply take the images automatically.
-					p After we've gotten the images, we feed them into Amazon Rekognition to find tags, and then use a co-training model from the images, captions and Rekognition data to determine whether crimes are occuring in the image.
+					p After we've obtained the images, we use them as data for Amazon Rekognition to find tags. Then we use a trained hybrid model to make use of this data along with manually annotated captions to determine whether or not crimes are appearing in images, along with crime severity.
 				.col.s12.m4.l4.center-align
 					img.responsive-img(src="stylesheets/img/rekognition.png" width="128" height="128")
 			.divider
