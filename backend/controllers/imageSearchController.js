@@ -57,7 +57,7 @@ exports.searchImages = async (req, res) => {
                 //first 30
                 data: images.map(image => ({
                     full_text: (crimeNumTypesArr[image.crimeType] + ": " + image.caption),
-                    image_url: ("../" + image.filename)
+                    image_url: ("http://43.240.97.137/images/" + image.filename)
                 }))
             });
         })
