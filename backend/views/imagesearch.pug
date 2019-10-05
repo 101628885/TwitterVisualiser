@@ -17,8 +17,47 @@ block content
 								input#db_count(type="text", name="db_count", placeholder="Default: 20")
 						.row
 							input-field.col.s12
-								label(for="word") Enter Keyword ('Assault', 'Drugs','Gun', 'Homicide', 'Hostage', 'PropertyDamage', 'SexOffence', 'Theft', 'Vehicular')
-								input#word(type="text", name="word", placeholder="e.g. assault")
+									label Crime Types
+									p
+										label
+											input(name='crimes', type='checkbox', value='1')
+											span NoCrime
+									p
+										label
+											input(name='crimes', type='checkbox', value='2')
+											span Assault
+									p
+										label
+											input(name='crimes', type='checkbox', value='4')
+											span Theft
+									p
+										label
+											input(name='crimes', type='checkbox', value='8')
+											span Gun
+									p
+										label
+											input(name='crimes', type='checkbox', value='16')
+											span Drugs
+									p
+										label
+											input(name='crimes', type='checkbox', value='32')
+											span Property Damage
+									p
+										label
+											input(name='crimes', type='checkbox', value='64')
+											span Homicide
+									p
+										label
+											input(name='crimes', type='checkbox', value='128')
+											span Vehicular
+									p
+										label
+											input(name='crimes', type='checkbox', value='256')
+											span Sex Offence
+									p
+										label
+											input(name='crimes', type='checkbox', value='512')
+											span Hostage
 						.row
 							input-field.col.s12
 								button.btn.waves-effect.waves-light(type="submit") Filter

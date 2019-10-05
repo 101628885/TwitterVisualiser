@@ -20,29 +20,16 @@ exports.searchImages = async (req, res) => {
         }
 
     query = ""
-    query = `SELECT * FROM images WHERE crimeType!=0`
-    switch (req.body.word) {
-        case 'assault':
-            query += " WHERE crimeType=1"
-            break;
-        case 'murder':
-            query += " WHERE crimeType=2"
-            break;
-        case 'theft':
-            query += " WHERE crimeType=3"
-            break;
-        case 'kidnap':
-            query += " WHERE crimeType=4"
-            break;
-        case 'scene':
-            query += " WHERE crimeType=5"
-            break;
-        case 'other':
-            query += " WHERE crimeType=99"
-            break;
-        default:
-            break;
+    query = `SELECT * FROM images WHERE crimeType=`
+    
+    //this won't work proper anyway
+    if(req.body.crimes){
+        query += req.body.crimes.join(' OR crimeType=')
     }
+
+    //unused mongo search
+    //images.collection.find( { tags: { $bitsAnySet: req.body.crimes } } )
+
     if (typeof req.body.db_crime !== 'undefined'){
         query += " LIMIT "+req.body.db_count
     }else{
