@@ -4,7 +4,7 @@ var router = express.Router();
 
 // getting all controllers
 const datamuseController      = require("../controllers/datamuseController");
-const lookupController        = require("../controllers/lookupController");
+const tweetSearchController        = require("../controllers/tweetSearchController");
 const verifyController        = require("../controllers/verifyController");
 const nlpTrainingController   = require("../controllers/nlpTrainingController");
 const autoController          = require("../controllers/autoController");
@@ -26,12 +26,12 @@ router.get('/deckmap', function(req, res) {
  * lookup controller routes
  * handles the returning of lists of tweets to display on the lookup view
  */
-router.get('/lookup', lookupController.getAPITweetsView);
-router.post('/lookup', datamuseController.getCombination, lookupController.getAPITweetsView);
-router.get('/lookup/api', lookupController.getAPITweetsView);
-router.post('/lookup/api', datamuseController.getCombination, lookupController.getAPITweetsView);
-router.get('/lookup/db', lookupController.getDBTweetsView);
-router.post('/lookup/db', datamuseController.getCombination, lookupController.getDBTweetsView);
+router.get('/lookup', tweetSearchController.getAPITweetsView);
+router.post('/lookup', datamuseController.getCombination, tweetSearchController.getAPITweetsView);
+router.get('/lookup/api', tweetSearchController.getAPITweetsView);
+router.post('/lookup/api', datamuseController.getCombination, tweetSearchController.getAPITweetsView);
+router.get('/lookup/db', tweetSearchController.getDBTweetsView);
+router.post('/lookup/db', datamuseController.getCombination, tweetSearchController.getDBTweetsView);
 
 // auto controller
 router.get('/auto', autoController.autoGet);
