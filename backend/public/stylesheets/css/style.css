@@ -19,6 +19,12 @@ body:not(#map body) {
   z-index: 1;
 }
 
+.footer-white-text {
+  color: #fff;
+  padding-top: 50px;
+  padding-bottom: 15px;
+}
+
 nav {
   height: 9vh;
 }
