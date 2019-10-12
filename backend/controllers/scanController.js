@@ -1,4 +1,6 @@
 const pty = require("node-pty");
+var fs = require('fs');
+var mime = require('mime-types');
 
 exports.scanGet = function(req, res) {
   res.render("scan");
@@ -6,7 +8,16 @@ exports.scanGet = function(req, res) {
 
 exports.scanPost = async (req, res) => {
   //save image and get image path here
-  image_path = "./fake_image.png";
+  var file = req.files.file;
+  var image_path = 'storage/' + file.md5 + '.' + mime.extension(file.mimetype);
+  if (!(file.mimetype == 'image/jpeg' || file.mimetype == 'image/png')) {
+    res.send('Error: incorrect file type');
+  }
+  file.mv(image_path, function(err) {
+    if (err)
+      return res.status(500).send(err);
+    console.log('Image moved to ' + image_path);
+  });
 
   const pyProcess = pty.spawn("/usr/bin/python3", [
     process.cwd() + "/ml_model/model.py",
@@ -23,4 +34,5 @@ exports.scanPost = async (req, res) => {
     res.send({ prediction: dataToSend });
     console.log("model.py exiting with code " + exitCode);
   });
+
 };
