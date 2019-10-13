@@ -1,14 +1,17 @@
+const spinner = document.getElementById("predSpinner"); //loading spinner
+
 async function scanImage() {
   var input = document.querySelector('input[type="file"]');
   var data = new FormData();
   data.append("file", input.files[0]);
 
-  console.log("first!");
+  showSpinner(); //showing loading spinner
 
   await fetch("/scan", {
     method: "POST",
     body: data
   }).then(function(res) {
+    hideSpinner(); //hide spinner
     res.json().then(async function(json) {
       document.getElementById("pred").innerHTML = json.result.prediction;
       document.getElementById("highC").innerHTML = parseFloat(
@@ -34,4 +37,12 @@ function displayImage(input) {
     image.src = e.target.result;
     image.hidden = false;
   };
+}
+
+function showSpinner() {
+  spinner.className = "show";
+}
+
+function hideSpinner() {
+  spinner.className = spinner.className.replace("show", "");
 }
