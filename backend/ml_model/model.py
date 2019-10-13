@@ -38,7 +38,11 @@ def main():
     # image_prediction
     image_result, image_prob = image_prediction(image_path)
 
-    print(image_result)
+    result = {}
+    result["prediction"] = str(image_result)
+    result["probability"] = image_prob.tolist()
+
+    print(json.dumps(result))
 
 
 if __name__ == "__main__":

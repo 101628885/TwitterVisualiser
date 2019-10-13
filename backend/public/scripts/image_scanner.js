@@ -3,10 +3,13 @@ async function scanImage() {
   var data = new FormData();
   data.append("file", input.files[0]);
 
+  console.log("first!");
+
   await fetch("/scan", {
     method: "POST",
     body: data
   }).then(function(res) {
+    console.log(res);
     res.json().then(async function(json) {
       document.getElementById("result").innerHTML = JSON.stringify(
         json,

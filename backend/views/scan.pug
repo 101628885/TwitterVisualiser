@@ -12,10 +12,10 @@ block content
 					p Send an image to check with our crime classification model
 					
 					.row
-						form.form#dbimagesform(action="/scan", method="POST", enctype="multipart/form-data")
-							.col
-								input.form-control(type="file", name="file")
-								button.btn.waves-effect.waves-light(onclick="scanImage()") Submit
+						//- form.form#dbimagesform(action="/scan", method="POST", enctype="multipart/form-data")
+						.col
+							input.form-control(type="file", name="file")
+							button.btn.waves-effect.waves-light(onclick="scanImage()") Predict
 					.row
 						code
 							pre#result
