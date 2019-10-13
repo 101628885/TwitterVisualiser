@@ -7,7 +7,7 @@ block content
 	.container
 		.section
 			.row
-				.col.s12.m6.l6
+				.col.s12.m6
 					h4 Image Crime Classifer
 					p Send an image to check with our crime classification model
 					
@@ -17,8 +17,25 @@ block content
 							input.form-control(type="file", name="file")
 							button.btn.waves-effect.waves-light(onclick="scanImage()") Predict
 					.row
-						code
-							pre#result
-					.row
 						img(id="imageDisplay", hidden=true)
+				.col.s12.m6
+					.row
+						.col.s8.m8(style="margin-top: 0.5em;")
+							h5#predTitle Prediction:
+							h4#pred(style="font-weight:bold")
+						.col.s4.m4
+							table#predTable(style='width:100%', border='1')
+								tr
+									th Crime Type
+									th Probability (%)
+								tr
+									td High Crime
+									td#highC 
+								tr
+									td Low Crime
+									td#lowC
+								tr
+									td No Crime
+									td#noC
+
 	script(type="text/javascript" src="./scripts/image_scanner.js")

@@ -9,12 +9,16 @@ async function scanImage() {
     method: "POST",
     body: data
   }).then(function(res) {
-    console.log(res);
     res.json().then(async function(json) {
-      document.getElementById("result").innerHTML = JSON.stringify(
-        json,
-        undefined,
-        4
+      document.getElementById("pred").innerHTML = json.result.prediction;
+      document.getElementById("highC").innerHTML = parseFloat(
+        (json.result.probability[0] * 100).toFixed(4)
+      );
+      document.getElementById("lowC").innerHTML = parseFloat(
+        (json.result.probability[1] * 100).toFixed(4)
+      );
+      document.getElementById("noC").innerHTML = parseFloat(
+        (json.result.probability[2] * 100).toFixed(4)
       );
     });
   });
