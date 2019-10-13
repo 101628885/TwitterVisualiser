@@ -6,12 +6,12 @@ from fastai.vision import *
 
 
 def image_prediction(image_path):
-	test_src = (ImageList.from_csv("",'cleaned_trinary_test_30.csv', folder='images/25kimages')
-	       .split_by_rand_pct(1.0)
+	test_src = (ImageList.from_csv("",'images.csv', folder='images')
+		.split_none()
 	       .label_from_df(label_delim=' '))
 
 	data_test = (test_src.transform(size=256)
-	        .databunch(bs=2).normalize(imagenet_stats))
+	        .databunch(bs=1).normalize(imagenet_stats))
 
 	learn = cnn_learner(data_test, models.resnet18)
 	learn=load_learner('')
