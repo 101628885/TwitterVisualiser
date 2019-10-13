@@ -2,7 +2,11 @@ import sys  # You will get input from node in sys.argv(list)
 import json
 import numpy as np
 from fastai.vision import *
+import os
 
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 
 
 def image_prediction(image_path):
