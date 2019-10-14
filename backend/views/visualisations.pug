@@ -3,5 +3,18 @@ extends layout
 
 append head
 	title VisCrime - Visualisations
-
 block content
+	.container
+		.row
+			.col-md-6
+				.card
+					.card-header Entries per crime
+					.card-body
+						canvas(id="crimes")
+			
+
+	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js")
+	script. 
+		var labels = !{JSON.stringify(labels)};
+		var data = #{data};
+	script(type="text/javascript" src="/scripts/setupCharts.js")
