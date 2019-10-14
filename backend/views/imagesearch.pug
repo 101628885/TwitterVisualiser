@@ -20,43 +20,43 @@ block content
 									label Crime Types
 									p
 										label
-											input(name='crimes', type='checkbox', value='1')
+											input(name='crimes', type='checkbox', value='NoCrime')
 											span NoCrime
 									p
 										label
-											input(name='crimes', type='checkbox', value='2')
+											input(name='crimes', type='checkbox', value='Assault')
 											span Assault
 									p
 										label
-											input(name='crimes', type='checkbox', value='4')
+											input(name='crimes', type='checkbox', value='Theft')
 											span Theft
 									p
 										label
-											input(name='crimes', type='checkbox', value='8')
+											input(name='crimes', type='checkbox', value='Gun')
 											span Gun
 									p
 										label
-											input(name='crimes', type='checkbox', value='16')
+											input(name='crimes', type='checkbox', value='Drugs')
 											span Drugs
 									p
 										label
-											input(name='crimes', type='checkbox', value='32')
+											input(name='crimes', type='checkbox', value='PropertyDamage')
 											span Property Damage
 									p
 										label
-											input(name='crimes', type='checkbox', value='64')
+											input(name='crimes', type='checkbox', value='Homicide')
 											span Homicide
 									p
 										label
-											input(name='crimes', type='checkbox', value='128')
+											input(name='crimes', type='checkbox', value='Vehicular')
 											span Vehicular
 									p
 										label
-											input(name='crimes', type='checkbox', value='256')
+											input(name='crimes', type='checkbox', value='SexOffence')
 											span Sex Offence
 									p
 										label
-											input(name='crimes', type='checkbox', value='512')
+											input(name='crimes', type='checkbox', value='Hostage')
 											span Hostage
 						.row
 							input-field.col.s12
@@ -69,6 +69,7 @@ block content
 									.card-content
 										.row(style="margin: 0;")
 											.col.s4
-												img(src=`${'http://43.240.97.137/images/' + image.image_url}` width="100" height="100")
+												img(src=`${'http://43.240.97.137/images/' + image.image}` width="100" height="100")
 											.col.s8
-												p #{image.full_text}
+												p #{image.manualAnnotation}
+												p #{image.objectLabels}												
