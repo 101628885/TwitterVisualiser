@@ -40,7 +40,7 @@ function createDBConnectionObject(database) {
     });
 
     conn.on('open', () => {
-        console.log("Connected to the", database.type, database.location, "DB at", databaseMelb.url)
+        console.log("Connected to the", database.type, database.location, "DB at", database.url)
     });
 
     return conn;

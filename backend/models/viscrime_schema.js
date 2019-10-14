@@ -13,6 +13,6 @@ var viscrimeSchema = mongoose.Schema({
 	tfidfPrediction: {type: String},
 	fastaiPrediction: {type: String},
 	coordinates: {type: String},
-});
+}, {collection: 'crimes'});
 
 var viscrime = module.exports = mongoose.model('viscrime', viscrimeSchema);

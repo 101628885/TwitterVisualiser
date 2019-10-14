@@ -68,8 +68,12 @@ block content
 								.card
 									.card-content
 										.row(style="margin: 0;")
-											.col.s4
-												img(src=`${'http://43.240.97.137/images/' + image.image}` width="100" height="100")
-											.col.s8
-												p #{image.manualAnnotation}
-												p #{image.objectLabels}												
+											.col.m10
+												a(href=`${'http://43.240.97.137/images/' + image.image}`)
+													img(src=`${'http://43.240.97.137/images/' + image.image}` width="100%" height="100%")
+											.col.s2
+												p #[strong Manual tags:] #{image.manualAnnotation}
+												p #[strong Object tags:] 
+												each label, index in image.objectLabels
+													p #{label}		
+												p #[strong Crime Prediction:] #{image.combinedPrediction}									
