@@ -218,3 +218,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# OSX DS_Store files
+.DS_Store
+
+/backend/variables.env

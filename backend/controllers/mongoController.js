@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
 const crime = require('../models/crime_schema');
+const viscrime = require('../models/viscrime_schema');
 const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
 const connectionTimeout = 1500;
 const databaseMelb = {location: "Melbourne", url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
 const databaseChicago = {location: "Chicago", url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
 const databaseChicagoCrime = {location:"Chicago Crime", url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
+const databaseViscrime = {location: "Viscrime", url : process.env.IMAGE_DATABASE_LOCATION, type: "Production"}
 const connectFailure = function() {console.log("This will abort the NodeJS process."); process.exit(1);}
 
 init();
@@ -18,10 +20,12 @@ function init()
 	let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
 	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
 	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
+	let viscrime = createDBConnectionObject(databaseViscrime).model('viscrime');
 
     module.exports.tweetMelb = tweetMelb;
     module.exports.tweetChicago = tweetChicago;
-    module.exports.chicagoCrime = chicagoCrime;
+	module.exports.chicagoCrime = chicagoCrime;
+	module.exports.viscrime = viscrime;
     module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
 }
 
@@ -30,12 +34,13 @@ function createDBConnectionObject(database) {
     let conn = mongoose.createConnection(database.url, { connectTimeoutMS: connectionTimeout, useNewUrlParser: true });
 
     conn.on('error', () => {
-        console.log("\nFailed to connect to the", database.type, database.location, "DB at", databaseMelb.url);
+		console.log("\nFailed to connect to the", database.type, database.location, "DB at", databaseMelb.url);
+				
         connectFailure();
     });
 
     conn.on('open', () => {
-        console.log("Connected to the", database.type, database.location, "DB at", databaseMelb.url)
+        console.log("Connected to the", database.type, database.location, "DB at", database.url)
     });
 
     return conn;
@@ -55,6 +60,14 @@ exports.getStoredTweets = async (location, query, count, skip) =>
 	}
 
 	return result;	
+}
+
+//Gets stored viscrime images based on parameters
+exports.getStoredImages = async (query, count, skip) =>
+{
+	let result = [];
+	await this.viscrime.find(query).skip(skip).limit(parseInt(count)).lean().exec().then((res) => {result = res;});
+	return result;
 }
 
 //Pretty large function, handles storing tweets

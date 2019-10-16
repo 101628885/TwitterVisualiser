@@ -71,10 +71,23 @@ The VisCrime backend forms the main part of VisCrime, which hosts the web app, D
 To now run the application we can simply do an `npm start` command in the backend folder and it will fire up locally on port `3000`.
 
 ## Testing (Cypress)
+
 To run cypress, simply navigate to the `backend` directory and run: 
 `./start-cypress.sh`
 This script will open the cypress test window where you can choose what tests to run.
 
 ### Creating Tests (Integration Tests)
+
 To create cypress tests navigate to `backend/cypress` directory and see all the examples in the `integration` folder.
 Here you can create integration tests that will be visible when you run the `./start-cypress.sh` script.
+
+## Using local databases
+
+Instead of running the application with the production databases used to hold tweets and crimes, it may help to have your own local copy of the files so that you can do whatever you like to them. To do this, first set up different MongoDB databases for each of the Melbourne, Chicago and Chicago Crime databases, which can be accessed by typing into your command line (with Mongo installed) "mongo " and then one of the following:
+
+- mongodb://team:swinburne@43.240.97.166/tweets
+- mongodb://team:swinburne@43.240.97.166/tweetsChicago
+- mongodb://team:swinburne@43.240.97.166/chicagoCrime
+
+From here you can access the databases using the command line. To copy these to your database, use
+`mongodump --uri="mongodb://mongodb0.example.com:27017"` from your PC (not the mongo shell), where the string is one of the above mongoDB locations. This will generate a dump file for you, which you can then use with the `mongorestore` command to add to your local database. From there, get the credentials for your databases and add them to the variables.env file in the backend. You won't be able to add the images database because that would also require that you move all the images to your own computer.
