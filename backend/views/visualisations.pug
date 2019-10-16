@@ -8,13 +8,20 @@ block content
 		.row
 			.col-md-6
 				.card
-					.card-header Entries per crime
+					.card-header(style={'margin': '10px', 'font-size': '24px'}) Entries per crime
 					.card-body
 						canvas(id="crimes")
-			
+				.card
+					.card-header(style={'margin': '10px', 'font-size': '24px'}) Crime count per object label
+					.card-body
+						canvas(id="labels")
+					
+
 
 	script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js")
 	script. 
-		var labels = !{JSON.stringify(labels)};
-		var data = #{data};
+		var manualLabels = !{JSON.stringify(manualLabels)};
+		var manualData = #{manualData};
+		var objectLabels = !{JSON.stringify(objectLabels)};
+		var objectData = #{objectData};
 	script(type="text/javascript" src="/scripts/setupCharts.js")

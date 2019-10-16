@@ -1,10 +1,25 @@
-var businessChart = new Chart(document.getElementById('crimes'), {
+var annotationChart = new Chart(document.getElementById('crimes'), {
     type: 'bar',
     data: {
-        labels: labels,
+        labels: manualLabels,
         datasets: [{
             label: 'Number of crimes',
-            data: data,
+            data: manualData,
+            backgroundColor: [
+                'rgba(67, 150, 233, 0.3)',
+            ],
+            borderWidth: 2
+        },
+    ]},
+});
+
+var labelChart = new Chart(document.getElementById('labels'), {
+    type: 'bar',
+    data: {
+        labels: objectLabels,
+        datasets: [{
+            label: 'Number of crimes',
+            data: objectData,
             backgroundColor: [
                 'rgba(67, 150, 233, 0.3)',
             ],
