@@ -4,12 +4,13 @@ var router = express.Router();
 
 // getting all controllers
 const datamuseController      = require("../controllers/datamuseController");
-const lookupController        = require("../controllers/lookupController");
+const tweetSearchController        = require("../controllers/tweetSearchController");
 const verifyController        = require("../controllers/verifyController");
 const nlpTrainingController   = require("../controllers/nlpTrainingController");
 const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
-const cacheController		  = require("../controllers/cacheController");
+const cacheController		      = require("../controllers/cacheController");
+const imageSearchController   = require("../controllers/imageSearchController");
 
 // get homepage
 router.get('/', function(req, res) {
@@ -25,14 +26,12 @@ router.get('/deckmap', function(req, res) {
  * lookup controller routes
  * handles the returning of lists of tweets to display on the lookup view
  */
-router.get('/lookup', lookupController.getAPITweetsView);
-router.post('/lookup', datamuseController.getCombination, lookupController.getAPITweetsView);
-router.get('/lookup/api', lookupController.getAPITweetsView);
-router.post('/lookup/api', datamuseController.getCombination, lookupController.getAPITweetsView);
-router.get('/lookup/db', lookupController.getDBTweetsView);
-router.post('/lookup/db', datamuseController.getCombination, lookupController.getDBTweetsView);
-router.get('/lookup/db_images', lookupController.getDBImagesView);
-router.post('/lookup/db_images', lookupController.getDBImagesView);
+router.get('/lookup', tweetSearchController.getAPITweetsView);
+router.post('/lookup', datamuseController.getCombination, tweetSearchController.getAPITweetsView);
+router.get('/lookup/api', tweetSearchController.getAPITweetsView);
+router.post('/lookup/api', datamuseController.getCombination, tweetSearchController.getAPITweetsView);
+router.get('/lookup/db', tweetSearchController.getDBTweetsView);
+router.post('/lookup/db', datamuseController.getCombination, tweetSearchController.getDBTweetsView);
 
 // auto controller
 router.get('/auto', autoController.autoGet);
@@ -48,6 +47,10 @@ router.get('/nlpTraining/:count/checked/:checked', nlpTrainingController.returnN
 router.get('/nlpTraining/:count/crime/:crime', nlpTrainingController.returnNLPData);
 router.get('/nlpTraining', nlpTrainingController.returnAllData);
 router.get('/nlpRun', nlpTrainingController.runNLP);
+
+//searching image by tag
+router.get('/imagesearch', imageSearchController.searchImages);
+router.post('/imagesearch', imageSearchController.searchImages);
 
 /**
  * tweetmap controller routes

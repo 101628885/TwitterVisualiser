@@ -1,0 +1,79 @@
+//-Lookup page to view images in the database
+extends layout
+
+append head
+	title VisCrime - Image Search
+
+block content
+	.container
+		.section
+			.row
+				.col.s12.m3
+					//- form for querying the local database
+					form#dbimagesform(action="/imagesearch", method="POST")
+						.row
+							input-field.col.s12
+								label(for="db_count") Amount of Results
+								input#db_count(type="text", name="db_count", placeholder="Default: 20")
+						.row
+							input-field.col.s12
+									label Crime Types
+									p
+										label
+											input(name='crimes', type='checkbox', value='NoCrime')
+											span NoCrime
+									p
+										label
+											input(name='crimes', type='checkbox', value='Assault')
+											span Assault
+									p
+										label
+											input(name='crimes', type='checkbox', value='Theft')
+											span Theft
+									p
+										label
+											input(name='crimes', type='checkbox', value='Gun')
+											span Gun
+									p
+										label
+											input(name='crimes', type='checkbox', value='Drugs')
+											span Drugs
+									p
+										label
+											input(name='crimes', type='checkbox', value='PropertyDamage')
+											span Property Damage
+									p
+										label
+											input(name='crimes', type='checkbox', value='Homicide')
+											span Homicide
+									p
+										label
+											input(name='crimes', type='checkbox', value='Vehicular')
+											span Vehicular
+									p
+										label
+											input(name='crimes', type='checkbox', value='SexOffence')
+											span Sex Offence
+									p
+										label
+											input(name='crimes', type='checkbox', value='Hostage')
+											span Hostage
+						.row
+							input-field.col.s12
+								button.btn.waves-effect.waves-light(type="submit") Filter
+				.col.s12.m9.l9
+					each image, index in data
+						.row(style="margin: 0;")
+							.col.s12
+								.card
+									.card-content
+										.row(style="margin: 0;")
+											.col.m10
+												a(href=`${'http://43.240.97.137/images/' + image.image}`)
+													img(src=`${'http://43.240.97.137/images/' + image.image}` width="100%" height="100%")
+											.col.s2
+												p #[strong Manual tags:] #{image.manualAnnotation}
+												p #[strong Object tags:] 
+												each label, index in image.objectLabels
+													p #{label}		
+												p #[strong Crime Prediction:] #{image.combinedPrediction}									
