@@ -51,3 +51,9 @@ function showSpinner() {
 function hideSpinner() {
   spinner.className = spinner.className.replace("show", "");
 }
+
+// sticky footer styling - specific to this page
+$(document).ready(function() {
+  document.querySelector("footer").style =
+    "bottom: 0; position: absolute; width: 100%;";
+});
