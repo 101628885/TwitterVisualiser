@@ -18,7 +18,7 @@ exports.scanPost = async (req, res) => {
     console.log("Image moved to " + image_path);
   });
 
-  const pyProcess = pty.spawn("/usr/bin/python3", [
+  const pyProcess = pty.spawn("python3", [
     process.cwd() + "/ml_model/model.py",
     "../" + image_path //the path gets passed to the python script as an argument
   ]);
