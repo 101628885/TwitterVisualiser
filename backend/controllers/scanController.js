@@ -11,7 +11,7 @@ exports.scanPost = async (req, res) => {
   var file = req.files.file;
   var image_path = "storage/" + file.md5 + "." + mime.extension(file.mimetype);
   if (!(file.mimetype == "image/jpeg" || file.mimetype == "image/png")) {
-    res.send("Error: incorrect file type");
+    res.send({ error: "Error: incorrect file type" });
   }
   file.mv(image_path, function(err) {
     if (err) return res.status(500).send(err);

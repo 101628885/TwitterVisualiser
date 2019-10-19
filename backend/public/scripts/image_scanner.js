@@ -2,6 +2,10 @@ const spinner = document.getElementById("predSpinner"); //loading spinner
 
 async function scanImage() {
   var input = document.querySelector('input[type="file"]');
+  if (input.files.length == 0) {
+    document.getElementById("pred").innerHTML = "Please upload an image";
+    return;
+  }
   var data = new FormData();
   data.append("file", input.files[0]);
 
@@ -13,6 +17,12 @@ async function scanImage() {
   }).then(function(res) {
     hideSpinner(); //hide spinner
     res.json().then(async function(json) {
+      if ("error" in json) {
+        console.log(json);
+
+        document.getElementById("pred").innerHTML = json.error;
+        return;
+      }
       document.getElementById("pred").innerHTML = json.result.prediction;
       document.getElementById("highC").innerHTML = parseFloat(
         (json.result.probability[0] * 100).toFixed(4)
@@ -32,10 +42,9 @@ async function scanImage() {
       $(document).ready(function() {
         document.querySelector("footer").style = "";
       });
+      displayImage(document.querySelector("input[type=file]").files[0]);
     });
   });
-
-  displayImage(document.querySelector("input[type=file]").files[0]);
 }
 
 function displayImage(input) {
