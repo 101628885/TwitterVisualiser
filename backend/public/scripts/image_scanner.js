@@ -23,6 +23,11 @@ async function scanImage() {
       document.getElementById("noC").innerHTML = parseFloat(
         (json.result.probability[2] * 100).toFixed(4)
       );
+      //unhide tale after result
+      const el = document.querySelector("#predTable");
+      if (el.classList.contains("hide")) {
+        el.classList.remove("hide");
+      }
     });
   });
 
