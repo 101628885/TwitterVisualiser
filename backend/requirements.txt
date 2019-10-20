@@ -4,4 +4,6 @@ argparse
 sklearn
 tensorflow
 imageai
+torch==1.3.0+cpu -f https://download.pytorch.org/whl/torch_stable.htm
+torchvision==0.4.1+cpu -f https://download.pytorch.org/whl/torch_stable.htm
 fastai
