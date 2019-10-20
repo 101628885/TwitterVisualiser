@@ -38,10 +38,6 @@ async function scanImage() {
       if (el.classList.contains("hide")) {
         el.classList.remove("hide");
       }
-      // reset footer styling
-      $(document).ready(function() {
-        document.querySelector("footer").style = "";
-      });
       displayImage(document.querySelector("input[type=file]").files[0]);
     });
   });

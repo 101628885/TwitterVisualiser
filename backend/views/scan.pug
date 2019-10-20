@@ -6,7 +6,7 @@ append head
 block content
 	.container
 		.section
-			h3 Image Crime Classifer
+			h3 Image Crime Classifier
 			.row
 				.col.s12.m8
 					h4 Upload Image
@@ -18,7 +18,8 @@ block content
 							button.btn.waves-effect.waves-light(onclick="scanImage()") Predict
 					.row
 						div#predSpinner
-						img(id="imageDisplay", style='max-width:100%;', hidden=true)
+						//- NOTE: Object-fit isn't compatable with IE
+						img(id="imageDisplay", style='max-width:500px; max-height:500px; object-fit:cover; margin-left: 0.9rem', hidden=true)
 				.col.s12.m4
 					.row
 						.col.s12.m12(style="margin-top: 0.5em;")
