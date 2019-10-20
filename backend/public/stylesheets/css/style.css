@@ -1,5 +1,7 @@
 /* containers */
-html, body, #outer {
+html,
+body,
+#outer {
   height: 100%;
   width: 100%;
 }
@@ -10,8 +12,8 @@ html, body, #outer {
 }
 
 body:not(#map body) {
-	font-family: "Roboto", sans-serif;
-	font-weight: 300;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
 }
 
 #filterform {
@@ -32,20 +34,20 @@ nav {
 /* tweet card */
 
 .card {
-	background-color: white;
-	border-width: 0.2em;
+  background-color: white;
+  border-width: 0.2em;
 }
 
 .card-body {
-	padding: 10px;
+  padding: 10px;
 }
 
 .grid-container {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-areas:
-    'tweetdp tweetheader'
-    'tweetdp tweetbody'
+    "tweetdp tweetheader"
+    "tweetdp tweetbody";
 }
 
 #tweetdp {
@@ -55,11 +57,11 @@ nav {
 }
 
 #tweetheader {
-  grid-area: tweetheader
+  grid-area: tweetheader;
 }
 
 #tweetbody {
-  grid-area: tweetbody
+  grid-area: tweetbody;
 }
 
 p {
@@ -73,7 +75,7 @@ p {
 }
 
 h1:not(#map h1) {
-	color: white;
+  color: white;
 }
 
 #hometext {
@@ -86,11 +88,11 @@ h1:not(#map h1) {
 }
 
 @keyframes fadein {
-  from { 
+  from {
     opacity: 0;
     padding-top: 2em;
-   }
-  to { 
+  }
+  to {
     opacity: 1;
     padding-top: 0em;
   }
@@ -111,8 +113,8 @@ h1:not(#map h1) {
 #map {
   position: absolute;
   z-index: 0;
-	height: 100%;
-	width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 /* deckgl module */
@@ -158,24 +160,29 @@ h1:not(#map h1) {
   position: absolute;
 }
 
-#toggle-panels
-{
-   position: absolute;
+#toggle-panels {
+  position: absolute;
 }
 
 /* large desktop devices */
-@media(min-width: 1200px) {
-  .map-panel { width: 20%; }
+@media (min-width: 1200px) {
+  .map-panel {
+    width: 20%;
+  }
 }
 
 /* desktop devices */
-@media(max-width: 1200px) {
-  .map-panel { width: 25%; }
+@media (max-width: 1200px) {
+  .map-panel {
+    width: 25%;
+  }
 }
 
 /* mobile devices and tablets */
-@media(max-width: 992px) {
-  .map-panel { width: 90%; }
+@media (max-width: 992px) {
+  .map-panel {
+    width: 90%;
+  }
 }
 
 #control-panel {
@@ -213,7 +220,7 @@ h1:not(#map h1) {
 
 .legend {
   display: inline-block;
-  height: 12px; 
+  height: 12px;
   width: 16.667%;
 }
 
@@ -249,8 +256,12 @@ h1:not(#map h1) {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .crime-color {
@@ -269,4 +280,36 @@ h1:not(#map h1) {
   background-color: #bbb;
   border-radius: 50%;
   display: inline-block;
+}
+
+#predSpinner {
+  visibility: hidden;
+  width: 80px;
+  height: 80px;
+
+  border: 2px solid #f3f3f3;
+  border-top: 3px solid #f25a41;
+  border-radius: 100%;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#predSpinner.show {
+  visibility: visible;
 }

@@ -8,8 +8,10 @@ const helmet = require('helmet');
 const index = require('./routes/index');
 const cors = require('cors');
 const fs = require('fs');
+var fileupload = require("express-fileupload");
 
 var app = express();
+app.use(fileupload());
 app.use(cors());
 app.use(helmet());
 // view engine setup

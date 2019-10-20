@@ -20,6 +20,7 @@ if [[ "$unamestr" == 'Darwin' ]]; then
     mv VisCrime ~/VisCrime
     cd ~/VisCrime/backend
     npm install
+    pip3 install -r requirements.txt
 elif [[ "$unamestr" == 'Linux' ]]; then
     echo "Setting up VisCrime for Ubuntu..."
     echo "Getting dependencies..."
@@ -32,6 +33,7 @@ elif [[ "$unamestr" == 'Linux' ]]; then
     mv VisCrime ~/VisCrime
     cd ~/VisCrime/backend
     npm install
+    pip3 install -r requirements.txt
 
 fi
 echo "Installation Complete!"

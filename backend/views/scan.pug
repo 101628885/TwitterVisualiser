@@ -1,0 +1,45 @@
+extends layout
+
+append head
+	title VisCrime - Scanner
+
+block content
+	.container
+		.section
+			h3 Image Crime Classifier
+			.row
+				.col.s12.m8
+					h4 Upload Image
+					p Send an image to check with our crime classification model
+					
+					.row
+						.col
+							input.form-control(type="file", name="file")
+							button.btn.waves-effect.waves-light(onclick="scanImage()") Predict
+					.row
+						div#predSpinner
+						//- NOTE: Object-fit isn't compatable with IE
+						img(id="imageDisplay", style='max-width:500px; max-height:500px; object-fit:cover; margin-left: 0.9rem', hidden=true)
+				.col.s12.m4
+					.row
+						.col.s12.m12(style="margin-top: 0.5em;")
+							h4#predTitle Prediction:
+							h5#pred(style="font-weight:bold")
+			.row
+				.col.s12.m6#predTable.hide
+					h4 Model Confidence
+					table(style='width:100%', border='1')
+						tr
+							th Crime Type
+							th Probability (%)
+						tr
+							td High Crime
+							td#highC 
+						tr
+							td Low Crime
+							td#lowC
+						tr
+							td No Crime
+							td#noC
+
+	script(type="text/javascript" src="./scripts/image_scanner.js")

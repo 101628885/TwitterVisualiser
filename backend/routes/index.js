@@ -9,7 +9,8 @@ const verifyController        = require("../controllers/verifyController");
 const nlpTrainingController   = require("../controllers/nlpTrainingController");
 const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
-const cacheController		      = require("../controllers/cacheController");
+const cacheController		  = require("../controllers/cacheController");
+const scanController		  = require("../controllers/scanController");
 const imageSearchController   = require("../controllers/imageSearchController");
 const visualisationController = require('../controllers/visualisationController');
 
@@ -37,6 +38,9 @@ router.post('/lookup/db', datamuseController.getCombination, tweetSearchControll
 // auto controller
 router.get('/auto', autoController.autoGet);
 router.post('/auto', autoController.autoPost);
+
+router.get('/scan', scanController.scanGet);
+router.post('/scan', scanController.scanPost);
 
 // verify controller
 router.get('/check', verifyController.getUncheckedTweets);
