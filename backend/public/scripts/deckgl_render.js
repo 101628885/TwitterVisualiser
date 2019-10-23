@@ -90,7 +90,9 @@ const deckgl = new deck.DeckGL({
 
 //Updates tooltip for new data when hovered over by user.
 const updateMlLayerTooltip = ({x, y, object}) => {
-	/*try {
+	try {
+		console.log(object);
+		
 		const tooltip = document.querySelector("#tooltip");
 		if (object) {
 			tooltip.style.visibility = "visible";
@@ -98,14 +100,15 @@ const updateMlLayerTooltip = ({x, y, object}) => {
 			tooltip.style.left = `${x}px`;
 			tooltip.innerHTML = `
 				<div>Latitude: ${object.centroid[0]}</div>
-				<div>Longitude: ${object.centroid[0]}</div>`;
+				<div>Longitude: ${object.centroid[0]}</div>
+				<div>${object.points.length} image${(object.points.length === 1) ? "" : "s"}</div>`;
 		} else {
 			tooltip.innerHTML = "";
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
 		console.log(e);
-	}*/
+	}
 };
 
 //Updates tool tips when user hovers over on deck.gl map
