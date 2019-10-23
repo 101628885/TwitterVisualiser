@@ -91,8 +91,8 @@ const deckgl = new deck.DeckGL({
 //Updates tooltip for new data when hovered over by user.
 const updateMlLayerTooltip = ({x, y, object}) => {
 	try {
-		console.log(object);
 		
+		console.log(object);
 		const tooltip = document.querySelector("#tooltip");
 		if (object) {
 			tooltip.style.visibility = "visible";
@@ -101,7 +101,9 @@ const updateMlLayerTooltip = ({x, y, object}) => {
 			tooltip.innerHTML = `
 				<div>Latitude: ${object.centroid[0]}</div>
 				<div>Longitude: ${object.centroid[0]}</div>
-				<div>${object.points.length} image${(object.points.length === 1) ? "" : "s"}</div>`;
+				<div>${object.points.length} image${(object.points.length === 1) ? "" : "s"}</div>
+				<div>${object.points[0].properties.Caption}</div>
+				<div><img width="100%" src=http://43.240.97.137/images/${object.points[0].properties.Image}></img></div>`;
 		} else {
 			tooltip.innerHTML = "";
 			tooltip.style.visibility = "hidden";
@@ -596,7 +598,7 @@ renderLayers = (currentDate) => {
 		pickable: true,
 		colorRange: TWEET_COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
-		radius: 250,
+		radius: 150,
 		elevationRange: [0, 800],
 		elevationScale: 4,
 		opacity: 0.6,
@@ -604,7 +606,7 @@ renderLayers = (currentDate) => {
 		fp64: false,
 		z: 1,
 		extruded: false,
-		getPosition: d => d,
+		getPosition: d => d.coordinates,
 		onHover: updateMlLayerTooltip,
 		...chiMlOptions.points,
 	});	
@@ -776,9 +778,10 @@ const loadData = (data, mode) => {
 
 const loadMlData = (data) => {
 	try {
-		chiMlData.points = data.data.map(feature => (
-			feature.geometry.coordinates
-		));
+		chiMlData.points = data.data.map(point => ({
+			coordinates: point.geometry.coordinates,
+			properties: point.properties
+		}));
 		console.log(chiMlData);
 		
 	} catch (e) {
