@@ -40,6 +40,10 @@ let chiTweetData = {
 	points: null,
 };
 
+let chiMlData = {
+	points: null,
+};
+
 let chiTrajectoryData = {
 	points: null,
 	sameType: null,
@@ -83,6 +87,26 @@ const deckgl = new deck.DeckGL({
 	mapboxApiAccessToken: MAPBOX_ACCESS_TOKEN,
 	...INITIAL_VIEW_STATE
 });
+
+//Updates tooltip for new data when hovered over by user.
+const updateMlLayerTooltip = ({x, y, object}) => {
+	/*try {
+		const tooltip = document.querySelector("#tooltip");
+		if (object) {
+			tooltip.style.visibility = "visible";
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `
+				<div>Latitude: ${object.centroid[0]}</div>
+				<div>Longitude: ${object.centroid[0]}</div>`;
+		} else {
+			tooltip.innerHTML = "";
+			tooltip.style.visibility = "hidden";
+		}
+	} catch(e) {
+		console.log(e);
+	}*/
+};
 
 //Updates tool tips when user hovers over on deck.gl map
 const updateTrajectoryLayerTooltip = ({x, y, object}) => {
@@ -427,6 +451,13 @@ renderLayers = (currentDate) => {
 		points: {},
 	};
 
+<<<<<<< HEAD
+=======
+	let chiMlOptions = {
+		points: {},
+	};
+
+>>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 	let chiTrajectOptions = {
 		points: {},
 		sameType: {},
@@ -482,12 +513,34 @@ renderLayers = (currentDate) => {
 			crimeDisplay.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
+<<<<<<< HEAD
 			chiTrajectOptions.points.visible = crimePointsVisble;
 			chiTrajectOptions.sameType.visible = STVisble ? crimeTrajectoriesVisible: false;
 			chiTrajectOptions.allType.visible = ATVisble ? crimeTrajectoriesVisible : false;
 			chiCentroidOptions.sameType.visible = STVisble ? centroidsVisble: false;
 			chiCentroidOptions.allType.visible = ATVisble ? centroidsVisble : false;
 			renderCrimeTypeLegend();
+=======
+			chiTrajectOptions.points.visible = crimePointsVisible;
+			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
+			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
+			renderCrimeTypeLegend();
+			break;
+		case "machine-learning":
+			tweetDensityStatistics.style.display = "block";
+			tweetDisplay.style.display = "none";
+			crimeDisplay.style.display = "none";
+			crimeTrajectoriesStatistics.style.display = "none";
+			chiTweetOptions.points.visible = false;
+			chiTrajectOptions.points.visible = false;
+			chiMlOptions.points.visible = true;
+			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
+			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
+>>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 			break;
 		case "both":
 			tweetDensityStatistics.style.display = "block";
@@ -531,6 +584,28 @@ renderLayers = (currentDate) => {
 		onHover: updateTweetLayerTooltip,
 		...chiTweetOptions.points,
 	});
+<<<<<<< HEAD
+=======
+
+	const mlLayer = new deck.HexagonLayer({
+		id: "ml-layer",
+		data: chiMlData.points,
+		pickable: true,
+		colorRange: TWEET_COLOR_RANGE,
+		lightSettings: LIGHT_SETTINGS,
+		radius: 250,
+		elevationRange: [0, 800],
+		elevationScale: 4,
+		opacity: 0.6,
+		coverage: 0.9,
+		fp64: false,
+		z: 1,
+		extruded: false,
+		getPosition: d => d,
+		onHover: updateMlLayerTooltip,
+		...chiMlOptions.points,
+	});	
+>>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 	
 	var historicCrimeLayer = new deck.IconLayer({
 		id: "historic-crime-layer",
@@ -651,8 +726,7 @@ renderLayers = (currentDate) => {
 
 	// add the data layers to the main deckgl object
 	deckgl.setProps({
-		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
-		// layers: [tweetLayer],
+		layers: [tweetLayer, mlLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
 	});
 };
 
@@ -693,23 +767,46 @@ const loadData = (data, mode) => {
 		// array of dates represented in crimesByDate
 		dataDateRange = Object.keys(crimesByDate);
 	} catch(e) {
-		console.log("Error: Could not load data");
+		console.log("Error: Could not load data: " + e);
 	};
 };
+
+const loadMlData = (data) => {
+	try {
+		chiMlData.points = data.data.map(feature => (
+			feature.geometry.coordinates
+		));
+		console.log(chiMlData);
+		
+	} catch (e) {
+		console.log(e);
+	}
+}
 
 /**
  * Initialise the global data variables by fetching data from the endpoints
  * specified in DATA_URL. Called once only.
  */
 const initialiseData = async() => {
+	console.log("Loading data...");
+	
+	await fetch('/mlmap')
+    .then(res => res.json())
+	.then(data => loadMlData(data))
+	.then(console.log("ML Map data loaded."))
+	.catch((e) => console.log("Error in loading ML data. " + e));
+	
 	await fetch(DATA_URL.CHI_TRAJECTORY)
 	.then(res => res.json())
 	.then(data => loadData(data, "default"))
-	.catch(() => console.log("Error in loading data."));
+	.then(console.log("Chicago trajectory data loaded."))
+	.catch(() => console.log("Error in loading Chicago trajectory data."));
+
 
 	// statsBuilder();
 	renderLayers();
 };
+
 
 /**
  * Initialise the interactive JS components
@@ -758,12 +855,22 @@ const setupInterface = () => {
 	setupTimeline();
 };
 
+<<<<<<< HEAD
 /**
  * initialise everything
  */
 const runScript = () => {
+=======
+const runScript = () => {
+    console.log("Setting up DeckGL...");
+    
+>>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 	setupInterface();
 	initialiseData();
 }
 
+<<<<<<< HEAD
 runScript();
+=======
+runScript();
+>>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map

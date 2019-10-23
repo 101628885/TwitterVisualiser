@@ -13,8 +13,9 @@ block content
 	#map-container
 		#deckmap
 		button#toggle-panels(class="waves-effect waves-light btn-small" onClick="togglePanels()") Hide Panels
-		+dataPanel
-		+statsPanel
+		.row
+			+dataPanel
+			+statsPanel
 		#tooltip(style="visibility: hidden")
 
 	script(type="text/javascript" src="https://unpkg.com/deck.gl@~5.2.0/deckgl.min.js")
