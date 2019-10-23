@@ -2,6 +2,41 @@ const fs = require('fs');
 const skmeans = require("skmeans");
 const chicagoDataFactory = require('./chicagoDataFactory');
 const moment = require('moment')
+
+exports.getMlMapData = function(req, res) {
+    viscrime.find({ "caption": { "$not": /^NoCrime/  } }).lean().exec()
+    .then(viscrime => {
+        var features = [];
+        viscrime.forEach(function(element) {
+            var coords = [];
+            coords.push(parseFloat((element.location.split(','))[0].replace('(', '')));
+            coords.push(parseFloat((element.location.split(','))[1].replace(')', '')));
+            coords.reverse();
+
+            features.push({
+                "type":"Feature",
+                "geometry":{
+                    "type":"Point",
+                    "coordinates":[coords[0], coords[1]]},
+                    "properties":{
+                        "Longitude":coords[0],
+                        "Latitude":coords[1],
+                        "Image":element.image,
+                        "Caption":element.caption,
+                    }
+                });
+        });
+        console.log(features);
+                  
+        res.send({
+            data: features
+        });
+    })
+    .catch(function (err) {
+        console.log(err)
+    });
+};
+
 exports.getTweetMap = function(req, res) {
     let chicagoTestData = JSON.parse(fs.readFileSync('poc_chicago.json'));
 
