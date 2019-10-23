@@ -178,13 +178,6 @@ h1:not(#map h1) {
   }
 }
 
-/* mobile devices and tablets */
-@media (max-width: 992px) {
-  .map-panel {
-    width: 90%;
-  }
-}
-
 #control-panel {
   top: 2rem;
   left: 8px;
