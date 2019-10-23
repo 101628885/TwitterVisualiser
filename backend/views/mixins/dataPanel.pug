@@ -29,7 +29,11 @@ mixin dataPanel
 								p
 									label
 										input(type="radio" name="preset-select" value="both" onClick="renderLayers()")
-										span Both
+										span Trajectories and Crimes
+								p
+									label
+										input(type="radio" name="preset-select" value="machine-learning" onClick="renderLayers()")
+										span Machine Learning
 			li.active#menu-tweet-density
 				.collapsible-header
 					.container(style="margin: 0; width: 100%;")

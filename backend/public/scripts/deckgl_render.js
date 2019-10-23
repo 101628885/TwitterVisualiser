@@ -91,19 +91,23 @@ const deckgl = new deck.DeckGL({
 //Updates tooltip for new data when hovered over by user.
 const updateMlLayerTooltip = ({x, y, object}) => {
 	try {
-		
-		console.log(object);
 		const tooltip = document.querySelector("#tooltip");
 		if (object) {
+			var index = 0;
+			var tooltipData = `
+			<div>Latitude: ${object.centroid[index]}</div>
+			<div>Longitude: ${object.centroid[index]}</div>
+			<div>${object.points.length} image${(object.points.length === 1) ? "" : "s"}:</div>				
+			`;
 			tooltip.style.visibility = "visible";
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
-			tooltip.innerHTML = `
-				<div>Latitude: ${object.centroid[0]}</div>
-				<div>Longitude: ${object.centroid[0]}</div>
-				<div>${object.points.length} image${(object.points.length === 1) ? "" : "s"}</div>
-				<div>${object.points[0].properties.Caption}</div>
-				<div><img width="100%" src=http://43.240.97.137/images/${object.points[0].properties.Image}></img></div>`;
+			object.points.forEach(element => {
+				tooltipData += `
+				<div>${element.properties.Caption}</div>
+				<div><img width="100%" src=http://43.240.97.137/images/${element.properties.Image}></img></div>`;
+			});
+			tooltip.innerHTML = tooltipData;
 		} else {
 			tooltip.innerHTML = "";
 			tooltip.style.visibility = "hidden";
@@ -153,7 +157,7 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
@@ -171,7 +175,7 @@ const updateCentroidSameTypeLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
@@ -192,7 +196,7 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
@@ -228,7 +232,7 @@ const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
