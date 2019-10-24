@@ -92,22 +92,39 @@ const deckgl = new deck.DeckGL({
 const updateMlLayerTooltip = ({x, y, object}) => {
 	try {
 		const tooltip = document.querySelector("#tooltip");
+		while(tooltip.firstChild && tooltip.removeChild(tooltip.firstChild));
 		if (object) {
 			var index = 0;
-			var tooltipData = `
-			<div>Latitude: ${object.centroid[index]}</div>
-			<div>Longitude: ${object.centroid[index]}</div>
-			<div>${object.points.length} image${(object.points.length === 1) ? "" : "s"}:</div>				
-			`;
+			let lat = document.createElement("DIV")
+			lat.innerText = `Latitude: ${object.centroid[index]}`
+			let lon = document.createElement("DIV")
+			lat.innerText = `Longitude: ${object.centroid[index]}`
+			let count = document.createElement("DIV")
+			count.innerText = `${object.points.length} image${(object.points.length === 1) ? "" : "s"}:`
+			let images = document.createElement("DIV")
+			images.style.display = "grid";
+			images.style.gridTemplateColumns= "repeat(auto-fill, minmax(100px, 1fr))";
+			images.style.gridGap= "5px";
+			tooltip.appendChild(lat)
+			tooltip.appendChild(lon)
+			tooltip.appendChild(count)
+			tooltip.appendChild(images)
 			tooltip.style.visibility = "visible";
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
 			object.points.forEach(element => {
-				tooltipData += `
-				<div>${element.properties.Caption}</div>
-				<div><img width="100%" src=http://43.240.97.137/images/${element.properties.Image}></img></div>`;
+				let article = document.createElement("article")
+				let caption = document.createElement("span")
+				caption.innerText = element.properties.Caption
+				let image = document.createElement("IMG")
+				image.src=`http://43.240.97.137/images/${element.properties.Image}`
+				image.style.maxWidth="300px"
+				image.style.width="100%"
+				image.style.objectFit="cover"
+				article.appendChild(caption)
+				article.appendChild(image)
+				images.appendChild(article)
 			});
-			tooltip.innerHTML = tooltipData;
 		} else {
 			tooltip.innerHTML = "";
 			tooltip.style.visibility = "hidden";
