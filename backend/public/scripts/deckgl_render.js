@@ -460,13 +460,10 @@ renderLayers = (currentDate) => {
 		points: {},
 	};
 
-<<<<<<< HEAD
-=======
 	let chiMlOptions = {
 		points: {},
 	};
 
->>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 	let chiTrajectOptions = {
 		points: {},
 		sameType: {},
@@ -487,13 +484,15 @@ renderLayers = (currentDate) => {
 	bothStatistics = document.querySelector("#statistics-both");
 
 
-	crimeTrajectoriesVisible = document.getElementById("trajectories-visble").checked ;
-	crimePointsVisble = document.getElementById("crimes-visble").checked;
-	centroidsVisble = document.getElementById("centroids-visble").checked;
-	tweetsVisble = document.getElementById("tweets-visble").checked;
+	crimeTrajectoriesVisible = document.getElementById("trajectories-Visible").checked ;
+	crimePointsVisible = document.getElementById("crimes-Visible").checked;
+	centroidsVisible = document.getElementById("centroids-Visible").checked;
+	tweetsVisible = document.getElementById("tweets-Visible").checked;
+	mlVisible = document.getElementById("ml-Visible").checked;
 
 	tweetDisplay = document.querySelector(".tweet-display"); 
 	crimeDisplay = document.querySelector(".crime-display"); 
+	mlDisplay = document.querySelector(".ml-display");
 
 	selectedTrajectoryValue = document.querySelector("input[name='trajectory-crime-type']:checked").value;
 	
@@ -508,8 +507,10 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "none";
+			mlDisplay.style.display = "none";
 			crimeTrajectoriesStatistics.style.display = "none";
-			chiTweetOptions.points.visible = tweetsVisble;
+			chiTweetOptions.points.visible = tweetsVisible;
+			chiMlOptions.points.visible = false;
 			chiTrajectOptions.points.visible = false;
 			chiTrajectOptions.sameType.visible = false;
 			chiTrajectOptions.allType.visible = false;
@@ -520,16 +521,10 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "none";
 			tweetDisplay.style.display = "none";
 			crimeDisplay.style.display = "block";
+			mlDisplay.style.display = "none";
+			chiMlOptions.points.visible = false;
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
-<<<<<<< HEAD
-			chiTrajectOptions.points.visible = crimePointsVisble;
-			chiTrajectOptions.sameType.visible = STVisble ? crimeTrajectoriesVisible: false;
-			chiTrajectOptions.allType.visible = ATVisble ? crimeTrajectoriesVisible : false;
-			chiCentroidOptions.sameType.visible = STVisble ? centroidsVisble: false;
-			chiCentroidOptions.allType.visible = ATVisble ? centroidsVisble : false;
-			renderCrimeTypeLegend();
-=======
 			chiTrajectOptions.points.visible = crimePointsVisible;
 			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
 			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
@@ -541,20 +536,22 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "none";
 			crimeDisplay.style.display = "none";
+			mlDisplay.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "none";
 			chiTweetOptions.points.visible = false;
 			chiTrajectOptions.points.visible = false;
-			chiMlOptions.points.visible = true;
+			chiMlOptions.points.visible = mlVisible;
 			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
 			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
 			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
 			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
->>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 			break;
 		case "both":
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "block";
+			mlDisplay.style.display = "none";
+			chiMlOptions.points.visible = false;
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = tweetsVisble;
 			chiTrajectOptions.points.visible = crimePointsVisble;
@@ -593,13 +590,12 @@ renderLayers = (currentDate) => {
 		onHover: updateTweetLayerTooltip,
 		...chiTweetOptions.points,
 	});
-<<<<<<< HEAD
-=======
 
 	const mlLayer = new deck.HexagonLayer({
 		id: "ml-layer",
 		data: chiMlData.points,
 		pickable: true,
+		colorRange: TWEET_COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
 		radius: 150,
 		elevationRange: [0, 800],
@@ -613,7 +609,6 @@ renderLayers = (currentDate) => {
 		onHover: updateMlLayerTooltip,
 		...chiMlOptions.points,
 	});	
->>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 	
 	var historicCrimeLayer = new deck.IconLayer({
 		id: "historic-crime-layer",
@@ -848,6 +843,8 @@ const setupInterface = () => {
 					crimeTrajectoriesMenu.style.display = "block";
 					break;
 				default:
+					tweetDensityMenu.style.display = "block";
+					crimeTrajectoriesMenu.style.display = "none";	
 					break;
 			}
 		});
@@ -864,22 +861,11 @@ const setupInterface = () => {
 	setupTimeline();
 };
 
-<<<<<<< HEAD
-/**
- * initialise everything
- */
-const runScript = () => {
-=======
 const runScript = () => {
     console.log("Setting up DeckGL...");
     
->>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
 	setupInterface();
 	initialiseData();
 }
 
-<<<<<<< HEAD
 runScript();
-=======
-runScript();
->>>>>>> 317fa2c... FEATURE: Make new machine learning data visible on map
