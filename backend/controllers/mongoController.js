@@ -16,17 +16,17 @@ init();
 //Initialises the variables by calling database connection function.
 function init()
 {
-	//let tweetMelb = createDBConnectionObject(databaseMelb).model('tweets');
-	//let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
-	//let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
-	//let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
+	let tweetMelb = createDBConnectionObject(databaseMelb).model('tweets');
+	let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
+	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
+	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
 	let viscrime = createDBConnectionObject(databaseViscrime).model('viscrime');
 
-    //module.exports.tweetMelb = tweetMelb;
-    //module.exports.tweetChicago = tweetChicago;
-	//module.exports.chicagoCrime = chicagoCrime;
+    module.exports.tweetMelb = tweetMelb;
+    module.exports.tweetChicago = tweetChicago;
+	module.exports.chicagoCrime = chicagoCrime;
 	module.exports.viscrime = viscrime;
-    //module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
+    module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
 }
 
 //Returns DB connection object and model
