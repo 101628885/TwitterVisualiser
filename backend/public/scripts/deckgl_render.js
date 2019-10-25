@@ -26,6 +26,7 @@ const DATA_URL = {
 	CHI_TWEET: "/tweetmap",
 	CHI_TRAJECTORY: "/tweetmap",
 	CHI_TEMP: "https://tinyurl.com/ycawn5tc",
+	IMAGE_SERVER_IP: "http://43.240.97.137/",
 };
 
 // some colo(u)rs
@@ -112,12 +113,13 @@ const updateMlLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "visible";
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
+			
 			object.points.forEach(element => {
 				let article = document.createElement("article")
 				let caption = document.createElement("span")
 				caption.innerText = element.properties.Caption
 				let image = document.createElement("IMG")
-				image.src=`http://43.240.97.137/images/${element.properties.Image}`
+				image.src=`${DATA_URL.IMAGE_SERVER_IP}/images/${element.properties.Image}`
 				image.style.maxWidth="300px"
 				image.style.width="100%"
 				image.style.objectFit="cover"
