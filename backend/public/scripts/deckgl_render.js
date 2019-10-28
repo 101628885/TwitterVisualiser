@@ -515,8 +515,8 @@ renderLayers = (currentDate) => {
 
 	selectedTrajectoryValue = document.querySelector("input[name='trajectory-crime-type']:checked").value;
 	
-	ATVisble = selectedTrajectoryValue == "all-trajectories" ? true : false;
-	STVisble = selectedTrajectoryValue == "same-trajectories" ? true : false;
+	ATVisible = selectedTrajectoryValue == "all-trajectories" ? true : false;
+	STVisible = selectedTrajectoryValue == "same-trajectories" ? true : false;
 
 
 	// set the new values into the options objects so we can feed them into the data layers

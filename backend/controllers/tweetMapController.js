@@ -1,5 +1,6 @@
 const fs = require('fs');
 const skmeans = require("skmeans");
+const viscrime = require('./mongoController').viscrime;
 const chicagoDataFactory = require('./chicagoDataFactory');
 const moment = require('moment')
 

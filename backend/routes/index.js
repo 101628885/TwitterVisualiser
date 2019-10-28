@@ -64,6 +64,7 @@ router.post('/imagesearch', imageSearchController.searchImages);
 router.get('/tweetMap', cacheController.getTrajectories);
 router.post('/tweetMap', cacheController.getTrajectories);
 router.get('/update', nlpTrainingController.test);
+router.get('/mlmap', tweetMapController.getMlMapData);
 
 
 router.get('/visualisations', visualisationController.getVisualisationView);
