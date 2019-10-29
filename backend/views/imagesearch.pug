@@ -72,8 +72,8 @@ block content
 												a(href=`${'http://43.240.97.137/images/' + image.image}`)
 													img(src=`${'http://43.240.97.137/images/' + image.image}` width="100%" height="100%")
 											.col.s2
-												p #[strong Manual tags:] #{image.manualAnnotation}
-												p #[strong Object tags:] 
+												h6 #[strong Manual Classification] 
+												p  #{image.manualAnnotation}
+												h6 #[strong Object Tags] 								
 												each label, index in image.objectLabels
-													p #{label}		
-												p #[strong Crime Prediction:] #{image.combinedPrediction}									
+													li(style={'margin-left': '15px'}) #{label}																					
