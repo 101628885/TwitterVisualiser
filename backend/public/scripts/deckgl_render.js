@@ -95,37 +95,36 @@ const updateMlLayerTooltip = ({x, y, object}) => {
 		const tooltip = document.querySelector("#tooltip");
 		while(tooltip.firstChild && tooltip.removeChild(tooltip.firstChild));
 		if (object) {
-			var index = 0;
-			let lat = document.createElement("DIV")
-			lat.innerText = `Latitude: ${object.centroid[index]}`
-			let lon = document.createElement("DIV")
-			lat.innerText = `Longitude: ${object.centroid[index]}`
-			let count = document.createElement("DIV")
-			count.innerText = `${object.points.length} image${(object.points.length === 1) ? "" : "s"}:`
-			let images = document.createElement("DIV")
+			let lat = document.createElement("DIV");
+			lat.innerText = `Latitude: ${object.centroid[0]}`;
+			let lon = document.createElement("DIV");
+			lon.innerText = `Longitude: ${object.centroid[1]}`;
+			let count = document.createElement("DIV");
+			count.innerText = `${object.points.length} image${(object.points.length === 1) ? "" : "s"}:`;
+			let images = document.createElement("DIV");
 			images.style.display = "grid";
 			images.style.gridTemplateColumns= "repeat(auto-fill, minmax(100px, 1fr))";
 			images.style.gridGap= "5px";
-			tooltip.appendChild(lat)
-			tooltip.appendChild(lon)
-			tooltip.appendChild(count)
-			tooltip.appendChild(images)
+			tooltip.appendChild(lat);
+			tooltip.appendChild(lon);
+			tooltip.appendChild(count);
+			tooltip.appendChild(images);
 			tooltip.style.visibility = "visible";
 			tooltip.style.top = `${y}px`;
 			tooltip.style.left = `${x}px`;
 			
 			object.points.forEach(element => {
-				let article = document.createElement("article")
-				let caption = document.createElement("span")
-				caption.innerText = element.properties.Caption
-				let image = document.createElement("IMG")
-				image.src=`${DATA_URL.IMAGE_SERVER_IP}/images/${element.properties.Image}`
-				image.style.maxWidth="300px"
-				image.style.width="100%"
-				image.style.objectFit="cover"
-				article.appendChild(caption)
-				article.appendChild(image)
-				images.appendChild(article)
+				let article = document.createElement("article");
+				let caption = document.createElement("span");
+				caption.innerText = element.properties.Caption;
+				let image = document.createElement("IMG");
+				image.src=`${DATA_URL.IMAGE_SERVER_IP}/images/${element.properties.Image}`;
+				image.style.maxWidth="300px";
+				image.style.width="100%";
+				image.style.objectFit="cover";
+				article.appendChild(caption);
+				article.appendChild(image);
+				images.appendChild(article);
 			});
 		} else {
 			tooltip.innerHTML = "";
