@@ -824,7 +824,6 @@ const initialiseData = async() => {
 	.then(console.log("Chicago trajectory data loaded."))
 	.catch(() => console.log("Error in loading Chicago trajectory data."));
 
-
 	// statsBuilder();
 	renderLayers();
 };
@@ -884,6 +883,7 @@ const runScript = () => {
     
 	setupInterface();
 	initialiseData();
+	setTimeout(renderLayers, 2000);
 }
 
 runScript();
