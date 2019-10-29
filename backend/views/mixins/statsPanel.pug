@@ -18,20 +18,26 @@ mixin statsPanel
 							.col.s12.tweet-display
 								p
 									label
-										input(type="checkbox" id="tweets-visble" checked onClick="renderLayers()")
+										input(type="checkbox" id="tweets-Visible" checked onClick="renderLayers()")
 										span Show Tweets
+							.col.s12.ml-display(style="display: none;")
+								p
+									label
+										input(type="checkbox" id="ml-Visible" checked onClick="renderLayers()")
+										span Show Image Data
+
 							.col.s12.crime-display(style="display: none;")
 								p
 									label
-										input(type="checkbox" id="trajectories-visble" checked onClick="renderLayers()")
+										input(type="checkbox" id="trajectories-Visible" checked onClick="renderLayers()")
 										span Show Trajectories
 								p
 									label
-										input(type="checkbox" id="crimes-visble" checked onClick="renderLayers()")
+										input(type="checkbox" id="crimes-Visible" checked onClick="renderLayers()")
 										span Show Crime Points
 								p
 									label
-										input(type="checkbox" id="centroids-visble" checked onClick="renderLayers()")
+										input(type="checkbox" id="centroids-Visible" checked onClick="renderLayers()")
 										span Show Centroids
 								br
 								p Trajectories based on
@@ -42,7 +48,7 @@ mixin statsPanel
 								p
 									label
 										input(type="radio" name="trajectory-crime-type" value="all-trajectories" onClick="renderLayers()")
-										span  Not Restriced 
+										span  Not Restricted 
 							
 			li.active
 				.collapsible-header
@@ -67,10 +73,10 @@ mixin statsPanel
 							.row(style="margin: 0;")
 								.col.s6
 									p.left-align
-										label Less Tweets
+										label Less Data
 								.col.s6
 									p.right-align
-										label More Tweets
+										label More Data
 					#statistics-crime-trajectories
 						.container(style="margin: 0; width: 100%;")
 							.row(style="margin: 0;")

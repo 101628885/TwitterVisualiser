@@ -26,6 +26,7 @@ const DATA_URL = {
 	CHI_TWEET: "/tweetmap",
 	CHI_TRAJECTORY: "/tweetmap",
 	CHI_TEMP: "https://tinyurl.com/ycawn5tc",
+	IMAGE_SERVER_IP: "http://43.240.97.137/",
 };
 
 // some colo(u)rs
@@ -37,6 +38,10 @@ const DATA_COLOURS = {
 
 // data objects
 let chiTweetData = {
+	points: null,
+};
+
+let chiMlData = {
 	points: null,
 };
 
@@ -84,6 +89,52 @@ const deckgl = new deck.DeckGL({
 	...INITIAL_VIEW_STATE
 });
 
+//Updates tooltip for new data when hovered over by user.
+const updateMlLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.querySelector("#tooltip");
+		while(tooltip.firstChild && tooltip.removeChild(tooltip.firstChild));
+		if (object) {
+			let lat = document.createElement("DIV");
+			lat.innerText = `Latitude: ${object.centroid[0]}`;
+			let lon = document.createElement("DIV");
+			lon.innerText = `Longitude: ${object.centroid[1]}`;
+			let count = document.createElement("DIV");
+			count.innerText = `${object.points.length} image${(object.points.length === 1) ? "" : "s"}:`;
+			let images = document.createElement("DIV");
+			images.style.display = "grid";
+			images.style.gridTemplateColumns= "repeat(auto-fill, minmax(100px, 1fr))";
+			images.style.gridGap= "5px";
+			tooltip.appendChild(lat);
+			tooltip.appendChild(lon);
+			tooltip.appendChild(count);
+			tooltip.appendChild(images);
+			tooltip.style.visibility = "visible";
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			
+			object.points.forEach(element => {
+				let article = document.createElement("article");
+				let caption = document.createElement("span");
+				caption.innerText = element.properties.Caption;
+				let image = document.createElement("IMG");
+				image.src=`${DATA_URL.IMAGE_SERVER_IP}/images/${element.properties.Image}`;
+				image.style.maxWidth="300px";
+				image.style.width="100%";
+				image.style.objectFit="cover";
+				article.appendChild(caption);
+				article.appendChild(image);
+				images.appendChild(article);
+			});
+		} else {
+			tooltip.innerHTML = "";
+			tooltip.style.visibility = "hidden";
+		}
+	} catch(e) {
+		console.log(e);
+	}
+};
+
 //Updates tool tips when user hovers over on deck.gl map
 const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 	try {
@@ -124,7 +175,7 @@ const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
@@ -142,7 +193,7 @@ const updateCentroidSameTypeLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
@@ -163,7 +214,7 @@ const updateTweetLayerTooltip = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
@@ -199,7 +250,7 @@ const updateHistoricCrimeLayerTooltip  = ({x, y, object}) => {
 			tooltip.style.visibility = "hidden";
 		}
 	} catch(e) {
-		// Error
+		console.log(e);
 	}
 };
 
@@ -427,6 +478,10 @@ renderLayers = (currentDate) => {
 		points: {},
 	};
 
+	let chiMlOptions = {
+		points: {},
+	};
+
 	let chiTrajectOptions = {
 		points: {},
 		sameType: {},
@@ -447,18 +502,20 @@ renderLayers = (currentDate) => {
 	bothStatistics = document.querySelector("#statistics-both");
 
 
-	crimeTrajectoriesVisible = document.getElementById("trajectories-visble").checked ;
-	crimePointsVisble = document.getElementById("crimes-visble").checked;
-	centroidsVisble = document.getElementById("centroids-visble").checked;
-	tweetsVisble = document.getElementById("tweets-visble").checked;
+	crimeTrajectoriesVisible = document.getElementById("trajectories-Visible").checked ;
+	crimePointsVisible = document.getElementById("crimes-Visible").checked;
+	centroidsVisible = document.getElementById("centroids-Visible").checked;
+	tweetsVisible = document.getElementById("tweets-Visible").checked;
+	mlVisible = document.getElementById("ml-Visible").checked;
 
 	tweetDisplay = document.querySelector(".tweet-display"); 
 	crimeDisplay = document.querySelector(".crime-display"); 
+	mlDisplay = document.querySelector(".ml-display");
 
 	selectedTrajectoryValue = document.querySelector("input[name='trajectory-crime-type']:checked").value;
 	
-	ATVisble = selectedTrajectoryValue == "all-trajectories" ? true : false;
-	STVisble = selectedTrajectoryValue == "same-trajectories" ? true : false;
+	ATVisible = selectedTrajectoryValue == "all-trajectories" ? true : false;
+	STVisible = selectedTrajectoryValue == "same-trajectories" ? true : false;
 
 
 	// set the new values into the options objects so we can feed them into the data layers
@@ -468,8 +525,10 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "none";
+			mlDisplay.style.display = "none";
 			crimeTrajectoriesStatistics.style.display = "none";
-			chiTweetOptions.points.visible = tweetsVisble;
+			chiTweetOptions.points.visible = tweetsVisible;
+			chiMlOptions.points.visible = false;
 			chiTrajectOptions.points.visible = false;
 			chiTrajectOptions.sameType.visible = false;
 			chiTrajectOptions.allType.visible = false;
@@ -480,19 +539,37 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "none";
 			tweetDisplay.style.display = "none";
 			crimeDisplay.style.display = "block";
+			mlDisplay.style.display = "none";
+			chiMlOptions.points.visible = false;
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
-			chiTrajectOptions.points.visible = crimePointsVisble;
-			chiTrajectOptions.sameType.visible = STVisble ? crimeTrajectoriesVisible: false;
-			chiTrajectOptions.allType.visible = ATVisble ? crimeTrajectoriesVisible : false;
-			chiCentroidOptions.sameType.visible = STVisble ? centroidsVisble: false;
-			chiCentroidOptions.allType.visible = ATVisble ? centroidsVisble : false;
+			chiTrajectOptions.points.visible = crimePointsVisible;
+			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
+			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
 			renderCrimeTypeLegend();
+			break;
+		case "machine-learning":
+			tweetDensityStatistics.style.display = "block";
+			tweetDisplay.style.display = "none";
+			crimeDisplay.style.display = "none";
+			mlDisplay.style.display = "block";
+			crimeTrajectoriesStatistics.style.display = "none";
+			chiTweetOptions.points.visible = false;
+			chiTrajectOptions.points.visible = false;
+			chiMlOptions.points.visible = mlVisible;
+			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
+			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
 			break;
 		case "both":
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "block";
+			mlDisplay.style.display = "none";
+			chiMlOptions.points.visible = false;
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = tweetsVisble;
 			chiTrajectOptions.points.visible = crimePointsVisble;
@@ -531,6 +608,25 @@ renderLayers = (currentDate) => {
 		onHover: updateTweetLayerTooltip,
 		...chiTweetOptions.points,
 	});
+
+	const mlLayer = new deck.HexagonLayer({
+		id: "ml-layer",
+		data: chiMlData.points,
+		pickable: true,
+		colorRange: TWEET_COLOR_RANGE,
+		lightSettings: LIGHT_SETTINGS,
+		radius: 150,
+		elevationRange: [0, 800],
+		elevationScale: 4,
+		opacity: 0.6,
+		coverage: 0.9,
+		fp64: false,
+		z: 1,
+		extruded: true,
+		getPosition: d => d.coordinates,
+		onHover: updateMlLayerTooltip,
+		...chiMlOptions.points,
+	});	
 	
 	var historicCrimeLayer = new deck.IconLayer({
 		id: "historic-crime-layer",
@@ -651,8 +747,7 @@ renderLayers = (currentDate) => {
 
 	// add the data layers to the main deckgl object
 	deckgl.setProps({
-		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
-		// layers: [tweetLayer],
+		layers: [tweetLayer, mlLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
 	});
 };
 
@@ -693,23 +788,46 @@ const loadData = (data, mode) => {
 		// array of dates represented in crimesByDate
 		dataDateRange = Object.keys(crimesByDate);
 	} catch(e) {
-		console.log("Error: Could not load data");
+		console.log("Error: Could not load data: " + e);
 	};
 };
+
+const loadMlData = (data) => {
+	try {
+		chiMlData.points = data.data.map(point => ({
+			coordinates: point.geometry.coordinates,
+			properties: point.properties
+		}));
+		console.log(chiMlData);
+		
+	} catch (e) {
+		console.log(e);
+	}
+}
 
 /**
  * Initialise the global data variables by fetching data from the endpoints
  * specified in DATA_URL. Called once only.
  */
 const initialiseData = async() => {
+	console.log("Loading data...");
+	
+	await fetch('/mlmap')
+    .then(res => res.json())
+	.then(data => loadMlData(data))
+	.then(console.log("ML Map data loaded."))
+	.catch((e) => console.log("Error in loading ML data. " + e));
+	
 	await fetch(DATA_URL.CHI_TRAJECTORY)
 	.then(res => res.json())
 	.then(data => loadData(data, "default"))
-	.catch(() => console.log("Error in loading data."));
+	.then(console.log("Chicago trajectory data loaded."))
+	.catch(() => console.log("Error in loading Chicago trajectory data."));
 
 	// statsBuilder();
 	renderLayers();
 };
+
 
 /**
  * Initialise the interactive JS components
@@ -742,6 +860,8 @@ const setupInterface = () => {
 					crimeTrajectoriesMenu.style.display = "block";
 					break;
 				default:
+					tweetDensityMenu.style.display = "block";
+					crimeTrajectoriesMenu.style.display = "none";	
 					break;
 			}
 		});
@@ -758,12 +878,12 @@ const setupInterface = () => {
 	setupTimeline();
 };
 
-/**
- * initialise everything
- */
 const runScript = () => {
+    console.log("Setting up DeckGL...");
+    
 	setupInterface();
 	initialiseData();
+	setTimeout(renderLayers, 2000);
 }
 
 runScript();
