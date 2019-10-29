@@ -9,23 +9,25 @@ exports.getMlMapData = function(req, res) {
     .then(viscrime => {
         var features = [];
         viscrime.forEach(function(element) {
-            var coords = [];
-            coords.push(parseFloat((element.location.split(','))[0].replace('(', '')));
-            coords.push(parseFloat((element.location.split(','))[1].replace(')', '')));
-            coords.reverse();
-
-            features.push({
-                "type":"Feature",
-                "geometry":{
-                    "type":"Point",
-                    "coordinates":[coords[0], coords[1]]},
-                    "properties":{
-                        "Longitude":coords[0],
-                        "Latitude":coords[1],
-                        "Image":element.image,
-                        "Caption":element.caption,
-                    }
+            if (element.location) {
+                var coords = [];
+                coords.push(parseFloat((element.location.split(','))[0].replace('(', '')));
+                coords.push(parseFloat((element.location.split(','))[1].replace(')', '')));
+                coords.reverse();
+    
+                features.push({
+                    "type":"Feature",
+                    "geometry":{
+                        "type":"Point",
+                        "coordinates":[coords[0], coords[1]]},
+                        "properties":{
+                            "Longitude":coords[0],
+                            "Latitude":coords[1],
+                            "Image":element.image,
+                            "Caption":element.caption,
+                        }
                 });
+            }
         });
         console.log(features);
                   
