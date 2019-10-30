@@ -37,6 +37,7 @@ def main():
 
     # image_prediction
     image_result, image_prob = image_prediction(image_path)
+    image_result =  str(image_result).split(';')[0]
 
     result = {}
     result["prediction"] = str(image_result)
