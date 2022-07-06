@@ -23,7 +23,7 @@
     "helmet": "^3.14.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
-    "moment": "^2.22.1",
+    "moment": "^2.29.4",
     "mongoose": "^5.2.17",
     "morgan": "^1.9.1",
     "node-geocoder": "^3.22.0",
